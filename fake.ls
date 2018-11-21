@@ -11,7 +11,7 @@ accs =
     zec: \t1VpYecBW4UudbGcy4ufh61eWxQCoFaUrPs
     dash: \XfXzCt8S7atiVyqnGZdeXunjArgnkuLCc5
 fake-wallet = (wallet)->
-    wallet.address =  accs[wallet.network.token] ? wallet.address
+    wallet.address =  accs[wallet.coin.token] ? wallet.address
 module.exports = (store)->
     { wallets } = store.current.account
     #console.log toJS wallets

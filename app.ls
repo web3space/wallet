@@ -4,10 +4,12 @@ require! {
     \react
     \./pages.ls
     \whitebox
+    \./description.ls
+    \./browser/window.ls
+    \./copy-message.ls
 }
 .app
-    @import 'https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css'
-    background: #eae7e7
+    background: white
     min-height: 100vh
     position: relative
     color: white
@@ -17,12 +19,11 @@ require! {
 { get-container } = whitebox
 module.exports = ({ store, reload })->
     return null if not store?
-    select-page = (page, event)-->
-        store.current.page = page
     window <<<< { store }
     current-page =
         pages[store.current.page]
-    on-confirm = (_, event)-->
-        console.log \confirm
-    .app.pug
-        current-page { store }
+    .pug
+        description store
+        .app.pug
+            copy-message store
+            current-page { store }

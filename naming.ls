@@ -3,6 +3,8 @@ require! {
     \./ethnamed.ls
     \prelude-ls : { map, join, filter, head }
     \./icon.ls
+    \./get-record.ls
+    \./get-name-mask.ls
 }
 .naming
     .custom-domain
@@ -16,7 +18,7 @@ require! {
             border: 1px solid #b1afaf
         position: relative
         width: 100%
-        height: 50px
+        height: 28px
         >.part
             width: 100%
             background: transparent
@@ -35,7 +37,7 @@ require! {
         background: transparent
         border: none
         text-align: center
-        height: 20px
+        height: 12px
 install-record = (name, record)->
     "Please setup html element <meta property='ethnamed' value='#{record}' /> on #{name} to pass verification"
 state =
@@ -53,6 +55,7 @@ module.exports = ({ store })->
         #err <- verify-network
         return cb? err if err?
         store.current.checking-name = true
+        show-message "Loading..."
         err, data <- verify-record store.current.nicknamefull
         store.current.checking-name = no
         return cb? err if err?
@@ -63,18 +66,17 @@ module.exports = ({ store })->
     resolve-record = ->
         err, data <- check
         return show-message err if err?
-        show-message data
+        show-message if data.length > 0 then "Busy" else "Free"
         #goto "/resolve/#{store.current.nickname}", store
     buy-nickname = (cb)->
         name = store.current.nicknamefull
         owner = 
             store.current.account.wallets 
-                |> filter (.network.token is \eth)
+                |> filter (.coin.token is \eth)
                 |> map (.address)
                 |> head
         amount-ethers = price
-        record =
-            store.current.account.wallets |> map (.address) |> join \,
+        record = get-record store
         err, data <- check
         return cb err if err? and err isnt "Address Not Found"
         return cb "Address is already exists" if err isnt "Address Not Found"
@@ -93,16 +95,10 @@ module.exports = ({ store })->
         return show-message(err.message ? err) if err?
         show-message done
     set-mask = ->
-        n = store.current.nickname ? ""
-        store.current.nicknamefull = 
-            | n.length is 0 => \nickname.domain.com
-            | n.match(/^[a-z][a-z0-9]+\.$/) => "#{n}ethnamed.io"
-            | n.match(/^[a-z][a-z0-9]+\.[a-z]([a-z0-9]+)?$/) => "#{n}.com"
-            | n.match(/^[a-z][a-z0-9]+\.[a-z]([a-z0-9]+)?\.$/) => "#{n}com"
-            | n.index-of('.') > -1 => n
-            | _ => "#{n}.ethnamed.io"
+        store.current.nicknamefull = get-name-mask(store.current.nickname ? "")
     enter-nick = (event)->
-        nickname = (event.target.value ? "").match(/^[a-z0-9\.]+/)?0 ? ""
+        nickname = (event.target.value ? "").match(/^[a-z0-9\.@]+/)?0 ? ""
+        show-message "Typing..."
         clear-timeout state.timeout
         state.timeout = null
         store.current.nickname = nickname
@@ -117,7 +113,7 @@ module.exports = ({ store })->
             .pug.title Register Name
             .pug.custom-domain
                 .part.hidden.pug
-                    input.pug(value="#{store.current.nicknamefull}" read-only="true")
+                    input.pug(value="#{store.current.nicknamefull}")
                 .part.visible.pug
                     input.pug(value="#{store.current.nickname}" on-change=enter-nick)
             if (store.current.message ? "").length > 0

@@ -1,15 +1,17 @@
-.wallet-1442129510
+.wallet1874067166
     padding: 10px
     margin: 0 10px 3px 10px
     text-align: left
     background: white
     color: black
+    border: 1px solid #dcd9d9
+    border-radius: 5px
     >.wallet-header
         img
             max-width: 32px
         .btn
             border: 1px solid #75cee1
-            line-height: 14px
+            line-height: 17px
             font-size: 14px
             color: #75cee1
             &.default
@@ -30,7 +32,8 @@
                 text-align: center
             &.right
                 text-align: right
-            width: 33%
+                .account
+            width: 33.3333%
             >.cell
                 display: inline-block
                 margin-right: 5px
@@ -41,18 +44,39 @@
         .center
             text-align: center
         .address
+            overflow: hidden
             margin-top: 5px
             background: black
-            border-radius: 10px
+            border-radius: 5px
             width: 100%
             box-sizing: border-box
             display: inline-block
             text-align: center
-            padding: 5px
             background: #eae7e7
             a
                 text-decoration: none
                 color: #4c4a4a
                 font-size: 14px
+            >*
+                display: inline-block
+                vertical-align: top
+                box-sizing: border-box
+            .address-area
+                width: 90%
+                overflow: hidden
+                text-overflow: ellipsis
+                padding: 3px
+            .copy-area
+                width: 10%
+                background: rgb(234, 231, 231)
+                background: linear-gradient(to bottom, #eeeeee 1%,#cccccc 51%,#cccccc 100%)
+                &:hover
+                    background: #cccccc
+                border-left: 1px solid #CCC
+                text-align: center
+                padding: 5px
+                line-height: 15px
+                >*
+                    display: inline-block
     >.wallet-footer
         height: 43px

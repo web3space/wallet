@@ -1,0 +1,32 @@
+{
+    "inputSourcePath": "./solidity/NameRegistry.sol",
+    "outputSourcePath": "./.out/NameRegistry.full.sol",
+    "outputDir": "./.out",
+    "ganache": {
+        "gasPriceGwei": "1",
+        "gasLimit": "2000000",
+        "ownerAddress": "0xad69f2ffd7d7b3e82605f5fe80acc9152929f283",
+        "ownerPrivateKey": "ead124e29a97966c4466dd5e72ec12637a6612f418c860a5bb0b6e359fe7e676",
+        "web3Provider": "http://209.126.79.177:9000",
+        "etherscanBaseUrl": "http://209.126.79.177:8000",
+        "apiUrl": "http://209.126.79.177:8000/api"
+    },
+    "ropsten": {
+        "gasPriceGwei": "1",
+        "gasLimit": "2000000",
+        "ownerAddress": "0xad69f2ffd7d7b3e82605f5fe80acc9152929f283",
+        "ownerPrivateKey": "ead124e29a97966c4466dd5e72ec12637a6612f418c860a5bb0b6e359fe7e676",
+        "web3Provider": "https://ropsten.infura.io/UoCkF4efTrbEGU8Qpcs0",
+        "etherscanBaseUrl": "https://ropsten.etherscan.io",
+        "apiUrl": "http://api-ropsten.etherscan.io/api"
+    },
+    "mainnet": {
+        "gasPriceGwei": "3",
+        "gasLimit": "2571652",
+        "ownerAddress": "0xc836225dddc253b41e6cec6d0b3380e3e091a377",
+        "ownerPrivateKey": "63444CD74DF4FECE379036C08EE73C1492AB7562F062D183103CF868DE833361",
+        "web3Provider": "https://mainnet.infura.io/UoCkF4efTrbEGU8Qpcs0",
+        "etherscanBaseUrl": "https://etherscan.io",
+        "apiUrl": "https://api.etherscan.io/api"
+    }
+}

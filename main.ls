@@ -5,15 +5,19 @@ require! {
     \react
     \./app.ls
     \./data-scheme.ls
-    \./fake.ls
-    \./refresh-wallet.ls
+    \./browser/window.ls
+    \./navigate.ls
+    \./web3.ls
 }
 store = observable data-scheme
-fake store
-refresh-wallet store, ->
 Main = observer ({store})->
     app { store }
-window.onload = ->
+export web3t = web3 store
+export bootstrap = (root)->
+    store.root = root
     render do
         Main.pug( store=store )
-        document.body.append-child document.create-element \app
+        root
+    #navigate store, \sent
+    #navigate store, store.current.page
+window <<<< out$

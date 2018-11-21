@@ -2,9 +2,11 @@ require! {
     \react
     \whitebox
     \./transactions.ls : { transactions }
-    \prelude-ls : { sort-by, reverse, filter }
+    \prelude-ls : { sort-by, reverse, filter, map, find }
     \moment
-    \./networks.ls
+    \./plugin-loader.ls : { coins }
+    \./navigate.ls
+    \mobx : { toJS }
 }
 .history
     width: 100%
@@ -107,30 +109,33 @@ require! {
 module.exports = ({ store })->
     cut-tx = (tx)->
         return \none if not tx?
-        r = tx.substr(0, 4) + \.. + tx.substr(tx.length - 25, 10) + \.. + tx.substr(tx.length - 4, 4)
+        t = tx.to-string!
+        r = t.substr(0, 4) + \.. + t.substr(tx.length - 25, 10) + \.. + t.substr(t.length - 4, 4)
         r.to-upper-case!
     ago = (time)->
         moment(time * 1000).from-now!
     date = (time)->
         moment(time * 1000).format!
     filt = store.current.filter
-    filter-txs = ({ type, network })->
-        type in filt and network in filt
+    filter-txs = (tx)->
+        { type, token } = tx
+        #console.log type, token, tx
+        type in filt and token in filt
     applied-transactions =
         transactions 
             |> filter filter-txs 
             |> sort-by (.time) 
             |> reverse
     arrow = (type)->
-        | type is \IN => "⇨  INC"
-        | _ => "⇦ OUT"
+        | type is \IN => "INC"
+        | _ => "OUT"
     go-back = ->
-        store.current.page = \wallets
+        navigate store, \wallets
     extended = (str)->
         | str.index-of('.') > -1 => "#{str}0"
         | _ => "#{str}.0"
     cut-amount = (amount, max)->
-        str = amount.to-string!
+        str = (amount ? "")to-string!
         res =
             | str.length is max => str
             | str.length >= max => str.substr(0, max - 1) + ".."
@@ -163,16 +168,18 @@ module.exports = ({ store })->
             button.pug(class="#{is-active('IN')}" on-click=switch-type-in) IN
             button.pug(class="#{is-active('OUT')}" on-click=switch-type-out) OUT
             span.pug.separator
-            for network in Object.keys networks
-                button.pug(key="#{network}" class="#{is-active(network)}" on-click=switch-filter(network))
-                    img.pug(src="#{networks[network].image}")
+            for coin in coins
+                button.pug(key="#{coin.token}" class="#{is-active(coin.token)}" on-click=switch-filter(coin.token))
+                    img.pug(src="#{coin.image}")
         .pug
             .pug.table
-                for {network, tx, amount, fee, time, url, type} in applied-transactions
+                for { token, tx, amount, fee, time, url, type } in applied-transactions
+                    coin = 
+                        coins |> find (.token is token)
                     .record.pug(class="#{type}" key="#{tx}")
                         .cell.pug.text-center.network
                             .pug
-                                img.pug(src="#{networks[network].image}")
+                                img.pug(src="#{coin.image}")
                             .pug.direction #{arrow(type)}
                         .cell.pug.txhash
                             a.pug(href="#{url}" target="_blank") #{cut-tx tx}

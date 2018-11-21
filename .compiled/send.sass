@@ -1,4 +1,4 @@
-.content1871139591
+.content1185862639
     background: white
     color: gray
     margin: 10px
@@ -15,12 +15,33 @@
         padding: 10px
     a
         color: gray
+    .more-buttons
+        border-top: 1px solid #e6e4e4
+        margin-top: 13px
+        .more
+            color: #737171
+            padding: 5px
+            border: 1px solid #b9b6b6
+            display: inline-block
+            margin: 3px
+            border-radius: 8px
+            margin-top: 22px
+            width: 147px
+            text-align: center
+            height: 14px
+            line-height: 14px
+            background: #efeeee
+            cursor: pointer
+            &:hover
+                background: #efeeee - 10
     .address
         background: #dcdada
         border: 1px solid gray
         padding: 5px
         border-radius: 5px
         font-size: 13px
+        overflow: hidden
+        text-overflow: ellipsis
     form
         max-width: 400px
         text-align: left
@@ -33,13 +54,14 @@
             height: 30px
             border-radius: 4px
             padding: 0px 10px
+            font-size: 12px
             margin: 1px
             border: 1px solid gray
             &.amount
                 width: 100px
                 height: 50px
                 font-size: 32px
-    padding: 25px
+    padding: 13px
     .font-light
         text-align: left
         padding: 7px 0
@@ -58,12 +80,24 @@
             width: 53px
     .usd
         font-size: 11px
+    .topup
+        display: inline-block
+        margin-left: 5px
+        color: orange
+        vertical-align: top
+        padding: 0 5px
+        border-radius: 3px
+        line-height: 12px
+        font-size: 12px
     .not-enough
         color: red
     .gray
         color: #CCC
     .orange
         color: #ab8540
+    .escrow
+        padding: 5px 4px
+        color: #adb551
     .green
         color: #095409
     .bold
@@ -74,7 +108,7 @@
         .btn
             text-align: center
             font-size: 16px
-            width: 100px
+            width: 156px
             border-radius: 7px
             height: 25px
             margin: 3px
@@ -82,7 +116,8 @@
             display: inline-block
             line-height: 27px
             cursor: pointer
+            box-sizing: border-box
             &.btn-primary
                 background: #75cee1
                 color: white
-                width: 150px
+                width: 161px
