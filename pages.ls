@@ -9,8 +9,7 @@ require! {
     \./loading.ls
     \react
 }
-export not-found = ->
-    .pug Page Not Found
+#
 export loading
 export wallets
 export history

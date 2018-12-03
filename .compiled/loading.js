@@ -5,53 +5,9 @@
   module.exports = function(){
     var children;
     return react.createElement('div', {
-      className: 'loading-page loading-page1149541662'
+      className: 'loading-page loading-page813641756'
     }, children = react.createElement('div', {
-      className: 'loader'
-    }, children = [
-      react.createElement('div', {
-        className: 'loader_overlay'
-      }), react.createElement('div', {
-        className: 'loader_cogs'
-      }, children = [
-        react.createElement('div', {
-          className: 'loader_cogs__top'
-        }, children = [
-          react.createElement('div', {
-            className: 'top_part'
-          }), react.createElement('div', {
-            className: 'top_part'
-          }), react.createElement('div', {
-            className: 'top_part'
-          }), react.createElement('div', {
-            className: 'top_hole'
-          })
-        ]), react.createElement('div', {
-          className: 'loader_cogs__left'
-        }, children = [
-          react.createElement('div', {
-            className: 'left_part'
-          }), react.createElement('div', {
-            className: 'left_part'
-          }), react.createElement('div', {
-            className: 'left_part'
-          }), react.createElement('div', {
-            className: 'left_hole'
-          })
-        ]), react.createElement('div', {
-          className: 'loader_cogs__bottom'
-        }, children = [
-          react.createElement('div', {
-            className: 'bottom_part'
-          }), react.createElement('div', {
-            className: 'bottom_part'
-          }), react.createElement('div', {
-            className: 'bottom_part'
-          }), react.createElement('div', {
-            className: 'bottom_hole'
-          })
-        ])
-      ]), react.createElement('h1', {}, ' Loading')
-    ]));
+      className: 'loading'
+    }));
   };
 }).call(this);

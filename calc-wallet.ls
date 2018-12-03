@@ -2,7 +2,7 @@ require! {
     \./api.ls : { get-balance }
     \./math.ls : { times, plus }
     \prelude-ls : { find, map, pairs-to-obj }
-    \./plugin-loader.ls : { coins }
+    \./plugin-loader.ls : { get-coins }
     \./workflow.ls : { run, task }
 }
 round5 = (value)->
@@ -16,6 +16,7 @@ calc-wallet = (store, cb)->
     { rates } = store
     state =
         balance-usd: 0
+    coins = get-coins!
     build-loader = (wallet)-> task (cb)->
         { token } = wallet.coin
         wallet.balance = \...

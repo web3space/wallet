@@ -3,13 +3,14 @@ require! {
     \whitebox
     \./navigate.ls
     \./web3.ls
-    \./refresh-account.ls
     \./seed.ls : { set }
 }
 { get-container, generate-wallet } = whitebox
 .newseed
+    @import scheme
     padding-top: 50px
-    min-height: 300px
+    height: 100%
+    background: $primary
     .title
         color: #248295
         font-size: 35px
@@ -54,7 +55,7 @@ newseed = ({ store })->
         store.current.saved-seed = yes
         set store.current.seed
         navigate store, \:init 
-        <- refresh-account web3(store), store
+        <- web3(store).refresh
     .newseed.pug
         .title.pug New Seed Phrase
         textarea.pug(value="#{store.current.seed}" on-change=change-seed placeholder="Click Generate or Put Your Seed Phrase here")
@@ -62,10 +63,10 @@ newseed = ({ store })->
             button.pug.left(on-click=generate-seed) Generate
             button.pug.right(on-click=save) Save
         .pug.hint The phrase is stored securely on your computer. Do not transfer it to a third party and keep the duplicate in a safe place.
-init = (store, cb)->
+focus = (store, cb)->
     <- set-timeout _, 1000
     textarea = store.root.query-selector '.newseed textarea'
     textarea.focus!
     cb null
-newseed.init = init
+newseed.focus = focus
 module.exports = newseed

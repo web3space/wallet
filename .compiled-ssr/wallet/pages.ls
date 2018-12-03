@@ -9,8 +9,7 @@ require! {
     \./loading.ls
     \react
 }
-export not-found = ->
-    react.create-element 'div', {}, ' Page Not Found'
+#
 export loading
 export wallets
 export history

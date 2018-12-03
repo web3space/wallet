@@ -3,10 +3,11 @@ require! {
     \./providers/eth.ls
     \./providers/insight.ls
     \./providers/xem.ls
+    \./providers/erc20.ls
     \mobx : { toJS }
     \prelude-ls : { pairs-to-obj, obj-to-pairs }
 }
-providers = { eth, waves, insight , xem }
+providers = { eth, waves, insight , xem, erc20 }
 action = (func)-> (config, cb)->
     #console.log { config }
     return cb "token is not defined" if not config?token?

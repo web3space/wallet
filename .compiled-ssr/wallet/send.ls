@@ -12,7 +12,8 @@ require! {
     \./navigate.ls
     \./close.ls
 }
-# .content1185862639
+# .content670999182
+#     @import scheme
 #     background: white
 #     color: gray
 #     margin: 10px
@@ -132,7 +133,7 @@ require! {
 #             cursor: pointer
 #             box-sizing: border-box
 #             &.btn-primary
-#                 background: #75cee1
+#                 background: $primary
 #                 color: white
 #                 width: 161px
 send = ({ store })->
@@ -213,7 +214,7 @@ send = ({ store })->
         | _ => ""
     receive = ->
         navigate store, \receive
-    react.create-element 'div', { className: 'content content1185862639' }, children = 
+    react.create-element 'div', { className: 'content content670999182' }, children = 
         react.create-element 'div', {}, children = 
             react.create-element 'h2', { className: 'font-light m-b-xs' }, children = 
                 react.create-element 'img', { src: "#{wallet.coin.image}", className: 'head' }

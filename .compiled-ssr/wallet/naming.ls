@@ -2,11 +2,26 @@ require! {
     \react
     \./ethnamed.ls
     \prelude-ls : { map, join, filter, head }
-    \./icon.ls
     \./get-record.ls
     \./get-name-mask.ls
 }
-# .naming-427236597
+# .naming659199610
+#     @import scheme
+#     width: 95%
+#     padding: 0px 0
+#     .box
+#         padding: 10px !important
+#         background: white !important
+#         .title
+#             color: #5d5f6f !important
+#         button
+#             background-color: $primary
+#             border: 0
+#             &:hover
+#                 color: $primary
+#                 background-color: white
+#                 border: 1px solid $primary
+#     margin: 0 10px 3px 10px
 #     .custom-domain
 #         input
 #             outline: none
@@ -27,17 +42,20 @@ require! {
 #             &.hidden
 #                 z-index: 0
 #                 input
-#                     color: rgba(black, 0.2)
+#                     color: rgba(black, 0.6)
+#                     background: transparent
 #             &.visible
 #                 z-index: 1
 #                 input
 #                     background: transparent
+#                     color: #595768
 #     .message
 #         font-size: 11px
 #         background: transparent
 #         border: none
 #         text-align: center
 #         height: 12px
+#         color: #595768 - 20
 install-record = (name, record)->
     "Please setup html element <meta property='ethnamed' value='#{record}' /> on #{name} to pass verification"
 state =
@@ -108,7 +126,7 @@ module.exports = ({ store })->
         store.current.custom-domain = yes
     change-to-ethnamed = ->
         store.current.custom-domain = no
-    react.create-element 'div', { className: 'box-container naming naming-427236597' }, children = 
+    react.create-element 'div', { className: 'box-container naming naming659199610' }, children = 
         react.create-element 'div', { className: 'box' }, children = 
             react.create-element 'div', { className: 'title' }, ' Register Name'
             react.create-element 'div', { className: 'custom-domain' }, children = 

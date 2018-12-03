@@ -1,12 +1,12 @@
 require! {
-    \react
     \whitebox
     \./transactions.ls : { transactions }
     \prelude-ls : { sort-by, reverse, filter, map, find }
     \moment
-    \./plugin-loader.ls : { coins }
+    \./plugin-loader.ls : { get-coins }
     \./navigate.ls
     \mobx : { toJS }
+    \react
 }
 .history
     width: 100%
@@ -161,6 +161,7 @@ module.exports = ({ store })->
             filt.splice(filt.index-of(value), 1)
     switch-type-in = switch-filter \IN
     switch-type-out = switch-filter \OUT
+    coins = get-coins!
     .pug.normalheader.history
         .header.pug
             button.pug(on-click=go-back) < 

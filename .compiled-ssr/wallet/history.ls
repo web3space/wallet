@@ -1,12 +1,12 @@
 require! {
-    \react
     \whitebox
     \./transactions.ls : { transactions }
     \prelude-ls : { sort-by, reverse, filter, map, find }
     \moment
-    \./plugin-loader.ls : { coins }
+    \./plugin-loader.ls : { get-coins }
     \./navigate.ls
     \mobx : { toJS }
+    \react
 }
 # .history-632060576
 #     width: 100%
@@ -161,6 +161,7 @@ module.exports = ({ store })->
             filt.splice(filt.index-of(value), 1)
     switch-type-in = switch-filter \IN
     switch-type-out = switch-filter \OUT
+    coins = get-coins!
     react.create-element 'div', { className: 'normalheader history history-632060576' }, children = 
         react.create-element 'div', { className: 'header' }, children = 
             react.create-element 'button', { on-click: go-back }, ' < '

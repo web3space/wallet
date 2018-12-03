@@ -7,13 +7,12 @@ require! {
     \./description.ls
     \./browser/window.ls
     \./copy-message.ls
+    \./modal.ls : { modal-control }
 }
 .app
-    background: white
-    min-height: 100vh
+    height: 600px
     position: relative
     color: white
-    overflow-y: auto
     text-align: center
     max-width: 400px
 { get-container } = whitebox
@@ -25,5 +24,6 @@ module.exports = ({ store, reload })->
     .pug
         description store
         .app.pug
+            modal-control store
             copy-message store
             current-page { store }

@@ -1,6 +1,6 @@
 require! {
-    \./plugin-loader.ls : { coins }
-    \prelude-ls : { obj-to-pairs, map, pairs-to-obj }
+    \./plugin-loader.ls : { get-coins }
+    \prelude-ls : { obj-to-pairs, map, pairs-to-obj, each }
     \./guid.ls
     \./send-form.ls : { wait-form-result }
     \./change-amount.ls
@@ -10,7 +10,8 @@ require! {
     \./navigate.ls
     \./use-network.ls
     \./api.ls : { get-balance }
-    \./build-install.ls
+    \./install-plugin.ls : { build-install }
+    \./refresh-account.ls
 }
 state =
     time: null
@@ -64,15 +65,26 @@ build-api = (store, it)->
     build-network-specific(it) <<<< { send-transaction, get-balance } 
 build-use = (web3, store)->  (network)->
     <- use-network web3, store, network
+get-apis = (cweb3, store)->
+    get-coins!
+        |> map -> [it.token, build-api(store, it)]
+        |> pairs-to-obj
+clear-api = (cweb3, name)-->
+    delete cweb3[name]
+refresh-apis = (cweb3, store)->
+    (refresh-apis.prev ? []) |> each clear-api cweb3
+    apis = get-apis cweb3, store
+    cweb3 <<<< apis
+    refresh-apis.prev = Object.keys apis
 module.exports = (store)->
-    cweb3 = do
-        result =
-            coins
-                |> map -> [it.token, build-api(store, it)]
-                |> pairs-to-obj
-        use = build-use web3, store
-        result <<<< { web3.utils, use }
-        protect result
-    cweb3.use = build-use cweb3, store
-    cweb3.install = build-install cweb3, store
+    cweb3 = {}
+    use = build-use cweb3, store
+    install = build-install cweb3, store
+    refresh = (cb)->
+        refresh-apis cweb3, store
+        err <- refresh-account cweb3, store
+        return cb err if err?
+        cb null
+    refresh-apis cweb3, store
+    cweb3 <<<< { web3.utils, use, refresh, install }
     cweb3

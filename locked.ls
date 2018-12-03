@@ -5,12 +5,16 @@ require! {
     \./navigate.ls
 }
 .locked
+    @import scheme
+    $gradient: $primary - 10
+    background: $primary
     padding-top: 200px
-    min-height: 300px
+    height: 100%
+    box-sizing: border-box
     text-align: center
     >.title
         font-size: 35px
-        color: #248295
+        color: white
         margin-bottom: 20px
     >.inputs
         input
@@ -20,7 +24,7 @@ require! {
             width: 40px
             height: 40px
             background: white
-            border: 1px solid #CCC
+            border: 1px solid #f4f4f5
             border-radius: 3px
             margin: 5px
             outline: none
@@ -104,10 +108,7 @@ setup-button = (store)->
     .pug
         button.setup.pug(on-click=setup) Setup
         .hint.pug Please memorize this PIN and do not provide it to third party.
-loading = ->
-    .pug Loading...
 locked = ({ store })->
-    return loading! if store.current.loading is yes
     title = 
         | not exists! => "Setup PIN"
         | _ => "Enter PIN"
@@ -119,8 +120,8 @@ locked = ({ store })->
         .pug.inputs
             [0 to 3] |> map input store
         footer store
-init = (store, cb)->
+focus = (store, cb)->
     <- goto store, 0
     cb null
-locked.init = init
+locked.focus = focus
 module.exports = locked

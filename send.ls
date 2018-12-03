@@ -13,6 +13,7 @@ require! {
     \./close.ls
 }
 .content
+    @import scheme
     background: white
     color: gray
     margin: 10px
@@ -132,7 +133,7 @@ require! {
             cursor: pointer
             box-sizing: border-box
             &.btn-primary
-                background: #75cee1
+                background: $primary
                 color: white
                 width: 161px
 send = ({ store })->

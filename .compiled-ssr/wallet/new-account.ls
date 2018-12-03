@@ -1,5 +1,5 @@
 require! {
-    \./plugin-loader.ls : { coins }
+    \./plugin-loader.ls : { get-coins }
     \prelude-ls : { obj-to-pairs, pairs-to-obj, map }
     \mobx : { toJS }
     \./api.ls : { get-keys }
@@ -38,5 +38,6 @@ module.exports = (store, mnemonic="", cb)->
         return cb err if err?
         all = [wallet] ++ wallets
         cb null, all
+    coins = get-coins!
     err, wallets <- generate-coin-wallets coins
     cb err, { mnemonic, wallets }

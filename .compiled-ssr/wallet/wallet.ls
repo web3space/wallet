@@ -7,121 +7,149 @@ require! {
     \./copied-inform.ls
     \./copy.ls
 }
-# .wallet1874067166
-#     padding: 10px
-#     margin: 0 10px 3px 10px
-#     text-align: left
-#     background: white
-#     color: black
-#     border: 1px solid #dcd9d9
-#     border-radius: 5px
-#     >.wallet-header
-#         img
-#             max-width: 32px
-#         .btn
-#             border: 1px solid #75cee1
-#             line-height: 17px
-#             font-size: 14px
-#             color: #75cee1
-#             &.default
-#                 background: #75cee1
-#                 color: white
-#             cursor: pointer
-#             border-radius: 5px
-#             width: 90px
-#             height: 17px
+#
+# .wallet-208042256
+#     $cards-height: 324px
+#     $pad: 20px
+#     $radius: 15px 
+#     position: relative
+#     cursor: pointer
+#     margin: 0 5px
+#     $card-height: 80px
+#     height: $card-height
+#     background: #fff
+#     $mt: 20px
+#     box-sizing: border-box
+#     border-radius: $radius
+#     margin-top: -$mt
+#     overflow: hidden
+#     transition: height .5s
+#     box-shadow: 0 -10px 24px 0 rgba(0,0,0,0.05)
+#     &:first-child
+#         margin-top: 0
+#         box-shadow: none
+#     &.over
+#         background: #CCC
+#     &.active
+#         background: #fff
+#         height: 117px
+#         >.wallet-middle
 #             display: inline-block
-#             text-align: center
-#             margin-bottom: 2px
-#         .part
+#     >.wallet-top
+#         $card-top-height: 50px
+#         width: 100%
+#         color: #677897
+#         font-size: 14px
+#         text-align: center
+#         >*
 #             display: inline-block
-#             vertical-align: top
-#             text-align: left
-#             &.center
-#                 text-align: center
-#             &.right
-#                 text-align: right
-#                 .account
-#             width: 33.3333%
-#             >.cell
-#                 display: inline-block
-#                 margin-right: 5px
-#             .gray
-#                 color: gray
-#                 font-size: 12px
-#     >.wallet-body
-#         .center
-#             text-align: center
-#         .address
-#             overflow: hidden
-#             margin-top: 5px
-#             background: black
-#             border-radius: 5px
-#             width: 100%
+#             width: 32.6%
 #             box-sizing: border-box
-#             display: inline-block
-#             text-align: center
-#             background: #eae7e7
-#             a
-#                 text-decoration: none
-#                 color: #4c4a4a
-#                 font-size: 14px
+#             vertical-align: top
+#             padding-top: 10px
+#             height: $card-top-height
+#         >.top-left
 #             >*
 #                 display: inline-block
-#                 vertical-align: top
-#                 box-sizing: border-box
-#             .address-area
-#                 width: 90%
-#                 overflow: hidden
-#                 text-overflow: ellipsis
-#                 padding: 3px
-#             .copy-area
-#                 width: 10%
-#                 background: rgb(234, 231, 231)
-#                 background: linear-gradient(to bottom, #eeeeee 1%,#cccccc 51%,#cccccc 100%)
-#                 &:hover
-#                     background: #cccccc
-#                 border-left: 1px solid #CCC
-#                 text-align: center
-#                 padding: 5px
-#                 line-height: 15px
-#                 >*
-#                     display: inline-block
-#     >.wallet-footer
-#         height: 43px
+#             >.img
+#                 line-height: $card-top-height
+#                 >img
+#                     vertical-align: top
+#                     max-width: 50px
+#                     $s: 35px
+#                     border-radius: $s
+#                     width: $s
+#                     height: $s
+#             >.info
+#                 text-align: left
+#                 margin-left: $pad / 2
+#                 >.name
+#                 >.price
+#                     font-weight: bold
+#         >.top-middle
+#             >.balance
+#                 &:last-child
+#                     font-weight: bold
+#         >.top-right
+#             >button
+#                 margin-top: 5px
+#                 cursor: pointer
+#                 border: 0
+#                 border-radius: 20px
+#                 width: 75px
+#                 height: 30px
+#                 color: #6CA7ED
+#                 text-transform: uppercase
+#                 font-weight: bold
+#                 background: #FFFFFF
+#                 box-shadow: 0 2px 9px 0 rgba(184,184,184,0.50)
+#     >.wallet-middle
+#         $card-top-height: 50px
+#         width: 100%
+#         color: #677897
+#         font-size: 14px
+#         margin-top: 10px
+#         text-align: center
+#         position: relative
+#         >img
+#             position: absolute
+#             right: 20px
+#             margin: 12px
+#         >a
+#             width: 90%
+#             position: relative
+#             border-radius: 20px
+#             border: 0
+#             background: #E6F0FF
+#             box-sizing: border-box
+#             vertical-align: top
+#             text-align: left
+#             padding-left: 20px
+#             padding-right: 25px
+#             height: $card-top-height - 14px
+#             color: #677897
+#             font-size: 14px
+#             line-height: $card-top-height - 14px
+#             display: inline-block
+#             text-overflow: ellipsis
+#             overflow: hidden
 module.exports = (store, wallet)-->
+    index = store.current.account.wallets.index-of wallet
+    type = 
+        | index is 0 => \top
+        | index + 1 is store.current.account.wallets.length => \bottom
+        | _ => \middle
     return null if not store? or not wallet?
     lweb3 = web3(store)
-    #TODO refactor
     address-label = 
         | wallet.coin.token is \xem => \account
         | _ => \address
     send = (wallet, event)-->
+        return alert "Not yet loaded" if not wallet?
         { send-transaction } = lweb3[wallet.coin.token]
         to = ""
         value = 0
         err <- send-transaction { to, value }
         console.log err
     usd-rate = wallet?usd-rate ? 0
-    react.create-element 'div', { key: "#{wallet.coin.token}", className: 'wallet wallet1874067166' }, children = 
-        react.create-element 'div', { className: 'wallet-header' }, children = 
-            react.create-element 'div', { className: 'part left' }, children = 
-                react.create-element 'div', { className: 'cell' }, children = 
+    expand = ->
+        store.current.wallet-index = index
+    active = if index is store.current.wallet-index then \active else ''
+    balance = cut(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
+    react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active} wallet wallet-208042256" }, children = 
+        react.create-element 'div', { className: 'wallet-top' }, children = 
+            react.create-element 'div', { className: 'top-left' }, children = 
+                react.create-element 'div', { className: 'img' }, children = 
                     react.create-element 'img', { src: "#{wallet.coin.image}" }
-                react.create-element 'div', { className: 'cell' }, children = 
-                    react.create-element 'div', {}, ' ' +  wallet.coin.token.to-upper-case! 
-                    react.create-element 'div', { className: 'gray' }, ' $' +  money(usd-rate)
-            react.create-element 'div', { className: 'part center' }, children = 
-                react.create-element 'div', {}, ' ' +  cut(wallet.balance)  + ' '
-                react.create-element 'div', { className: 'gray' }, ' $' +  money(wallet.balance-usd)
-            react.create-element 'div', { className: 'part right' }, children = 
-                react.create-element 'div', {}, children = 
-                    react.create-element 'a', { on-click: send(wallet), className: 'btn default' }, ' Open'
-        react.create-element 'div', { className: 'wallet-body' }, children = 
-            react.create-element 'div', { className: 'group center' }, children = 
-                react.create-element 'span', { className: 'address' }, children = 
-                    react.create-element 'span', { className: 'address-area' }, children = 
-                        react.create-element 'a', { target: "_blank", href: "#{wallet.network.api.url}/#{address-label}/#{wallet.address}" }, ' ' + wallet.address
-                    react.create-element 'span', { className: 'copy-area' }, children = 
-                        react.create-element CopyToClipboard, { text: "#{wallet.address}", on-copy: copied-inform(store) }, children = 
-                            copy store
+                react.create-element 'div', { className: 'info' }, children = 
+                    react.create-element 'div', { className: 'name' }, ' PRICE'
+                    react.create-element 'div', { className: 'price' }, ' $' +  money(usd-rate)
+            react.create-element 'div', { className: 'top-middle' }, children = 
+                react.create-element 'div', { className: 'balance' }, ' Balance'
+                react.create-element 'div', { className: 'balance' }, ' ' +  balance 
+            react.create-element 'div', { className: 'top-right' }, children = 
+                react.create-element 'button', { on-click: send(wallet) }, ' Open'
+        react.create-element 'div', { className: 'wallet-middle' }, children = 
+            react.create-element 'a', { target: "_blank", href: "#{wallet.network.api.url}/#{address-label}/#{wallet.address}" }, ' ' + wallet.address
+            react.create-element CopyToClipboard, { text: "#{wallet.address}", on-copy: copied-inform(store) }, children = 
+                copy store

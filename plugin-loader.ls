@@ -1,17 +1,18 @@
 require! {
     \prelude-ls : { filter }
+    \./install-plugin.ls : { get-install-list }
 }
-plugins = 
+common = 
     * require \./plugins/btc-coin.ls
     * require \./plugins/ltc-coin.ls
     * require \./plugins/eth-coin.ls
-    #* require \./plugins/xmr-coin.ls
-    #* require \./plugins/zec-coin.ls
-    #* require \./plugins/waves-coin.ls
     * require \./plugins/dash-coin.ls
     * require \./plugins/xem-coin.ls
-    * require \./plugins/sprkl-coin.ls
-export coins =
-    plugins 
-        |> filter (.type is \coin)
-        |> filter (.enabled)
+export get-coins = ->
+    base =
+        common
+            |> filter (.type is \coin)
+            |> filter (.enabled)
+    installed =
+        get-install-list! |> filter (.type is \coin)
+    base ++ installed

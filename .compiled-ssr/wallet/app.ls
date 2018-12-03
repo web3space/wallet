@@ -7,13 +7,12 @@ require! {
     \./description.ls
     \./browser/window.ls
     \./copy-message.ls
+    \./modal.ls : { modal-control }
 }
-# .app868907609
-#     background: white
-#     min-height: 100vh
+# .app2127118339
+#     height: 600px
 #     position: relative
 #     color: white
-#     overflow-y: auto
 #     text-align: center
 #     max-width: 400px
 { get-container } = whitebox
@@ -24,6 +23,7 @@ module.exports = ({ store, reload })->
         pages[store.current.page]
     react.create-element 'div', {}, children = 
         description store
-        react.create-element 'div', { className: 'app app868907609' }, children = 
+        react.create-element 'div', { className: 'app app2127118339' }, children = 
+            modal-control store
             copy-message store
             current-page { store }

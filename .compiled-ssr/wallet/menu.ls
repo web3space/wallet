@@ -5,98 +5,257 @@ require! {
     \./tools.ls : { cut, money }
     \./naming.ls
     \./seed.ls
-    \./refresh-account.ls
     \./use-network.ls
     \./web3.ls
-    \./pin.ls : { check } 
+    \./pin.ls : { check }
+    \./navigate.ls
 }
 { get-container, generate-wallet } = whitebox
-# .menu-1821002069
-#     background: #eae7e7
+# .menu580644162
+#     $width: 400px
+#     $height: 600px
+#     $viewport-height: $height / 2.5
+#     $cards-height: 324px
+#     $pad: 20px
+#     $radius: 15px
+#     height: $height
+#     width: $width
 #     position: relative
-#     .network
-#         color: #989696
-#         font-size: 10px
-#         text-align: center
-#         padding: 3px
-#         text-transform: uppercase
-#         font-weight: 100
-#         .active
-#             color: #36bbd8 - 1
-#             cursor: default
-#         cursor: pointer
-#     padding-top: 9px
-#     .box-container
-#         margin: 0 10px 3px 10px
-#         .box
-#             padding: 10px
-#             background: white
-#             width: 100%
-#             box-sizing: border-box
+#     >*
+#         position: absolute
+#         left: 0
+#     >.viewport
+#         width: $width
+#         height: $height
+#         top: 0
+#         overflow: hidden
+#         >*
+#             position: absolute
+#             top: 0
+#             width: $width
+#         $viewport-header-height: 32px
+#         $slide-height: $viewport-height / 2
+#         >.viewport-icons
+#             z-index: 5
+#             height: $viewport-header-height
+#             position: relative
 #             display: inline-block
-#             border-radius: 5px
-#             color: black
-#             border: 1px solid #dcd9d9
-#             .title
-#                 font-size: 14px
-#                 .generate
-#                     color: #75cee1
-#                     cursor: pointer
-#                     margin-left: 5px
-#                     font-size: 12px
-#                     height: 17px
-#                     display: inline-block
-#                     line-height: 14px
-#                     vertical-align: middle
-#             .balance
+#             text-align: left
+#             >*
+#                 display: inline-block
+#                 color: white
+#             >span
+#                 margin-top: 7px
+#                 padding: 1px 2px
+#                 border-radius: 2px
+#                 font-size: 12px
+#                 color: white
+#                 vertical-align: top
+#             >img
+#                 width: $pad / 1.5
+#                 display: inline-block
+#                 margin: $pad / 2 $pad
+#                 cursor: pointer
+#                 &.reload
+#                     float: left
+#                 &.lock
+#                     float: right
+#                 &:hover
+#                     color: #eee
+#         >.viewport-header
+#             z-index: 4
+#             position: relative
+#             height: $viewport-header-height
+#             text-align: center
+#             >.text
+#                 display: inline-block
+#                 padding: 10px 25px
+#                 color: rgba(white, 0.5)
 #                 font-weight: bold
-#                 color: black
-#     textarea, input
-#         border-radius: 5px
-#         background: #fbfafa
-#         color: #4c4a4a
-#         padding: 3px 10px
-#         font-size: 15px
-#     textarea
-#         width: 260px
-#         height: 55px
-#         resize: none
-#         border: 1px solid #b1afaf
-#     input
-#         height: 23px
-#         width: 150px
-#         border: 0
-#         margin: 0px 2px
-#     button
-#         margin-top: 3px
-#         outline: none
-#         width: 100px
-#         cursor: pointer
-#         height: 20px
-#         border: 0
-#         background-color: #76CEE1
-#         color: white
-#         &:hover
-#             background-color: #76CEE1 + 10
-#         border-radius: 100px
-#     ul
-#         list-style: none
-#         padding: 0
-#         li 
-#             display: inline-block
-#             color: gray
-#             cursor: pointer
-#             padding: 0 5px
-#             &.active
-#                 border: 1px solid gray
-#                 border-radius: 5px
+#                 cursor: pointer
+#                 font-weight: 400
+#             >.text-line
+#                 height: 3px
+#             transition: left 1s, background 2s
+#             &.s1
+#                 left: 50px
+#                 >.text.s1
+#                     color: white
+#                     cursor: default
+#                 >.text-line
+#                     background: linear-gradient(135deg, #FFF 0%, transparent 100%)
+#             &.s2
+#                 left: 0
+#                 >.text-line
+#                     background: linear-gradient(135deg, transparent 0%,#FFF 50%, transparent 100%)
+#                 >.text.s2
+#                     color: white
+#                     cursor: default
+#             &.s3
+#                 left: -50px
+#                 >.text-line
+#                     background: linear-gradient(135deg, transparent 0%, #FFF 100%)
+#                 >.text.s3
+#                     color: white
+#                     cursor: default
+#         >.viewport-switchs
+#             z-index: 3
+#             $switch-padd: 13px
+#             top: $viewport-header-height + $slide-height + $switch-padd * 3
+#             text-align: center
+#             >.switch
+#                 border-radius: 100px
+#                 width: 8px
+#                 height: 8px
+#                 margin: 0 4px
+#                 background: rgba(white, 0.5)
+#                 display: inline-block
+#                 cursor: pointer
+#             &.s1
+#                 >.switch.s1
+#                     background: white
+#                     cursor: default
+#             &.s2
+#                 >.switch.s2
+#                     background: white
+#                     cursor: default
+#             &.s3
+#                 >.switch.s3
+#                     background: white
+#                     cursor: default
+#         >.viewport-decoration
+#             text-align: center
+#             z-index: 2
+#             top: 50px
+#             >.circle
+#                 display: inline-block
+#                 width: $width
+#                 height: $width
+#                 border-radius: $width
+#                 background: rgba(white, 0.1)
+#                 transition: all 1s
+#             &.s1>.circle
+#                 width: $width / 1.1
+#                 height: $width / 1.1
+#                 margin-left: -30px
+#             &.s2>.circle
+#                 width: $width
+#                 height: $width
+#                 margin-left: 0
+#             &.s3>.circle
+#                 width: $width / 1.1
+#                 height: $width / 1.1
+#                 margin-left: 30px
+#         >.viewport-background
+#             background-image: linear-gradient(90deg, #4650E7 0%, #7CC9FF 89%, #9d78b2 100%)
+#             padding: $viewport-header-height $pad 0 $pad
+#             z-index: 1
+#             width: $width * 3
+#             height: inherit
+#             transition: left 2s
+#             &.s1
+#                 left: 0
+#             &.s2
+#                 left: -$width + $pad * 2
+#             &.s3
+#                 left: -$width * 2 + $pad * 4
+#         >.viewport-content
+#             position: relative
+#             z-index: 3
+#             background: transparent
+#             height: $height / 4.5
+#             width: $width * 3
+#             padding: $pad $pad 0 $pad
+#             text-align: left
+#             transition: left 1s
+#             >.slide
+#                 transition: margin-top 0.5s
+#             &.s1
+#                 left: $pad * 2
+#                 >.slide.s1
+#                     margin-top: -$pad / 2
+#             &.s2
+#                 left: -$width + $pad * 8
+#                 >.slide.s2
+#                     margin-top: -$pad / 2
+#             &.s3
+#                 left: -$width * 2 + $pad * 14
+#                 >.slide.s3
+#                     margin-top: -$pad / 2
+#             font:
+#                 size: 20px
+#                 weight: bold
+#             line-height: $viewport-height
+#             >.slide
+#                 z-index: 3
+#                 float: left
+#                 text-align: center
+#                 height: $slide-height
+#                 display: inline-block
+#                 box-sizing: border-box
+#                 vertical-align: top
+#                 border:
+#                     width: $pad / 2
+#                     style: solid
+#                     color: transparent
+#                 >.slide-body
+#                     cursor: pointer
+#                     overflow: hidden
+#                     width: 100%
+#                     height: 100%
+#                     vertical-align: top
+#                     line-height: normal
+#                     display: inline-block
+#                     border-radius: $pad / 2
+#                     background: #FFFFFF
+#                     box-sizing: border-box
+#                 &.s1
+#                     width: $width - $pad * 6
+#                     >.slide-body
+#                 &.s2
+#                     width: $width - $pad * 6
+#                     >.slide-body
+#                         overflow: hidden
+#                         margin: 0 auto
+#                         position: relative
+#                         padding: 23px 0
+#                         >*
+#                             display: block
+#                             max-width: 80%
+#                             text-align: right
+#                         >.decor
+#                             color: rgba(#2743D3, 0.05)
+#                             position: absolute
+#                             top: -35px
+#                             right: -20px
+#                             font-size: 120px
+#                         >.currency
+#                             color: rgba(#2743D3, 0.3)
+#                         >.amount
+#                             color: #2743D3
+#                             >*
+#                                 display: inline-block
+#                                 vertical-align: top
+#                                 line-height: 45px
+#                             >.symbol
+#                                 font-size: 20px
+#                                 margin-top: -8px
+#                                 font-weight: 100
+#                             >.number
+#                                 font-size: 50px
+#                                 font-weight: 400
+#                 &.s3
+#                     width: $width - $pad * 6
+#                     >.slide-body
 state =
     timeout: null
 module.exports = ({ store })->
     return null if not store?
     { current, accounts } = store
+    lock = ->
+        navigate store, \locked
     refresh = ->
-        <- refresh-account web3(store), store
+        <- web3(store).refresh
     active-page = (page)->
         if current.page is page then \active
     choose-account = (selected, event)-->
@@ -130,46 +289,71 @@ module.exports = ({ store })->
         return if not confirm "Are you sure you want to override the current seed?"
         current.seed = generate-wallet!.mnemonic
         create-account!
-    active-mainnet = if store.current.network is \mainnet => \active else ''
-    active-testnet = if store.current.network is \testnet => \active else ''
-    use = (network, event)-->
+    switch-network = ->
+        network = 
+            | store.current.network is \mainnet => \testnet
+            | _ => \mainnet
         <- use-network web3(store), store, network
-    use-mainnet = use \mainnet
-    use-testnet = use \testnet
-    react.create-element 'aside', { className: 'menu menu-1821002069' }, children = 
-        react.create-element 'div', { className: 'box-container' }, children = 
-            switch
-                case current.try-edit-seed is yes
-                    react.create-element 'div', { className: 'box' }, children = 
-                        react.create-element 'div', {}, children = 
-                            react.create-element 'input', { on-change: enter-pin, value: "#{current.pin}", placeholder: "Enter PIN" }
-                        react.create-element 'div', {}, '    '
-                            react.create-element 'button', { on-click: cancel-try }, ' Cancel'
-                case current.saved-seed is no
-                    react.create-element 'div', { className: 'box' }, children = 
-                        react.create-element 'div', { className: 'title' }, children = 
-                            react.create-element 'span', {}, ' Secret Text'
-                            react.create-element 'a', { on-click: generate, className: 'generate' }, ' (generate)'
-                        react.create-element 'textarea', { on-change: change-seed, value: "#{current.seed}", placeholder: "Secret words" }
-                        react.create-element 'div', {}, children = 
-                            react.create-element 'button', { on-click: save-seed }, ' Save'
-                case current.saved-seed is yes
-                    react.create-element 'div', { className: 'box' }, children = 
-                        react.create-element 'div', {}, children = 
-                            react.create-element 'button', { on-click: edit-seed }, ' Edit seed'
-        if store.current.network is \mainnet
-            naming { store }
-        react.create-element 'div', { className: 'network' }, children = 
-            react.create-element 'span', { on-click: use-mainnet, className: "#{active-mainnet}" }, ' MAINNET'
-            react.create-element 'span', {}, ' |'
-            react.create-element 'span', { on-click: use-testnet, className: "#{active-testnet}" }, ' TESTNET'
-        react.create-element 'div', { className: 'box-container' }, children = 
-            if store.current.refreshing is no
-                react.create-element 'div', { className: 'box' }, children = 
-                    react.create-element 'div', { className: 'title' }, ' Balance'
-                    react.create-element 'div', { className: 'balance' }, ' $ ' + money current.balance-usd
-                    react.create-element 'button', { on-click: refresh }, ' Refresh'
-            else
-                react.create-element 'div', { className: 'box' }, children = 
-                    react.create-element 'div', { className: 'title' }, ' Loading...'
-                    react.create-element 'div', { className: 'balance' }, ' $ ' + money current.balance-usd
+    activate-s = (name, event)-->
+        store.menu.active = name
+    activate-s1 = activate-s \s1
+    activate-s2 = activate-s \s2
+    activate-s3 = activate-s \s3
+    react.create-element 'div', { className: 'menu menu580644162' }, children = 
+        react.create-element 'div', { className: 'viewport' }, children = 
+            react.create-element 'div', { className: 'viewport-icons' }, children = 
+                react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png", on-click: refresh, className: 'reload' }
+                react.create-element 'span', { on-click: switch-network, className: 'network' }, ' ' + store.current.network
+                react.create-element 'span', { on-click: switch-network, className: 'chevron' }, ' ▿'
+                react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png", on-click: lock, className: 'lock' }
+            react.create-element 'div', { className: "#{store.menu.active} viewport-header viewport-move" }, children = 
+                react.create-element 'div', { on-click: activate-s1, className: 'text s1' }, ' Edit Seed'
+                react.create-element 'div', { on-click: activate-s2, className: 'text s2' }, ' Balance'
+                react.create-element 'div', { on-click: activate-s3, className: 'text s3' }, ' Register'
+                react.create-element 'div', { className: 'text-line' }
+            react.create-element 'div', { className: "#{store.menu.active} viewport-background viewport-move" }
+            react.create-element 'div', { className: "#{store.menu.active} viewport-content viewport-move" }, children = 
+                react.create-element 'div', { on-click: activate-s1, className: 'slide s1' }, children = 
+                    react.create-element 'div', { className: 'slide-body' }, children = 
+                        switch
+                            case current.try-edit-seed is yes
+                                react.create-element 'div', { className: 'box' }, children = 
+                                    react.create-element 'div', {}, children = 
+                                        react.create-element 'input', { on-change: enter-pin, value: "#{current.pin}", placeholder: "Enter PIN" }
+                                    react.create-element 'div', {}, '    '
+                                        react.create-element 'button', { on-click: cancel-try }, ' Cancel'
+                            case current.saved-seed is no
+                                react.create-element 'div', { className: 'box' }, children = 
+                                    react.create-element 'div', { className: 'title' }, children = 
+                                        react.create-element 'span', {}, ' Secret Text'
+                                        react.create-element 'a', { on-click: generate, className: 'generate' }, ' (generate)'
+                                    react.create-element 'textarea', { on-change: change-seed, value: "#{current.seed}", placeholder: "Secret words" }
+                                    react.create-element 'div', {}, children = 
+                                        react.create-element 'button', { on-click: save-seed }, ' Save'
+                            case current.saved-seed is yes
+                                react.create-element 'div', { className: 'box' }, children = 
+                                    react.create-element 'div', {}, children = 
+                                        react.create-element 'button', { on-click: edit-seed }, ' Edit seed'
+                react.create-element 'div', { on-click: activate-s2, className: 'slide s2' }, children = 
+                    react.create-element 'div', { className: 'slide-body' }, children = 
+                        react.create-element 'div', { className: 'decor' }, ' $'
+                        react.create-element 'div', { className: 'currency' }, ' USD'
+                        react.create-element 'div', { className: 'amount' }, children = 
+                            react.create-element 'div', { className: 'symbol' }, ' $'
+                            react.create-element 'div', { className: 'number' }, children = 
+                                if store.current.refreshing is no
+                                    react.create-element 'div', {}, ' ' + money current.balance-usd
+                                else
+                                    react.create-element 'div', {}, ' Loading...'
+                react.create-element 'div', { on-click: activate-s3, className: 'slide s3' }, children = 
+                    react.create-element 'div', { className: 'slide-body' }, children = 
+                        if store.current.network is \mainnet
+                            naming { store }
+                        else 
+                            react.create-element 'div', {}, ' Not Available'
+            react.create-element 'div', { className: "#{store.menu.active} viewport-switchs viewport-move" }, children = 
+                react.create-element 'div', { on-click: activate-s1, className: 'switch s1' }
+                react.create-element 'div', { on-click: activate-s2, className: 'switch s2' }
+                react.create-element 'div', { on-click: activate-s3, className: 'switch s3' }
+            react.create-element 'div', { className: "#{store.menu.active} viewport-decoration viewport-move" }, children = 
+                react.create-element 'div', { className: 'circle' }

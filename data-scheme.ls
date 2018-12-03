@@ -1,5 +1,5 @@
 require! {
-    \./plugin-loader.ls : { coins }
+    \./plugin-loader.ls : { get-coins }
     \prelude-ls : { map, pairs-to-obj }
     \./seed.ls : { saved }
     \./browser/location.ls
@@ -7,11 +7,15 @@ require! {
 saved-seed = saved!
 store =
     root: null
+    menu:
+        active: 's2'
     ask: 
         text: ''
         enabled: no
         callback: null
+        image: ""
     current:
+        wallet-index: 0
         demo: location.href.index-of('ethnamed.io/wallet') > -1 
         network: \mainnet
         pin: ""
@@ -51,7 +55,7 @@ store =
             show-data-mode: \encoded
             error: ''
     rates: 
-        coins 
+        get-coins! 
             |> map -> [it.token.to-upper-case!, USD: 0] 
             |> pairs-to-obj
 module.exports = store

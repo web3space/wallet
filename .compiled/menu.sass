@@ -1,79 +1,236 @@
-.menu-1821002069
-    background: #eae7e7
+.menu580644162
+    $width: 400px
+    $height: 600px
+    $viewport-height: $height / 2.5
+    $cards-height: 324px
+    $pad: 20px
+    $radius: 15px
+    height: $height
+    width: $width
     position: relative
-    .network
-        color: #989696
-        font-size: 10px
-        text-align: center
-        padding: 3px
-        text-transform: uppercase
-        font-weight: 100
-        .active
-            color: #36bbd8 - 1
-            cursor: default
-        cursor: pointer
-    padding-top: 9px
-    .box-container
-        margin: 0 10px 3px 10px
-        .box
-            padding: 10px
-            background: white
-            width: 100%
-            box-sizing: border-box
+    >*
+        position: absolute
+        left: 0
+    >.viewport
+        width: $width
+        height: $height
+        top: 0
+        overflow: hidden
+        >*
+            position: absolute
+            top: 0
+            width: $width
+        $viewport-header-height: 32px
+        $slide-height: $viewport-height / 2
+        >.viewport-icons
+            z-index: 5
+            height: $viewport-header-height
+            position: relative
             display: inline-block
-            border-radius: 5px
-            color: black
-            border: 1px solid #dcd9d9
-            .title
-                font-size: 14px
-                .generate
-                    color: #75cee1
-                    cursor: pointer
-                    margin-left: 5px
-                    font-size: 12px
-                    height: 17px
-                    display: inline-block
-                    line-height: 14px
-                    vertical-align: middle
-            .balance
+            text-align: left
+            >*
+                display: inline-block
+                color: white
+            >span
+                margin-top: 7px
+                padding: 1px 2px
+                border-radius: 2px
+                font-size: 12px
+                color: white
+                vertical-align: top
+            >img
+                width: $pad / 1.5
+                display: inline-block
+                margin: $pad / 2 $pad
+                cursor: pointer
+                &.reload
+                    float: left
+                &.lock
+                    float: right
+                &:hover
+                    color: #eee
+        >.viewport-header
+            z-index: 4
+            position: relative
+            height: $viewport-header-height
+            text-align: center
+            >.text
+                display: inline-block
+                padding: 10px 25px
+                color: rgba(white, 0.5)
                 font-weight: bold
-                color: black
-    textarea, input
-        border-radius: 5px
-        background: #fbfafa
-        color: #4c4a4a
-        padding: 3px 10px
-        font-size: 15px
-    textarea
-        width: 260px
-        height: 55px
-        resize: none
-        border: 1px solid #b1afaf
-    input
-        height: 23px
-        width: 150px
-        border: 0
-        margin: 0px 2px
-    button
-        margin-top: 3px
-        outline: none
-        width: 100px
-        cursor: pointer
-        height: 20px
-        border: 0
-        background-color: #76CEE1
-        color: white
-        &:hover
-            background-color: #76CEE1 + 10
-        border-radius: 100px
-    ul
-        list-style: none
-        padding: 0
-        li 
-            display: inline-block
-            color: gray
-            cursor: pointer
-            padding: 0 5px
-            &.active
-                border: 1px solid gray
-                border-radius: 5px
+                cursor: pointer
+                font-weight: 400
+            >.text-line
+                height: 3px
+            transition: left 1s, background 2s
+            &.s1
+                left: 50px
+                >.text.s1
+                    color: white
+                    cursor: default
+                >.text-line
+                    background: linear-gradient(135deg, #FFF 0%, transparent 100%)
+            &.s2
+                left: 0
+                >.text-line
+                    background: linear-gradient(135deg, transparent 0%,#FFF 50%, transparent 100%)
+                >.text.s2
+                    color: white
+                    cursor: default
+            &.s3
+                left: -50px
+                >.text-line
+                    background: linear-gradient(135deg, transparent 0%, #FFF 100%)
+                >.text.s3
+                    color: white
+                    cursor: default
+        >.viewport-switchs
+            z-index: 3
+            $switch-padd: 13px
+            top: $viewport-header-height + $slide-height + $switch-padd * 3
+            text-align: center
+            >.switch
+                border-radius: 100px
+                width: 8px
+                height: 8px
+                margin: 0 4px
+                background: rgba(white, 0.5)
+                display: inline-block
+                cursor: pointer
+            &.s1
+                >.switch.s1
+                    background: white
+                    cursor: default
+            &.s2
+                >.switch.s2
+                    background: white
+                    cursor: default
+            &.s3
+                >.switch.s3
+                    background: white
+                    cursor: default
+        >.viewport-decoration
+            text-align: center
+            z-index: 2
+            top: 50px
+            >.circle
+                display: inline-block
+                width: $width
+                height: $width
+                border-radius: $width
+                background: rgba(white, 0.1)
+                transition: all 1s
+            &.s1>.circle
+                width: $width / 1.1
+                height: $width / 1.1
+                margin-left: -30px
+            &.s2>.circle
+                width: $width
+                height: $width
+                margin-left: 0
+            &.s3>.circle
+                width: $width / 1.1
+                height: $width / 1.1
+                margin-left: 30px
+        >.viewport-background
+            background-image: linear-gradient(90deg, #4650E7 0%, #7CC9FF 89%, #9d78b2 100%)
+            padding: $viewport-header-height $pad 0 $pad
+            z-index: 1
+            width: $width * 3
+            height: inherit
+            transition: left 2s
+            &.s1
+                left: 0
+            &.s2
+                left: -$width + $pad * 2
+            &.s3
+                left: -$width * 2 + $pad * 4
+        >.viewport-content
+            position: relative
+            z-index: 3
+            background: transparent
+            height: $height / 4.5
+            width: $width * 3
+            padding: $pad $pad 0 $pad
+            text-align: left
+            transition: left 1s
+            >.slide
+                transition: margin-top 0.5s
+            &.s1
+                left: $pad * 2
+                >.slide.s1
+                    margin-top: -$pad / 2
+            &.s2
+                left: -$width + $pad * 8
+                >.slide.s2
+                    margin-top: -$pad / 2
+            &.s3
+                left: -$width * 2 + $pad * 14
+                >.slide.s3
+                    margin-top: -$pad / 2
+            font:
+                size: 20px
+                weight: bold
+            line-height: $viewport-height
+            >.slide
+                z-index: 3
+                float: left
+                text-align: center
+                height: $slide-height
+                display: inline-block
+                box-sizing: border-box
+                vertical-align: top
+                border:
+                    width: $pad / 2
+                    style: solid
+                    color: transparent
+                >.slide-body
+                    cursor: pointer
+                    overflow: hidden
+                    width: 100%
+                    height: 100%
+                    vertical-align: top
+                    line-height: normal
+                    display: inline-block
+                    border-radius: $pad / 2
+                    background: #FFFFFF
+                    box-sizing: border-box
+                &.s1
+                    width: $width - $pad * 6
+                    >.slide-body
+                &.s2
+                    width: $width - $pad * 6
+                    >.slide-body
+                        overflow: hidden
+                        margin: 0 auto
+                        position: relative
+                        padding: 23px 0
+                        >*
+                            display: block
+                            max-width: 80%
+                            text-align: right
+                        >.decor
+                            color: rgba(#2743D3, 0.05)
+                            position: absolute
+                            top: -35px
+                            right: -20px
+                            font-size: 120px
+                        >.currency
+                            color: rgba(#2743D3, 0.3)
+                        >.amount
+                            color: #2743D3
+                            >*
+                                display: inline-block
+                                vertical-align: top
+                                line-height: 45px
+                            >.symbol
+                                font-size: 20px
+                                margin-top: -8px
+                                font-weight: 100
+                            >.number
+                                font-size: 50px
+                                font-weight: 400
+                &.s3
+                    width: $width - $pad * 6
+                    >.slide-body

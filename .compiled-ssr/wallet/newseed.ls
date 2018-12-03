@@ -3,13 +3,14 @@ require! {
     \whitebox
     \./navigate.ls
     \./web3.ls
-    \./refresh-account.ls
     \./seed.ls : { set }
 }
 { get-container, generate-wallet } = whitebox
-# .newseed-405874293
+# .newseed-2016469697
+#     @import scheme
 #     padding-top: 50px
-#     min-height: 300px
+#     height: 100%
+#     background: $primary
 #     .title
 #         color: #248295
 #         font-size: 35px
@@ -54,18 +55,18 @@ newseed = ({ store })->
         store.current.saved-seed = yes
         set store.current.seed
         navigate store, \:init 
-        <- refresh-account web3(store), store
-    react.create-element 'div', { className: 'newseed newseed-405874293' }, children = 
+        <- web3(store).refresh
+    react.create-element 'div', { className: 'newseed newseed-2016469697' }, children = 
         react.create-element 'div', { className: 'title' }, ' New Seed Phrase'
         react.create-element 'textarea', { value: "#{store.current.seed}", on-change: change-seed, placeholder: "Click Generate or Put Your Seed Phrase here" }
         react.create-element 'div', {}, children = 
             react.create-element 'button', { on-click: generate-seed, className: 'left' }, ' Generate'
             react.create-element 'button', { on-click: save, className: 'right' }, ' Save'
         react.create-element 'div', { className: 'hint' }, ' The phrase is stored securely on your computer. Do not transfer it to a third party and keep the duplicate in a safe place.'
-init = (store, cb)->
+focus = (store, cb)->
     <- set-timeout _, 1000
     textarea = store.root.query-selector '.newseed textarea'
     textarea.focus!
     cb null
-newseed.init = init
+newseed.focus = focus
 module.exports = newseed
