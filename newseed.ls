@@ -9,10 +9,12 @@ require! {
 .newseed
     @import scheme
     padding-top: 50px
+    width: $width
+    height: $height
     height: 100%
     background: $primary
     .title
-        color: #248295
+        color: #ebf6f8
         font-size: 35px
         margin-bottom: 20px
     textarea
@@ -41,7 +43,7 @@ require! {
         &:hover
             background: #248295 - 20
     .hint
-        color: #c6c5c5
+        color: #f2eeee
         padding: 20px 38px
 newseed = ({ store })->
     generate-seed = ->

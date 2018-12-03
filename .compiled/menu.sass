@@ -1,6 +1,5 @@
-.menu580644162
-    $width: 400px
-    $height: 600px
+.menu1759550710
+    @import scheme
     $viewport-height: $height / 2.5
     $cards-height: 324px
     $pad: 20px
@@ -38,6 +37,7 @@
                 font-size: 12px
                 color: white
                 vertical-align: top
+                cursor: pointer
             >img
                 width: $pad / 1.5
                 display: inline-block
@@ -45,6 +45,21 @@
                 cursor: pointer
                 &.reload
                     float: left
+                    &.true
+                        @keyframes rotating
+                            from
+                                -ms-transform: rotate(0deg)
+                                -moz-transform: rotate(0deg)
+                                -webkit-transform: rotate(0deg)
+                                -o-transform: rotate(0deg)
+                                transform: rotate(0deg)
+                            to
+                                -ms-transform: rotate(360deg)
+                                -moz-transform: rotate(360deg)
+                                -webkit-transform: rotate(360deg)
+                                -o-transform: rotate(360deg)
+                                transform: rotate(360deg)
+                        animation: rotating 2s linear infinite
                 &.lock
                     float: right
                 &:hover
@@ -55,6 +70,7 @@
             height: $viewport-header-height
             text-align: center
             >.text
+                font-size: 14px
                 display: inline-block
                 padding: 10px 25px
                 color: rgba(white, 0.5)
@@ -186,40 +202,69 @@
                     style: solid
                     color: transparent
                 >.slide-body
+                    display: flex
+                    align-items: center
+                    justify-content: center
                     cursor: pointer
                     overflow: hidden
                     width: 100%
                     height: 100%
                     vertical-align: top
                     line-height: normal
-                    display: inline-block
                     border-radius: $pad / 2
                     background: #FFFFFF
                     box-sizing: border-box
+                    input, textarea
+                        border-radius: 5px
+                        outline: none
+                        border: 1px solid #b1afaf
+                        padding: 3px
+                    button
+                        background-color: $primary
+                        border: 1px solid $primary
+                        border-radius: 50px
+                        color: white
+                        padding: 5px 24px
+                        cursor: pointer
+                        outline: none
+                        &:hover
+                            background: transparent
+                            color: $primary
                 &.s1
                     width: $width - $pad * 6
                     >.slide-body
+                        .title
+                            color: $primary
+                            font-size: 12px
+                            a
+                                color: blur
+                        textarea
+                            width: 244px
+                            height: 37px
+                            resize: none
+                            font-size: 12px
                 &.s2
                     width: $width - $pad * 6
                     >.slide-body
                         overflow: hidden
                         margin: 0 auto
                         position: relative
-                        padding: 23px 0
+                        padding: 11px 0
+                        display: inline-block
                         >*
                             display: block
                             max-width: 80%
                             text-align: right
                         >.decor
-                            color: rgba(#2743D3, 0.05)
+                            color: rgba(#7083e8, 0.05)
                             position: absolute
                             top: -35px
                             right: -20px
                             font-size: 120px
                         >.currency
-                            color: rgba(#2743D3, 0.3)
+                            color: rgba(#7083e8, 0.3)
                         >.amount
-                            color: #2743D3
+                            color: #7083e8
                             >*
                                 display: inline-block
                                 vertical-align: top

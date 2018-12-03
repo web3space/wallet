@@ -9,7 +9,7 @@ require! {
     $gradient: $primary - 10
     background: $primary
     padding-top: 200px
-    height: 100%
+    height: $height
     box-sizing: border-box
     text-align: center
     >.title
@@ -44,7 +44,7 @@ require! {
             background: #248295 - 20
         color: white
     .hint
-        color: #bab7b7
+        color: #f2eeee
         padding: 20px 38px
 goto = (store, number, cb)->
     return cb null if not store.root?

@@ -93,7 +93,7 @@
     activateS2 = activateS('s2');
     activateS3 = activateS('s3');
     return react.createElement('div', {
-      className: 'menu menu580644162'
+      className: 'menu menu1759550710'
     }, children = react.createElement('div', {
       className: 'viewport'
     }, children = [
@@ -103,7 +103,7 @@
         react.createElement('img', {
           src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png",
           onClick: refresh,
-          className: 'reload'
+          className: store.current.refreshing + " reload"
         }), react.createElement('span', {
           onClick: switchNetwork,
           className: 'network'
@@ -121,13 +121,13 @@
         react.createElement('div', {
           onClick: activateS1,
           className: 'text s1'
-        }, ' Edit Seed'), react.createElement('div', {
+        }, ' Secret Phrase'), react.createElement('div', {
           onClick: activateS2,
           className: 'text s2'
         }, ' Balance'), react.createElement('div', {
           onClick: activateS3,
           className: 'text s3'
-        }, ' Register'), react.createElement('div', {
+        }, ' Register Name'), react.createElement('div', {
           className: 'text-line'
         })
       ]), react.createElement('div', {
@@ -174,11 +174,9 @@
               }, ' Save'))
             ]);
           case current.savedSeed !== true:
-            return react.createElement('div', {
-              className: 'box'
-            }, children = react.createElement('div', {}, children = react.createElement('button', {
+            return react.createElement('div', {}, children = react.createElement('button', {
               onClick: editSeed
-            }, ' Edit seed')));
+            }, ' Edit Secret'));
           }
         }()))), react.createElement('div', {
           onClick: activateS2,
@@ -199,7 +197,7 @@
               className: 'number'
             }, children = store.current.refreshing === false
               ? react.createElement('div', {}, ' ' + money(current.balanceUsd))
-              : react.createElement('div', {}, ' Loading...'))
+              : react.createElement('div', {}, ' ...'))
           ])
         ])), react.createElement('div', {
           onClick: activateS3,

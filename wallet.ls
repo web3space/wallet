@@ -14,7 +14,6 @@ require! {
     $radius: 15px 
     position: relative
     cursor: pointer
-    margin: 0 5px
     $card-height: 80px
     height: $card-height
     background: #fff
@@ -32,7 +31,7 @@ require! {
         background: #CCC
     &.active
         background: #fff
-        height: 117px
+        height: 135px
         >.wallet-middle
             display: inline-block
     >.wallet-top
@@ -43,12 +42,13 @@ require! {
         text-align: center
         >*
             display: inline-block
-            width: 32.6%
             box-sizing: border-box
             vertical-align: top
             padding-top: 10px
             height: $card-top-height
         >.top-left
+            width: 35%
+            text-align: right
             >*
                 display: inline-block
             >.img
@@ -66,12 +66,21 @@ require! {
                 >.name
                 >.price
                     font-weight: bold
+                    width: 82px
+                    overflow: hidden
+                    text-overflow: ellipsis
         >.top-middle
+            width: 30%
+            text-align: center
             >.balance
                 &:last-child
                     font-weight: bold
         >.top-right
+            width: 35%
+            padding-left: 35px
+            text-align: left
             >button
+                outline: none
                 margin-top: 5px
                 cursor: pointer
                 border: 0

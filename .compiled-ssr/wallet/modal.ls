@@ -2,10 +2,10 @@ require! {
     \react
     \./scroll-top.ls
 }
-# .modal-container925330035
+# .modal-container-2117888270
 #     $e: url(https://res.cloudinary.com/dfbhd7liw/image/upload/v1543785751/wallet/Combined_Shape.png)
 #     $width: 400px
-#     $height: 700px
+#     $height: 600px
 #     z-index: 999
 #     overflow: hidden
 #     height: $height
@@ -197,7 +197,7 @@ export modal-control = (store)->
         cancel-ask store
     coin-image=
         background-image: "url(#{store.ask.image})"
-    react.create-element 'div', { className: 'modal-container modal-container925330035' }, children = 
+    react.create-element 'div', { className: 'modal-container modal-container-2117888270' }, children = 
         react.create-element 'div', { className: 'modal' }, children = 
             react.create-element 'div', { className: 'bg' }
             react.create-element 'div', { className: 'blur' }

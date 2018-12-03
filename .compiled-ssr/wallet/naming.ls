@@ -5,35 +5,21 @@ require! {
     \./get-record.ls
     \./get-name-mask.ls
 }
-# .naming659199610
+# .naming1860299560
 #     @import scheme
 #     width: 95%
 #     padding: 0px 0
-#     .box
-#         padding: 10px !important
-#         background: white !important
-#         .title
-#             color: #5d5f6f !important
-#         button
-#             background-color: $primary
-#             border: 0
-#             &:hover
-#                 color: $primary
-#                 background-color: white
-#                 border: 1px solid $primary
 #     margin: 0 10px 3px 10px
 #     .custom-domain
 #         input
-#             outline: none
 #             height: 22px
 #             padding: 2px 13px
 #             width: 100%
 #             text-align: left
 #             width: 70%
-#             border: 1px solid #b1afaf
 #         position: relative
 #         width: 100%
-#         height: 28px
+#         height: 31px
 #         >.part
 #             width: 100%
 #             background: transparent
@@ -52,10 +38,11 @@ require! {
 #     .message
 #         font-size: 11px
 #         background: transparent
-#         border: none
+#         border: none !important
 #         text-align: center
 #         height: 12px
 #         color: #595768 - 20
+#         resize: none
 install-record = (name, record)->
     "Please setup html element <meta property='ethnamed' value='#{record}' /> on #{name} to pass verification"
 state =
@@ -126,9 +113,8 @@ module.exports = ({ store })->
         store.current.custom-domain = yes
     change-to-ethnamed = ->
         store.current.custom-domain = no
-    react.create-element 'div', { className: 'box-container naming naming659199610' }, children = 
+    react.create-element 'div', { className: 'box-container naming naming1860299560' }, children = 
         react.create-element 'div', { className: 'box' }, children = 
-            react.create-element 'div', { className: 'title' }, ' Register Name'
             react.create-element 'div', { className: 'custom-domain' }, children = 
                 react.create-element 'div', { className: 'part hidden' }, children = 
                     react.create-element 'input', { value: "#{store.current.nicknamefull}" }

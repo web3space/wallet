@@ -5,9 +5,17 @@
   module.exports = function(){
     var children;
     return react.createElement('div', {
-      className: 'loading-page loading-page813641756'
+      className: 'loading-page loading-page-1737251852'
     }, children = react.createElement('div', {
       className: 'loading'
-    }));
+    }, children = [
+      react.createElement('div', {
+        className: 'inner one'
+      }), react.createElement('div', {
+        className: 'inner two'
+      }), react.createElement('div', {
+        className: 'inner three'
+      })
+    ]));
   };
 }).call(this);

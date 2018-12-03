@@ -12,8 +12,7 @@ require! {
 }
 { get-container, generate-wallet } = whitebox
 .menu
-    $width: 400px
-    $height: 600px
+    @import scheme
     $viewport-height: $height / 2.5
     $cards-height: 324px
     $pad: 20px
@@ -51,6 +50,7 @@ require! {
                 font-size: 12px
                 color: white
                 vertical-align: top
+                cursor: pointer
             >img
                 width: $pad / 1.5
                 display: inline-block
@@ -58,6 +58,21 @@ require! {
                 cursor: pointer
                 &.reload
                     float: left
+                    &.true
+                        @keyframes rotating
+                            from
+                                -ms-transform: rotate(0deg)
+                                -moz-transform: rotate(0deg)
+                                -webkit-transform: rotate(0deg)
+                                -o-transform: rotate(0deg)
+                                transform: rotate(0deg)
+                            to
+                                -ms-transform: rotate(360deg)
+                                -moz-transform: rotate(360deg)
+                                -webkit-transform: rotate(360deg)
+                                -o-transform: rotate(360deg)
+                                transform: rotate(360deg)
+                        animation: rotating 2s linear infinite
                 &.lock
                     float: right
                 &:hover
@@ -68,6 +83,7 @@ require! {
             height: $viewport-header-height
             text-align: center
             >.text
+                font-size: 14px
                 display: inline-block
                 padding: 10px 25px
                 color: rgba(white, 0.5)
@@ -199,40 +215,69 @@ require! {
                     style: solid
                     color: transparent
                 >.slide-body
+                    display: flex
+                    align-items: center
+                    justify-content: center
                     cursor: pointer
                     overflow: hidden
                     width: 100%
                     height: 100%
                     vertical-align: top
                     line-height: normal
-                    display: inline-block
                     border-radius: $pad / 2
                     background: #FFFFFF
                     box-sizing: border-box
+                    input, textarea
+                        border-radius: 5px
+                        outline: none
+                        border: 1px solid #b1afaf
+                        padding: 3px
+                    button
+                        background-color: $primary
+                        border: 1px solid $primary
+                        border-radius: 50px
+                        color: white
+                        padding: 5px 24px
+                        cursor: pointer
+                        outline: none
+                        &:hover
+                            background: transparent
+                            color: $primary
                 &.s1
                     width: $width - $pad * 6
                     >.slide-body
+                        .title
+                            color: $primary
+                            font-size: 12px
+                            a
+                                color: blur
+                        textarea
+                            width: 244px
+                            height: 37px
+                            resize: none
+                            font-size: 12px
                 &.s2
                     width: $width - $pad * 6
                     >.slide-body
                         overflow: hidden
                         margin: 0 auto
                         position: relative
-                        padding: 23px 0
+                        padding: 11px 0
+                        display: inline-block
                         >*
                             display: block
                             max-width: 80%
                             text-align: right
                         >.decor
-                            color: rgba(#2743D3, 0.05)
+                            color: rgba(#7083e8, 0.05)
                             position: absolute
                             top: -35px
                             right: -20px
                             font-size: 120px
                         >.currency
-                            color: rgba(#2743D3, 0.3)
+                            color: rgba(#7083e8, 0.3)
                         >.amount
-                            color: #2743D3
+                            color: #7083e8
                             >*
                                 display: inline-block
                                 vertical-align: top
@@ -302,14 +347,14 @@ module.exports = ({ store })->
     .menu.pug
         .viewport.pug
             .viewport-icons.pug
-                img.reload.pug(src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png" on-click=refresh)
+                img.reload.pug(class="#{store.current.refreshing}" src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png" on-click=refresh)
                 span.network.pug(on-click=switch-network) #{store.current.network}
                 span.chevron.pug(on-click=switch-network) ▿
                 img.lock.pug(src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png" on-click=lock)
             .viewport-header.viewport-move.pug(class="#{store.menu.active}")
-                .text.pug.s1(on-click=activate-s1) Edit Seed
+                .text.pug.s1(on-click=activate-s1) Secret Phrase
                 .text.pug.s2(on-click=activate-s2) Balance
-                .text.pug.s3(on-click=activate-s3) Register
+                .text.pug.s3(on-click=activate-s3) Register Name
                 .text-line.pug
             .viewport-background.viewport-move.pug(class="#{store.menu.active}")
             .viewport-content.viewport-move.pug(class="#{store.menu.active}")
@@ -331,9 +376,8 @@ module.exports = ({ store })->
                                     .pug
                                         button.pug(on-click=save-seed) Save
                             case current.saved-seed is yes
-                                .pug.box
-                                    .pug
-                                        button.pug(on-click=edit-seed) Edit seed
+                                .pug
+                                    button.pug(on-click=edit-seed) Edit Secret
                 .slide.pug.s2(on-click=activate-s2)
                     .slide-body.pug
                         .decor.pug $
@@ -344,7 +388,7 @@ module.exports = ({ store })->
                                 if store.current.refreshing is no
                                     .pug #{money current.balance-usd}
                                 else
-                                    .pug Loading...
+                                    .pug ...
                 .slide.pug.s3(on-click=activate-s3)
                     .slide-body.pug
                         if store.current.network is \mainnet

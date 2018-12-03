@@ -57,7 +57,7 @@
     return react.createElement('div', {
       onClick: expand,
       key: wallet.coin.token + "",
-      className: active + " wallet wallet-208042256"
+      className: active + " wallet wallet674423384"
     }, children = [
       react.createElement('div', {
         className: 'wallet-top'

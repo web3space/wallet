@@ -32,7 +32,7 @@
       return web3(store).refresh(function(){});
     };
     return react.createElement('div', {
-      className: 'newseed newseed-2016469697'
+      className: 'newseed newseed2017396391'
     }, children = [
       react.createElement('div', {
         className: 'title'

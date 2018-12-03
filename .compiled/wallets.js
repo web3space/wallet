@@ -19,16 +19,14 @@
       menu({
         store: store
       }), react.createElement('div', {
-        className: 'wallets wallets621879901'
-      }, children = react.createElement('div', {
-        className: 'wallets-container'
+        className: 'wallets wallets1929541530'
       }, children = [
         react.createElement('div', {
           className: 'arrow arrow-t'
         }, children = react.createElement('img', {
           src: arrow + ""
         })), react.createElement('div', {
-          className: 'wallets wallets621879901'
+          className: 'wallet-container'
         }, children = map(wallet(store))(
         take(4)(
         drop(0)(
@@ -37,7 +35,7 @@
         }, children = react.createElement('img', {
           src: arrow + ""
         }))
-      ]))
+      ])
     ]);
   };
   wallets.init = function(store, cb){

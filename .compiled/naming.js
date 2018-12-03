@@ -132,13 +132,11 @@
       return store.current.customDomain = false;
     };
     return react.createElement('div', {
-      className: 'box-container naming naming659199610'
+      className: 'box-container naming naming1860299560'
     }, children = react.createElement('div', {
       className: 'box'
     }, children = [
       react.createElement('div', {
-        className: 'title'
-      }, ' Register Name'), react.createElement('div', {
         className: 'custom-domain'
       }, children = [
         react.createElement('div', {

@@ -5,7 +5,7 @@ require! {
 .modal-container
     $e: url(https://res.cloudinary.com/dfbhd7liw/image/upload/v1543785751/wallet/Combined_Shape.png)
     $width: 400px
-    $height: 700px
+    $height: 600px
     z-index: 999
     overflow: hidden
     height: $height

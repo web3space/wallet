@@ -19,7 +19,7 @@
       backgroundImage: "url(" + store.ask.image + ")"
     };
     return react.createElement('div', {
-      className: 'modal-container modal-container925330035'
+      className: 'modal-container modal-container-2117888270'
     }, children = react.createElement('div', {
       className: 'modal'
     }, children = [
