@@ -15,6 +15,7 @@ store =
         callback: null
         image: ""
     current:
+        list: 0
         wallet-index: 0
         demo: location.href.index-of('ethnamed.io/wallet') > -1 
         network: \mainnet

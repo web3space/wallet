@@ -30,6 +30,8 @@ require! {
             outline: none
             &:focus
                 border-color: #248295
+            &:placeholder
+                color: $primary + 40
     >.wrong
         color: red
     button.setup

@@ -11,7 +11,7 @@ require! {
     \./navigate.ls
 }
 { get-container, generate-wallet } = whitebox
-# .menu1759550710
+# .menu1833732630
 #     @import scheme
 #     $viewport-height: $height / 2.5
 #     $cards-height: 324px
@@ -228,10 +228,11 @@ require! {
 #                     background: #FFFFFF
 #                     box-sizing: border-box
 #                     input, textarea
-#                         border-radius: 5px
+#                         border-radius: 23px
 #                         outline: none
-#                         border: 1px solid #b1afaf
-#                         padding: 3px
+#                         border: 1px solid #dedcdc
+#                         padding: 3px 10px
+#                         box-sizing: border-box
 #                     button
 #                         background-color: $primary
 #                         border: 1px solid $primary
@@ -250,7 +251,7 @@ require! {
 #                             color: $primary
 #                             font-size: 12px
 #                             a
-#                                 color: blur
+#                                 color: #ee8791
 #                         textarea
 #                             width: 244px
 #                             height: 37px
@@ -344,7 +345,7 @@ module.exports = ({ store })->
     activate-s1 = activate-s \s1
     activate-s2 = activate-s \s2
     activate-s3 = activate-s \s3
-    react.create-element 'div', { className: 'menu menu1759550710' }, children = 
+    react.create-element 'div', { className: 'menu menu1833732630' }, children = 
         react.create-element 'div', { className: 'viewport' }, children = 
             react.create-element 'div', { className: 'viewport-icons' }, children = 
                 react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png", on-click: refresh, className: "#{store.current.refreshing} reload" }

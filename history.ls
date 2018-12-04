@@ -13,6 +13,11 @@ require! {
     color: black
     position: relative
     padding-bottom: 20px
+    display: inline-block
+    .nothin-to-show
+        color: rgba(white, 0.5)
+        padding-top: 50px
+        text-align: center
     .header
         height: 50px
         box-sizing: border-box
@@ -191,3 +196,5 @@ module.exports = ({ store })->
                             .pug.gray
                                 span.pug.fee Fee 
                                 amount-beautify fee, 10
+            if applied-transactions.length is 0
+                .pug.nothin-to-show Nothing to show

@@ -10,6 +10,8 @@ require! {
     \./modal.ls : { modal-control }
 }
 .app
+    @import scheme
+    background: $primary
     height: 600px
     position: relative
     color: white

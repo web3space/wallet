@@ -14,7 +14,7 @@
   navigate = require('./navigate.ls');
   close = require('./close.ls');
   send = function(arg$){
-    var store, sendTo, send, wallet, link, sendTx, performSendSafe, performSendUnsafe, sendMoney, sendEscrow, cancel, recepientChange, amountChange, encodeDecode, showData, showLabel, whenEmpty, history, network, receive, children, ref$;
+    var store, sendTo, send, wallet, link, sendTx, performSendSafe, performSendUnsafe, sendMoney, sendEscrow, cancel, recepientChange, amountChange, encodeDecode, showData, showLabel, whenEmpty, history, topup, network, receive, token, isData, ref$, children;
     store = arg$.store;
     if (store == null) {
       return null;
@@ -163,6 +163,9 @@
       store.current.filter = ['IN', 'OUT', wallet.coin.token];
       return navigate(store, 'history');
     };
+    topup = function(){
+      return alert("Topup Service is not installed");
+    };
     network = (function(){
       switch (false) {
       case store.current.network !== 'testnet':
@@ -174,147 +177,157 @@
     receive = function(){
       return navigate(store, 'receive');
     };
+    token = send.coin.token.toUpperCase();
+    isData = ((ref$ = send.data) != null ? ref$ : "").length > 0;
     return react.createElement('div', {
-      className: 'content content670999182'
+      className: 'content content1469325038'
     }, children = [
-      react.createElement('div', {}, children = [
-        react.createElement('h2', {
-          className: 'font-light m-b-xs'
-        }, children = [
-          react.createElement('img', {
-            src: wallet.coin.image + "",
-            className: 'head'
-          }), react.createElement('span', {
-            className: 'head'
-          }, children = [
-            react.createElement('div', {
-              className: 'title'
-            }, ' ' + send.coin.token.toUpperCase() + network + ' WALLET'), react.createElement('div', {
-              className: 'from'
-            }, ' Send from')
-          ])
-        ]), react.createElement('div', {
-          className: 'address'
-        }, children = react.createElement('a', {
-          href: link + ""
-        }, ' ' + wallet.address))
-      ]), react.createElement('div', {}, children = react.createElement('form', {
-        method: 'get'
+      react.createElement('div', {
+        className: 'content-body'
       }, children = [
         react.createElement('div', {
-          className: 'form-group'
+          className: 'padded-content'
         }, children = [
-          react.createElement('label', {
-            className: 'control-label'
-          }, ' Recepient'), react.createElement('div', {}, children = react.createElement('input', {
-            type: 'text',
-            onChange: recepientChange,
-            value: send.to + "",
-            placeholder: store.current.sendToMask + ""
-          }))
-        ]), react.createElement('div', {
-          className: 'hr-line-dashed'
-        }), react.createElement('div', {
-          className: 'form-group'
-        }, children = [
-          react.createElement('label', {
-            className: 'control-label'
-          }, children = react.createElement('span', {}, ' Amount')), react.createElement('div', {}, children = [
-            react.createElement('div', {}, children = [
-              react.createElement('input', {
-                type: 'text',
-                onChange: amountChange,
-                placeholder: "0",
-                value: send.amountSend + "",
-                className: 'amount'
-              }), wallet.network.topup ? react.createElement('a', {
-                href: wallet.network.topup + "",
-                target: "_blank",
-                className: 'topup'
-              }, ' Top up?') : void 8
+          react.createElement('div', {}, children = react.createElement('h2', {
+            className: 'font-light m-b-xs'
+          }, children = [
+            react.createElement('span', {
+              className: 'head'
+            }, children = react.createElement('div', {
+              className: 'title'
+            }, ' ' + token + network + ' WALLET')), react.createElement('span', {
+              className: 'head right'
+            }, children = react.createElement('img', {
+              src: wallet.coin.image + ""
+            }))
+          ])), react.createElement('div', {}, children = react.createElement('form', {
+            method: 'get'
+          }, children = [
+            react.createElement('div', {
+              className: 'form-group'
+            }, children = [
+              react.createElement('label', {
+                className: 'control-label'
+              }, ' Send From'), react.createElement('div', {
+                className: 'address'
+              }, children = react.createElement('a', {
+                href: link + ""
+              }, ' ' + wallet.address))
             ]), react.createElement('div', {
-              className: 'usd'
-            }, ' Balance ' + wallet.balance), react.createElement('div', {
-              className: 'control-label not-enough text-left'
-            }, ' ' + send.error)
-          ])
-        ]), ((ref$ = send.data) != null ? ref$ : "").length > 0 ? react.createElement('div', {
-          className: 'form-group'
-        }, children = [
-          react.createElement('label', {
-            className: 'control-label'
-          }, children = [
-            react.createElement('span', {}, ' Data'), react.createElement('span', {
-              className: 'gray'
-            })
-          ]), react.createElement('div', {}, children = [
-            react.createElement('input', {
-              readOnly: "readonly",
-              value: showData() + ""
-            }), react.createElement('button', {
-              type: "button",
-              onClick: encodeDecode
-            }, ' Show ' + showLabel())
-          ])
-        ]) : void 8, react.createElement('div', {}, children = react.createElement('table', {
-          className: 'table table-striped'
-        }, children = react.createElement('tbody', {}, children = [
-          react.createElement('tr', {}, children = [
-            react.createElement('td', {}, ' You Send '), react.createElement('td', {}, children = [
-              react.createElement('div', {}, ' ' + whenEmpty(send.amountSend, 0)), react.createElement('div', {
-                className: 'usd'
-              }, ' ' + send.amountSendUsd + ' USD')
-            ])
-          ]), react.createElement('tr', {
-            className: 'green'
-          }, children = [
-            react.createElement('td', {}, ' Recepient obtains'), react.createElement('td', {}, children = [
-              react.createElement('div', {
-                className: 'bold'
-              }, ' ' + send.amountObtain + '  ' + send.coin.token), react.createElement('div', {
-                className: 'usd'
-              }, ' ' + send.amountObtainUsd + ' USD')
-            ])
-          ]), react.createElement('tr', {
-            className: 'orange'
-          }, children = [
-            react.createElement('td', {}, ' Transaction Fee '), react.createElement('td', {}, children = [
-              react.createElement('div', {}, ' ' + send.amountSendFee + '  ' + send.coin.token), react.createElement('div', {
-                className: 'usd'
-              }, ' ' + send.amountSendFeeUsd + ' USD')
-            ])
-          ])
-        ]))), react.createElement('div', {
+              className: 'form-group'
+            }, children = [
+              react.createElement('label', {
+                className: 'control-label'
+              }, ' Recepient'), react.createElement('div', {}, children = react.createElement('input', {
+                type: 'text',
+                onChange: recepientChange,
+                value: send.to + "",
+                placeholder: store.current.sendToMask + ""
+              }))
+            ]), react.createElement('div', {
+              className: 'form-group'
+            }, children = [
+              react.createElement('label', {
+                className: 'control-label'
+              }, children = react.createElement('span', {}, ' Amount')), react.createElement('div', {}, children = [
+                react.createElement('div', {}, children = [
+                  react.createElement('input', {
+                    type: 'text',
+                    onChange: amountChange,
+                    placeholder: "0",
+                    value: send.amountSend + "",
+                    className: 'amount'
+                  }), wallet.network.topup ? react.createElement('a', {
+                    href: wallet.network.topup + "",
+                    target: "_blank",
+                    className: 'topup'
+                  }, ' Top up?') : void 8
+                ]), react.createElement('div', {
+                  className: 'usd'
+                }, ' Balance ' + wallet.balance), react.createElement('div', {
+                  className: 'control-label not-enough text-left'
+                }, ' ' + send.error)
+              ])
+            ]), isData ? react.createElement('div', {
+              className: 'form-group'
+            }, children = [
+              react.createElement('label', {
+                className: 'control-label'
+              }, children = [
+                react.createElement('span', {}, ' Data'), react.createElement('span', {
+                  className: 'gray'
+                })
+              ]), react.createElement('div', {}, children = [
+                react.createElement('input', {
+                  readOnly: "readonly",
+                  value: showData() + ""
+                }), react.createElement('button', {
+                  type: "button",
+                  onClick: encodeDecode
+                }, ' Show ' + showLabel())
+              ])
+            ]) : void 8, react.createElement('div', {}, children = react.createElement('table', {
+              className: 'table table-striped'
+            }, children = react.createElement('tbody', {}, children = [
+              react.createElement('tr', {}, children = [
+                react.createElement('td', {}, ' You Send '), react.createElement('td', {}, children = [
+                  react.createElement('div', {}, ' ' + whenEmpty(send.amountSend, 0) + '  ' + token), react.createElement('div', {
+                    className: 'usd'
+                  }, ' $ ' + send.amountSendUsd)
+                ])
+              ]), react.createElement('tr', {
+                className: 'green'
+              }, children = [
+                react.createElement('td', {}, ' Recepient obtains'), react.createElement('td', {}, children = [
+                  react.createElement('div', {
+                    className: 'bold'
+                  }, ' ' + send.amountObtain + '  ' + token), react.createElement('div', {
+                    className: 'usd'
+                  }, ' $ ' + send.amountObtainUsd)
+                ])
+              ]), react.createElement('tr', {
+                className: 'orange'
+              }, children = [
+                react.createElement('td', {}, ' Transaction Fee '), react.createElement('td', {}, children = [
+                  react.createElement('div', {}, ' ' + send.amountSendFee + '  ' + token), react.createElement('div', {
+                    className: 'usd'
+                  }, ' $ ' + send.amountSendFeeUsd)
+                ])
+              ])
+            ]))), react.createElement('div', {
+              className: 'escrow'
+            }, children = send.proposeEscrow ? react.createElement('div', {}, ' You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically') : void 8)
+          ]))
+        ]), react.createElement('div', {
           className: 'buttons'
-        }, children = [
-          react.createElement('div', {}, children = [
-            send.proposeEscrow
-              ? (react.createElement('div', {}), react.createElement('a', {
-                onClick: sendEscrow,
-                className: 'btn btn-primary'
-              }, children = [react.createElement('span', {}, ' Send (Escrow)'), send.sending ? react.createElement('span', {}, ' ...') : void 8]))
-              : react.createElement('a', {
-                onClick: sendMoney,
-                className: 'btn btn-primary'
-              }, children = [react.createElement('span', {}, ' Send'), send.sending ? react.createElement('span', {}, ' ...') : void 8]), react.createElement('a', {
-              onClick: cancel,
-              className: 'btn btn-default'
-            }, ' Cancel')
-          ]), send.proposeEscrow ? react.createElement('div', {
-            className: 'escrow'
-          }, ' You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically') : void 8, react.createElement('div', {
-            className: 'more-buttons'
-          }, children = [
-            react.createElement('a', {
-              onClick: receive,
-              className: 'more receive'
-            }, ' Receive'), react.createElement('a', {
-              onClick: history,
-              className: 'more history'
-            }, ' History')
-          ])
-        ])
-      ]))
+        }, children = react.createElement('div', {}, children = [
+          send.proposeEscrow
+            ? react.createElement('a', {
+              onClick: sendEscrow,
+              className: 'btn btn-primary'
+            }, children = [react.createElement('span', {}, ' Send (Escrow)'), send.sending ? react.createElement('span', {}, ' ...') : void 8])
+            : react.createElement('a', {
+              onClick: sendMoney,
+              className: 'btn btn-primary'
+            }, children = [react.createElement('span', {}, ' Send'), send.sending ? react.createElement('span', {}, ' ...') : void 8]), react.createElement('a', {
+            onClick: cancel,
+            className: 'btn btn-default'
+          }, ' Cancel')
+        ]))
+      ]), !isData ? react.createElement('div', {
+        className: 'more-buttons'
+      }, children = [
+        react.createElement('a', {
+          onClick: receive,
+          className: 'more receive'
+        }, ' Receive'), react.createElement('a', {
+          onClick: history,
+          className: 'more history'
+        }, ' History'), react.createElement('a', {
+          onClick: topup,
+          className: 'more history'
+        }, ' Topup')
+      ]) : void 8
     ]);
   };
   module.exports = send;

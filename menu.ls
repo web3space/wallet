@@ -228,10 +228,11 @@ require! {
                     background: #FFFFFF
                     box-sizing: border-box
                     input, textarea
-                        border-radius: 5px
+                        border-radius: 23px
                         outline: none
-                        border: 1px solid #b1afaf
-                        padding: 3px
+                        border: 1px solid #dedcdc
+                        padding: 3px 10px
+                        box-sizing: border-box
                     button
                         background-color: $primary
                         border: 1px solid $primary
@@ -250,7 +251,7 @@ require! {
                             color: $primary
                             font-size: 12px
                             a
-                                color: blur
+                                color: #ee8791
                         textarea
                             width: 244px
                             height: 37px

@@ -8,11 +8,16 @@ require! {
     \mobx : { toJS }
     \react
 }
-# .history-632060576
+# .history798548141
 #     width: 100%
 #     color: black
 #     position: relative
 #     padding-bottom: 20px
+#     display: inline-block
+#     .nothin-to-show
+#         color: rgba(white, 0.5)
+#         padding-top: 50px
+#         text-align: center
 #     .header
 #         height: 50px
 #         box-sizing: border-box
@@ -162,7 +167,7 @@ module.exports = ({ store })->
     switch-type-in = switch-filter \IN
     switch-type-out = switch-filter \OUT
     coins = get-coins!
-    react.create-element 'div', { className: 'normalheader history history-632060576' }, children = 
+    react.create-element 'div', { className: 'normalheader history history798548141' }, children = 
         react.create-element 'div', { className: 'header' }, children = 
             react.create-element 'button', { on-click: go-back }, ' < '
             react.create-element 'span', { className: 'separator' }
@@ -191,3 +196,5 @@ module.exports = ({ store })->
                             react.create-element 'div', { className: 'gray' }, children = 
                                 react.create-element 'span', { className: 'fee' }, ' Fee '
                                 amount-beautify fee, 10
+            if applied-transactions.length is 0
+                react.create-element 'div', { className: 'nothin-to-show' }, ' Nothing to show'

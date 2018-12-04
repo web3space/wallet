@@ -9,7 +9,9 @@ require! {
     \./copy-message.ls
     \./modal.ls : { modal-control }
 }
-# .app2127118339
+# .app-1800129419
+#     @import scheme
+#     background: $primary
 #     height: 600px
 #     position: relative
 #     color: white
@@ -23,7 +25,7 @@ module.exports = ({ store, reload })->
         pages[store.current.page]
     react.create-element 'div', {}, children = 
         description store
-        react.create-element 'div', { className: 'app app2127118339' }, children = 
+        react.create-element 'div', { className: 'app app-1800129419' }, children = 
             modal-control store
             copy-message store
             current-page { store }

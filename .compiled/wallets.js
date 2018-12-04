@@ -10,28 +10,49 @@
   navigate = require('./navigate.ls');
   arrow = 'https://res.cloudinary.com/dfbhd7liw/image/upload/v1543595868/wallet/arrow.png';
   wallets = function(arg$){
-    var store, children;
+    var store, list, max, canUp, canDown, goUp, goDown, wallets, children;
     store = arg$.store;
     if (store.current.account == null) {
       return null;
     }
+    list = store.current.list;
+    max = 4;
+    canUp = store.current.list > 0;
+    canDown = store.current.list + 4 < store.current.account.wallets.length / max;
+    goUp = function(){
+      if (!canUp) {
+        return;
+      }
+      store.current.list -= max;
+      return store.current.walletIndex = 0;
+    };
+    goDown = function(){
+      if (!canDown) {
+        return;
+      }
+      store.current.list += max;
+      return store.current.walletIndex = 0;
+    };
+    wallets = take(max)(
+    drop(list)(
+    store.current.account.wallets));
     return react.createElement('div', {}, children = [
       menu({
         store: store
       }), react.createElement('div', {
-        className: 'wallets wallets1929541530'
+        className: 'wallets wallets-1312736338'
       }, children = [
         react.createElement('div', {
-          className: 'arrow arrow-t'
+          onClick: goUp,
+          className: canUp + " arrow arrow-t"
         }, children = react.createElement('img', {
           src: arrow + ""
         })), react.createElement('div', {
           className: 'wallet-container'
-        }, children = map(wallet(store))(
-        take(4)(
-        drop(0)(
-        store.current.account.wallets)))), react.createElement('div', {
-          className: 'arrow arrow-d'
+        }, children = map(wallet(store, wallets))(
+        wallets)), react.createElement('div', {
+          onClick: goDown,
+          className: canDown + " arrow arrow-d"
         }, children = react.createElement('img', {
           src: arrow + ""
         }))

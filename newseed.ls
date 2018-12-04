@@ -11,6 +11,7 @@ require! {
     padding-top: 50px
     width: $width
     height: $height
+    box-sizing: border-box
     height: 100%
     background: $primary
     .title

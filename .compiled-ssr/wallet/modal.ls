@@ -2,10 +2,8 @@ require! {
     \react
     \./scroll-top.ls
 }
-# .modal-container-2117888270
-#     $e: url(https://res.cloudinary.com/dfbhd7liw/image/upload/v1543785751/wallet/Combined_Shape.png)
-#     $width: 400px
-#     $height: 600px
+# .modal-container-884661047
+#     @import scheme
 #     z-index: 999
 #     overflow: hidden
 #     height: $height
@@ -95,6 +93,7 @@ require! {
 #                             >.spoke
 #                                 height: 160px
 #                                 width: 16px
+#                                 background-image: inherit
 #                                 position: absolute
 #                                 -webkit-transform-style: preserve-3d
 #                                 -webkit-backface-visibility: hidden
@@ -106,7 +105,7 @@ require! {
 #                                     position: absolute
 #                                     -webkit-transform: rotateX(84.375deg)
 #                                     background: hsl(42, 52%, 68%)
-#                                     background: black
+#                                     background-image: inherit
 #                                     background-size: 100% 1px
 #                                 &:before
 #                                     -webkit-transform-origin: top center
@@ -197,7 +196,7 @@ export modal-control = (store)->
         cancel-ask store
     coin-image=
         background-image: "url(#{store.ask.image})"
-    react.create-element 'div', { className: 'modal-container modal-container-2117888270' }, children = 
+    react.create-element 'div', { className: 'modal-container modal-container-884661047' }, children = 
         react.create-element 'div', { className: 'modal' }, children = 
             react.create-element 'div', { className: 'bg' }
             react.create-element 'div', { className: 'blur' }
@@ -215,7 +214,7 @@ export modal-control = (store)->
                             react.create-element 'div', { style: coin-image, className: 'back' }
                             react.create-element 'div', { className: 'side' }, children = 
                                 for i in [1 to 15]
-                                    react.create-element 'div', { className: 'spoke' }
+                                    react.create-element 'div', { style: coin-image, className: 'spoke' }
                 react.create-element 'div', { on-click: accept, className: 'button' }, ' INSTALL'
 current =
     timer: null

@@ -14,128 +14,156 @@ require! {
 }
 .content
     @import scheme
-    background: white
-    color: gray
-    margin: 10px
-    text-align: center
-    .control-label
-        padding-top: 5px
-    table
-        border-spacing: 0
-        margin-top: 20px
-        td
-            padding: 5px
-    h2 
-        margin: 0
-        padding: 10px
-    a
-        color: gray
-    .more-buttons
-        border-top: 1px solid #e6e4e4
-        margin-top: 13px
-        .more
-            color: #737171
-            padding: 5px
-            border: 1px solid #b9b6b6
-            display: inline-block
-            margin: 3px
-            border-radius: 8px
-            margin-top: 22px
-            width: 147px
-            text-align: center
-            height: 14px
-            line-height: 14px
-            background: #efeeee
-            cursor: pointer
-            &:hover
-                background: #efeeee - 10
-    .address
-        background: #dcdada
-        border: 1px solid gray
-        padding: 5px
-        border-radius: 5px
-        font-size: 13px
-        overflow: hidden
-        text-overflow: ellipsis
-    form
-        max-width: 400px
-        text-align: left
-        .form-group
-            margin-top: 10px
-        input
-            width: 100%
-            box-sizing: border-box
-            border: 0
-            height: 30px
-            border-radius: 4px
-            padding: 0px 10px
-            font-size: 12px
-            margin: 1px
-            border: 1px solid gray
-            &.amount
-                width: 100px
-                height: 50px
-                font-size: 32px
-    padding: 13px
-    .font-light
-        text-align: left
-        padding: 7px 0
-        .head
-            line-height: 70px
-            vertical-align: middle
-            line-height: 35px
-            display: inline-block
-            >*
-                padding-left: 10px
-            >.title
-            >.from
-                font-size: 16px
-                color: gray
-        img
-            width: 53px
-    .usd
-        font-size: 11px
-    .topup
+    $border-radius: 20px
+    $label-padding: 12px
+    $label-font: 12px
+    >*
         display: inline-block
-        margin-left: 5px
-        color: orange
-        vertical-align: top
-        padding: 0 5px
-        border-radius: 3px
-        line-height: 12px
-        font-size: 12px
-    .not-enough
-        color: red
-    .gray
-        color: #CCC
-    .orange
-        color: #ab8540
-    .escrow
-        padding: 5px 4px
-        color: #adb551
-    .green
-        color: #095409
-    .bold
-        font-weight: bold
-    .buttons
-        margin-top: 10px
-        text-align: left
-        .btn
-            text-align: center
-            font-size: 16px
-            width: 156px
-            border-radius: 7px
-            height: 25px
-            margin: 3px
-            color: gray
-            display: inline-block
-            line-height: 27px
-            cursor: pointer
+        margin: 10px 0 0 0
+        text-align: center
+        width: 94%
+        box-sizing: border-box
+        border-radius: 5px
+    >.more-buttons
+        border: 1px solid #e6e4e4
+        background: rgba(255, 255, 255, 0.24)
+        color: white
+        >.more
+            color: white
+            width: 33.333%
             box-sizing: border-box
-            &.btn-primary
-                background: $primary
-                color: white
-                width: 161px
+            display: inline-block
+            text-align: center
+            height: 32px
+            line-height: 32px
+            cursor: pointer
+            border-left: 1px solid #e6e4e4
+            &:first-child
+                border-left: 0    
+            &:hover
+                background: white
+                color: $primary
+    >.content-body
+        >.padded-content
+            padding: 13px
+        @import scheme
+        background: white
+        color: gray
+        .control-label
+            padding-top: 5px
+            padding-left: $label-padding
+            font-size: $label-font
+        table
+            background: rgba(243, 243, 243, 0.3)
+            border-radius: 3px
+            width: 100%
+            border-spacing: 0
+            td
+                padding: 5px $label-padding
+                font-size: 14px
+                &:last-child
+                    text-align: right
+        h2 
+            margin: 0
+            padding: 10px
+        a
+            color: gray
+        form
+            max-width: 400px
+            text-align: left
+            .form-group
+                margin-top: 4px
+            .address
+                padding: 5px 10px
+                overflow: hidden
+                text-overflow: ellipsis
+                background: #dcdada
+                border-radius: $border-radius
+                font-size: 13px
+                overflow: hidden
+                text-overflow: ellipsis
+                background: #E6F0FF
+                color: #677897
+            input
+                outline: none
+                width: 100%
+                box-sizing: border-box
+                border: 0
+                height: 30px
+                border-radius: $border-radius
+                padding: 0px 10px
+                font-size: 12px
+                margin: 1px
+                border: 1px solid gray
+        .font-light
+            text-align: left
+            padding: 0
+            >.head
+                width: 50%
+                line-height: 70px
+                vertical-align: middle
+                line-height: 29px
+                display: inline-block
+                >.title
+                    color: #4469b1
+                >.from
+                    font-size: $label-font
+                    color: gray
+                    font-weight: 100
+                    padding-left: $label-padding
+                &.right
+                    text-align: right
+            img
+                width: 34px
+        .usd
+            font-size: 11px
+            padding-left: $label-padding
+        .topup
+            display: inline-block
+            margin-left: 5px
+            color: orange
+            vertical-align: top
+            padding: 0 5px
+            border-radius: 3px
+            line-height: 12px
+            font-size: 12px
+        .not-enough
+            color: red
+            min-height: 30px
+        .gray
+            color: #CCC
+        .orange
+            color: #cf952c
+        .escrow
+            padding: 5px 11px
+            min-height: 20px
+            color: #cc625a
+            font-size: 14px
+        .green
+            color: #23b723
+        .bold
+            font-weight: bold
+        .buttons
+            margin-top: 10px
+            text-align: left
+            border-radius: 0px 0px 5px 5px
+            overflow: hidden
+            border: 1px solid white
+            border-top: 1px solid $primary
+            .btn
+                width: 187px
+                height: 40px
+                line-height: 40px
+                text-align: center
+                font-size: 16px
+                color: $primary
+                display: inline-block
+                cursor: pointer
+                box-sizing: border-box
+                &.btn-primary
+                    background: $primary
+                    color: white
+                    width: 161px
 send = ({ store })->
     return null if not store?
     { send-to } = ethnamed store
@@ -188,12 +216,10 @@ send = ({ store })->
     recepient-change = (event)->
         send.to = event.target.value ? ""
     amount-change = (event)->
-        #console.log event.target.value
         value = event.target.value.match(/^[0-9]+([.]([0-9]+)?)?$/)?0
         value2 = 
             | value?0 is \0 and value?1? and value?1 isnt \. => value.substr(1, value.length)
             | _ => value
-        #console.log { value }
         change-amount store, value2
     encode-decode = ->
         send.show-data-mode =
@@ -209,80 +235,89 @@ send = ({ store })->
     history = ->
         store.current.filter = [\IN, \OUT, wallet.coin.token]
         navigate store, \history
+    topup = ->
+        alert "Topup Service is not installed"
     network = 
         | store.current.network is \testnet => " (TESTNET) "
         | _ => ""
     receive = ->
         navigate store, \receive
+    token = send.coin.token.to-upper-case!
+    is-data = (send.data ? "").length > 0
     .pug.content
-        .pug
-            h2.pug.font-light.m-b-xs
-                img.pug.head(src="#{wallet.coin.image}")
-                span.pug.head 
-                    .pug.title #{send.coin.token.to-upper-case! + network} WALLET
-                    .pug.from Send from
-            .address.pug 
-                a.pug(href="#{link}") #{wallet.address}
-        .pug
-            form.pug(method='get')
-                .pug.form-group
-                    label.pug.control-label Recepient
-                    .pug
-                        input.pug(type='text' on-change=recepient-change value="#{send.to}" placeholder="#{store.current.send-to-mask}")
-                .pug.hr-line-dashed
-                .pug.form-group
-                    label.pug.control-label
-                        span.pug Amount
-                    .pug
-                        .pug
-                            input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{send.amount-send}")
-                            if wallet.network.topup
-                                a.pug.topup(href="#{wallet.network.topup}" target="_blank") Top up?
-                        .pug.usd Balance #{wallet.balance}
-                        .pug.control-label.not-enough.text-left #{send.error}
-                if (send.data ? "").length > 0
-                    .pug.form-group
-                        label.pug.control-label 
-                            span.pug Data
-                            span.pug.gray
-                        .pug
-                            input.pug(read-only="readonly" value="#{show-data!}")
-                            button.pug(type="button" on-click=encode-decode) Show #{show-label!}
+        .pug.content-body
+            .pug.padded-content
                 .pug
-                    table.table.table-striped.pug
-                        tbody.pug
-                            tr.pug
-                                td.pug You Send 
-                                td.pug
-                                    .pug #{when-empty send.amount-send, 0}
-                                    .pug.usd #{send.amount-send-usd} USD
-                            tr.pug.green
-                                td.pug Recepient obtains
-                                td.pug
-                                    .pug.bold #{send.amount-obtain + '  ' + send.coin.token}
-                                    .pug.usd #{send.amount-obtain-usd} USD
-                            tr.pug.orange
-                                td.pug Transaction Fee 
-                                td.pug
-                                    .pug #{send.amount-send-fee + '  ' + send.coin.token}
-                                    .pug.usd #{send.amount-send-fee-usd} USD
-                .pug.buttons
-                    .pug
-                        if send.propose-escrow
+                    h2.pug.font-light.m-b-xs
+                        span.pug.head 
+                            .pug.title #{token + network} WALLET
+                        span.head.pug.right
+                            img.pug(src="#{wallet.coin.image}")
+                .pug
+                    form.pug(method='get')
+                        .pug.form-group
+                            label.pug.control-label Send From
+                            .address.pug 
+                                a.pug(href="#{link}") #{wallet.address}
+                        .pug.form-group
+                            label.pug.control-label Recepient
                             .pug
-                            a.pug.btn.btn-primary(on-click=send-escrow)
-                                span.pug Send (Escrow)
-                                if send.sending
-                                    span.pug ...
-                        else
-                            a.pug.btn.btn-primary(on-click=send-money)
-                                span.pug Send
-                                if send.sending
-                                    span.pug ...
-                        a.pug.btn.btn-default(on-click=cancel) Cancel
+                                input.pug(type='text' on-change=recepient-change value="#{send.to}" placeholder="#{store.current.send-to-mask}")
+                        .pug.form-group
+                            label.pug.control-label
+                                span.pug Amount
+                            .pug
+                                .pug
+                                    input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{send.amount-send}")
+                                    if wallet.network.topup
+                                        a.pug.topup(href="#{wallet.network.topup}" target="_blank") Top up?
+                                .pug.usd Balance #{wallet.balance}
+                                .pug.control-label.not-enough.text-left #{send.error}
+                        if is-data
+                            .pug.form-group
+                                label.pug.control-label 
+                                    span.pug Data
+                                    span.pug.gray
+                                .pug
+                                    input.pug(read-only="readonly" value="#{show-data!}")
+                                    button.pug(type="button" on-click=encode-decode) Show #{show-label!}
+                        .pug
+                            table.table.table-striped.pug
+                                tbody.pug
+                                    tr.pug
+                                        td.pug You Send 
+                                        td.pug
+                                            .pug #{when-empty(send.amount-send, 0) + '  ' + token}
+                                            .pug.usd $ #{send.amount-send-usd}
+                                    tr.pug.green
+                                        td.pug Recepient obtains
+                                        td.pug
+                                            .pug.bold #{send.amount-obtain + '  ' + token}
+                                            .pug.usd $ #{send.amount-obtain-usd}
+                                    tr.pug.orange
+                                        td.pug Transaction Fee 
+                                        td.pug
+                                            .pug #{send.amount-send-fee + '  ' + token}
+                                            .pug.usd $ #{send.amount-send-fee-usd}
+                        .pug.escrow
+                            if send.propose-escrow
+                                .pug You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically
+            .pug.buttons
+                .pug
                     if send.propose-escrow
-                        .pug.escrow You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically
-                    .pug.more-buttons
-                        a.pug.more.receive(on-click=receive) Receive
-                        a.pug.more.history(on-click=history) History
+                        a.pug.btn.btn-primary(on-click=send-escrow)
+                            span.pug Send (Escrow)
+                            if send.sending
+                                span.pug ...
+                    else
+                        a.pug.btn.btn-primary(on-click=send-money)
+                            span.pug Send
+                            if send.sending
+                                span.pug ...
+                    a.pug.btn.btn-default(on-click=cancel) Cancel
+        if not is-data
+            .pug.more-buttons
+                a.pug.more.receive(on-click=receive) Receive
+                a.pug.more.history(on-click=history) History
+                a.pug.more.history(on-click=topup) Topup
 module.exports = send

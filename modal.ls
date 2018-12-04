@@ -3,9 +3,7 @@ require! {
     \./scroll-top.ls
 }
 .modal-container
-    $e: url(https://res.cloudinary.com/dfbhd7liw/image/upload/v1543785751/wallet/Combined_Shape.png)
-    $width: 400px
-    $height: 600px
+    @import scheme
     z-index: 999
     overflow: hidden
     height: $height
@@ -95,6 +93,7 @@ require! {
                             >.spoke
                                 height: 160px
                                 width: 16px
+                                background-image: inherit
                                 position: absolute
                                 -webkit-transform-style: preserve-3d
                                 -webkit-backface-visibility: hidden
@@ -106,7 +105,7 @@ require! {
                                     position: absolute
                                     -webkit-transform: rotateX(84.375deg)
                                     background: hsl(42, 52%, 68%)
-                                    background: black
+                                    background-image: inherit
                                     background-size: 100% 1px
                                 &:before
                                     -webkit-transform-origin: top center
@@ -215,7 +214,7 @@ export modal-control = (store)->
                             .back.pug(style=coin-image)
                             .side.pug
                                 for i in [1 to 15]
-                                    .spoke.pug
+                                    .spoke.pug(style=coin-image)
                 .button.pug(on-click=accept) INSTALL
 current =
     timer: null

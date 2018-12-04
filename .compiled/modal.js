@@ -19,7 +19,7 @@
       backgroundImage: "url(" + store.ask.image + ")"
     };
     return react.createElement('div', {
-      className: 'modal-container modal-container-2117888270'
+      className: 'modal-container modal-container-884661047'
     }, children = react.createElement('div', {
       className: 'modal'
     }, children = [
@@ -65,6 +65,7 @@
             for (i$ = 0, len$ = (ref$ = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]).length; i$ < len$; ++i$) {
               i = ref$[i$];
               results$.push(react.createElement('div', {
+                style: coinImage,
                 className: 'spoke'
               }));
             }

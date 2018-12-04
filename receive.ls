@@ -9,7 +9,7 @@ require! {
         padding: 50px 20px
         background: white
     .bottom
-        color: gray
+        color: white
         cursor: pointer
         padding: 10px
 module.exports = ({ store })->

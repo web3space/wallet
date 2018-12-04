@@ -23,7 +23,7 @@
     currentPage = pages[store.current.page];
     return react.createElement('div', {}, children = [
       description(store), react.createElement('div', {
-        className: 'app app2127118339'
+        className: 'app app-1800129419'
       }, children = [
         modalControl(store), copyMessage(store), currentPage({
           store: store

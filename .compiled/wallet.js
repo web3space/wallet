@@ -8,14 +8,14 @@
   CopyToClipboard = require('react-copy-to-clipboard').CopyToClipboard;
   copiedInform = require('./copied-inform.ls');
   copy = require('./copy.ls');
-  module.exports = curry$(function(store, wallet){
+  module.exports = curry$(function(store, wallets, wallet){
     var index, type, lweb3, addressLabel, send, usdRate, ref$, expand, active, balance, children;
-    index = store.current.account.wallets.indexOf(wallet);
+    index = wallets.indexOf(wallet);
     type = (function(){
       switch (false) {
       case index !== 0:
         return 'top';
-      case index + 1 !== store.current.account.wallets.length:
+      case index + 1 !== wallets.length:
         return 'bottom';
       default:
         return 'middle';

@@ -113,7 +113,7 @@
     switchTypeOut = switchFilter('OUT');
     coins = getCoins();
     return react.createElement('div', {
-      className: 'normalheader history history-632060576'
+      className: 'normalheader history history798548141'
     }, children = [
       react.createElement('div', {
         className: 'header'
@@ -144,55 +144,59 @@
           }
           return results$;
         }())
-      ]), react.createElement('div', {}, children = react.createElement('div', {
-        className: 'table'
-      }, children = (function(){
-        var i$, ref$, len$, ref1$, results$ = [];
-        for (i$ = 0, len$ = (ref$ = appliedTransactions).length; i$ < len$; ++i$) {
-          ref1$ = ref$[i$], token = ref1$.token, tx = ref1$.tx, amount = ref1$.amount, fee = ref1$.fee, time = ref1$.time, url = ref1$.url, type = ref1$.type;
-          coin = find(fn$)(
-          coins);
-          results$.push(react.createElement('div', {
-            key: tx + "",
-            className: type + " record"
-          }, children = [
-            react.createElement('div', {
-              className: 'cell text-center network'
-            }, children = [
-              react.createElement('div', {}, children = react.createElement('img', {
-                src: coin.image + ""
-              })), react.createElement('div', {
-                className: 'direction'
-              }, ' ' + arrow(type))
-            ]), react.createElement('div', {
-              className: 'cell txhash'
-            }, children = [
-              react.createElement('a', {
-                href: url + "",
-                target: "_blank"
-              }, ' ' + cutTx(tx)), react.createElement('div', {
-                className: 'gray'
-              }, ' ' + ago(time))
-            ]), react.createElement('div', {
-              className: 'cell amount'
+      ]), react.createElement('div', {}, children = [
+        react.createElement('div', {
+          className: 'table'
+        }, children = (function(){
+          var i$, ref$, len$, ref1$, results$ = [];
+          for (i$ = 0, len$ = (ref$ = appliedTransactions).length; i$ < len$; ++i$) {
+            ref1$ = ref$[i$], token = ref1$.token, tx = ref1$.tx, amount = ref1$.amount, fee = ref1$.fee, time = ref1$.time, url = ref1$.url, type = ref1$.type;
+            coin = find(fn$)(
+            coins);
+            results$.push(react.createElement('div', {
+              key: tx + "",
+              className: type + " record"
             }, children = [
               react.createElement('div', {
-                title: amount + ""
-              }, ' '), amountBeautify(amount, 8), react.createElement('div', {
-                className: 'gray'
+                className: 'cell text-center network'
               }, children = [
-                react.createElement('span', {
-                  className: 'fee'
-                }, ' Fee '), amountBeautify(fee, 10)
+                react.createElement('div', {}, children = react.createElement('img', {
+                  src: coin.image + ""
+                })), react.createElement('div', {
+                  className: 'direction'
+                }, ' ' + arrow(type))
+              ]), react.createElement('div', {
+                className: 'cell txhash'
+              }, children = [
+                react.createElement('a', {
+                  href: url + "",
+                  target: "_blank"
+                }, ' ' + cutTx(tx)), react.createElement('div', {
+                  className: 'gray'
+                }, ' ' + ago(time))
+              ]), react.createElement('div', {
+                className: 'cell amount'
+              }, children = [
+                react.createElement('div', {
+                  title: amount + ""
+                }, ' '), amountBeautify(amount, 8), react.createElement('div', {
+                  className: 'gray'
+                }, children = [
+                  react.createElement('span', {
+                    className: 'fee'
+                  }, ' Fee '), amountBeautify(fee, 10)
+                ])
               ])
-            ])
-          ]));
-        }
-        return results$;
-        function fn$(it){
-          return it.token === token;
-        }
-      }())))
+            ]));
+          }
+          return results$;
+          function fn$(it){
+            return it.token === token;
+          }
+        }())), appliedTransactions.length === 0 ? react.createElement('div', {
+          className: 'nothin-to-show'
+        }, ' Nothing to show') : void 8
+      ])
     ]);
   };
   function in$(x, xs){

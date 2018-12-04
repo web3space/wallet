@@ -18,6 +18,7 @@
       image: ""
     },
     current: {
+      list: 0,
       walletIndex: 0,
       demo: location.href.indexOf('ethnamed.io/wallet') > -1,
       network: 'mainnet',

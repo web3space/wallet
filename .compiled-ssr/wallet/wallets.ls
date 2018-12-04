@@ -7,7 +7,7 @@ require! {
     \./web3.ls
     \./navigate.ls
 }
-# .wallets1929541530
+# .wallets-1312736338
 #     @import scheme
 #     $real-height: 300px
 #     $cards-height: 296px
@@ -37,6 +37,8 @@ require! {
 #             bottom: 0
 #             margin-bottom: 10px
 #             transform: rotate(180deg)
+#         &:not(.true)
+#             visibility: hidden
 #     padding-top: 40px
 #     padding-bottom: 40px
 #     background: rgba(white, 0.5)
@@ -48,14 +50,30 @@ require! {
 arrow = \https://res.cloudinary.com/dfbhd7liw/image/upload/v1543595868/wallet/arrow.png
 wallets = ({ store })->
     return null if not store.current.account?
+    { list } = store.current
+    max = 4
+    can-up = store.current.list > 0
+    can-down = store.current.list + 4 < store.current.account.wallets.length / max
+    go-up = ->
+        return if not can-up
+        store.current.list -= max
+        store.current.wallet-index = 0
+    go-down = ->
+        return if not can-down
+        store.current.list += max
+        store.current.wallet-index = 0
+    wallets = 
+        store.current.account.wallets 
+            |> drop list 
+            |> take max
     react.create-element 'div', {}, children = 
         menu { store }
-        react.create-element 'div', { className: 'wallets wallets1929541530' }, children = 
-            react.create-element 'div', { className: 'arrow arrow-t' }, children = 
+        react.create-element 'div', { className: 'wallets wallets-1312736338' }, children = 
+            react.create-element 'div', { on-click: go-up, className: "#{can-up} arrow arrow-t" }, children = 
                 react.create-element 'img', { src: "#{arrow}" }
             react.create-element 'div', { className: 'wallet-container' }, children = 
-                store.current.account.wallets |> drop 0 |> take 4 |> map wallet store
-            react.create-element 'div', { className: 'arrow arrow-d' }, children = 
+                wallets |> map wallet store, wallets
+            react.create-element 'div', { on-click: go-down, className: "#{can-down} arrow arrow-d" }, children = 
                 react.create-element 'img', { src: "#{arrow}" }
 wallets.init = (store, cb)->
     return cb null if store.current.account?

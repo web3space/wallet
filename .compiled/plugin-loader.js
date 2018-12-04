@@ -3,7 +3,7 @@
   var filter, getInstallList, common, getCoins, out$ = typeof exports != 'undefined' && exports || this;
   filter = require('prelude-ls').filter;
   getInstallList = require('./install-plugin.ls').getInstallList;
-  common = [require('./plugins/btc-coin.ls'), require('./plugins/ltc-coin.ls'), require('./plugins/eth-coin.ls'), require('./plugins/dash-coin.ls'), require('./plugins/xem-coin.ls')];
+  common = [require('./plugins/btc-coin.ls'), require('./plugins/ltc-coin.ls'), require('./plugins/eth-coin.ls'), require('./plugins/dash-coin.ls')];
   out$.getCoins = getCoins = function(){
     var base, installed;
     base = filter(function(it){

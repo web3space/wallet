@@ -122,11 +122,11 @@ require! {
 #             display: inline-block
 #             text-overflow: ellipsis
 #             overflow: hidden
-module.exports = (store, wallet)-->
-    index = store.current.account.wallets.index-of wallet
+module.exports = (store, wallets, wallet)-->
+    index = wallets.index-of wallet
     type = 
         | index is 0 => \top
-        | index + 1 is store.current.account.wallets.length => \bottom
+        | index + 1 is wallets.length => \bottom
         | _ => \middle
     return null if not store? or not wallet?
     lweb3 = web3(store)

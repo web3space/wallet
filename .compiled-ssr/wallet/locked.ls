@@ -4,7 +4,7 @@ require! {
     \./pin.ls : { set, check, exists } 
     \./navigate.ls
 }
-# .locked257056133
+# .locked203904420
 #     @import scheme
 #     $gradient: $primary - 10
 #     background: $primary
@@ -30,6 +30,8 @@ require! {
 #             outline: none
 #             &:focus
 #                 border-color: #248295
+#             &:placeholder
+#                 color: $primary + 40
 #     >.wrong
 #         color: red
 #     button.setup
@@ -115,7 +117,7 @@ locked = ({ store })->
     footer =
         | not exists! => setup-button
         | _ => wrong-trials
-    react.create-element 'div', { className: 'locked locked257056133' }, children = 
+    react.create-element 'div', { className: 'locked locked203904420' }, children = 
         react.create-element 'div', { className: 'title' }, ' ' + title
         react.create-element 'div', { className: 'inputs' }, children = 
             [0 to 3] |> map input store

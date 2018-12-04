@@ -37,6 +37,8 @@ require! {
             bottom: 0
             margin-bottom: 10px
             transform: rotate(180deg)
+        &:not(.true)
+            visibility: hidden
     padding-top: 40px
     padding-bottom: 40px
     background: rgba(white, 0.5)
@@ -48,14 +50,30 @@ require! {
 arrow = \https://res.cloudinary.com/dfbhd7liw/image/upload/v1543595868/wallet/arrow.png
 wallets = ({ store })->
     return null if not store.current.account?
+    { list } = store.current
+    max = 4
+    can-up = store.current.list > 0
+    can-down = store.current.list + 4 < store.current.account.wallets.length / max
+    go-up = ->
+        return if not can-up
+        store.current.list -= max
+        store.current.wallet-index = 0
+    go-down = ->
+        return if not can-down
+        store.current.list += max
+        store.current.wallet-index = 0
+    wallets = 
+        store.current.account.wallets 
+            |> drop list 
+            |> take max
     .pug
         menu { store }
         .wallets.pug
-            .arrow.arrow-t.pug
+            .arrow.arrow-t.pug(on-click=go-up class="#{can-up}")
                 img.pug(src="#{arrow}")
             .wallet-container.pug
-                store.current.account.wallets |> drop 0 |> take 4 |> map wallet store
-            .arrow.arrow-d.pug
+                wallets |> map wallet store, wallets
+            .arrow.arrow-d.pug(on-click=go-down class="#{can-down}")
                 img.pug(src="#{arrow}")
 wallets.init = (store, cb)->
     return cb null if store.current.account?

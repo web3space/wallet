@@ -13,7 +13,7 @@
       return navigate(store, 'send');
     };
     return react.createElement('div', {
-      className: 'receive receive-1708377641'
+      className: 'receive receive818731593'
     }, children = [
       react.createElement('div', {
         className: 'receive-body'
