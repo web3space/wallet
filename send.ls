@@ -44,58 +44,63 @@ require! {
                 background: white
                 color: $primary
     >.content-body
-        >.padded-content
-            padding: 13px
+        padding: 13px
         @import scheme
         background: white
         color: gray
-        .control-label
-            padding-top: 5px
-            padding-left: $label-padding
-            font-size: $label-font
-        table
-            background: rgba(243, 243, 243, 0.3)
-            border-radius: 3px
-            width: 100%
-            border-spacing: 0
-            td
-                padding: 5px $label-padding
-                font-size: 14px
-                &:last-child
-                    text-align: right
-        h2 
-            margin: 0
-            padding: 10px
         a
             color: gray
-        form
+        >form
+            >table
+                background: rgba(243, 243, 243, 0.3)
+                border-radius: 3px
+                width: 100%
+                border-spacing: 0
+                tr
+                    &.gray
+                        color: #CCC
+                    &.orange
+                        color: #cf952c
+                    &.green
+                        color: #23b723
+                    td
+                        padding: 5px $label-padding
+                        font-size: 14px
+                        &:last-child
+                            text-align: right
             max-width: 400px
             text-align: left
-            .form-group
+            >.control-label
+                padding-top: 5px
+                padding-left: $label-padding
+                font-size: $label-font
+            >.form-group
                 margin-top: 4px
-            .address
-                padding: 5px 10px
-                overflow: hidden
-                text-overflow: ellipsis
-                background: #dcdada
-                border-radius: $border-radius
-                font-size: 13px
-                overflow: hidden
-                text-overflow: ellipsis
-                background: #E6F0FF
-                color: #677897
-            input
-                outline: none
-                width: 100%
-                box-sizing: border-box
-                border: 0
-                height: 30px
-                border-radius: $border-radius
-                padding: 0px 10px
-                font-size: 12px
-                margin: 1px
-                border: 1px solid gray
-        .font-light
+                .address
+                    padding: 5px 10px
+                    overflow: hidden
+                    text-overflow: ellipsis
+                    background: #dcdada
+                    border-radius: $border-radius
+                    font-size: 13px
+                    overflow: hidden
+                    text-overflow: ellipsis
+                    background: #E6F0FF
+                    color: #677897
+                input
+                    outline: none
+                    width: 100%
+                    box-sizing: border-box
+                    border: 0
+                    height: 30px
+                    border-radius: $border-radius
+                    padding: 0px 10px
+                    font-size: 12px
+                    margin: 1px
+                    border: 1px solid gray
+        >.header
+            margin: 0
+            padding: 10px
             text-align: left
             padding: 0
             >.head
@@ -104,13 +109,7 @@ require! {
                 vertical-align: middle
                 line-height: 29px
                 display: inline-block
-                >.title
-                    color: #4469b1
-                >.from
-                    font-size: $label-font
-                    color: gray
-                    font-weight: 100
-                    padding-left: $label-padding
+                color: #4469b1
                 &.right
                     text-align: right
             img
@@ -130,17 +129,11 @@ require! {
         .not-enough
             color: red
             min-height: 30px
-        .gray
-            color: #CCC
-        .orange
-            color: #cf952c
         .escrow
             padding: 5px 11px
             min-height: 20px
             color: #cc625a
             font-size: 14px
-        .green
-            color: #23b723
         .bold
             font-weight: bold
         .buttons
@@ -197,7 +190,7 @@ send = ({ store })->
         send-tx { wallet, ...send }, cb
     perform-send-unsafe = (cb)->
         send-tx { wallet, ...send }, cb
-    send-money = (event)->
+    send-money = ->
         return if send.sending is yes
         send.sending = yes
         err, data <- perform-send-safe
@@ -206,10 +199,16 @@ send = ({ store })->
         notify-form-result send.id, null, data
         store.current.last-tx-url = "#{send.network.api.url}/transfer/#{data}"
         navigate store, \sent
-    send-escrow = (event)->
+    send-escrow = ->
         name = send.to
         amount-ethers = send.amount-send
         err <- send-to { name, amount-ethers }
+    send-anyway = ->
+        return send-escrow! if send.propose-escrow
+        send-money!
+    send-title = 
+        | send.propose-escrow then 'Send (Escrow)'
+        | _ => "Send"
     cancel = (event)->
         navigate store, \wallets
         notify-form-result send.id, "Cancelled by user"
@@ -244,77 +243,61 @@ send = ({ store })->
         navigate store, \receive
     token = send.coin.token.to-upper-case!
     is-data = (send.data ? "").length > 0
+    form-group = (title, content)->
+        .pug.form-group
+            label.pug.control-label #{title}
+            content!
     .pug.content
         .pug.content-body
-            .pug.padded-content
-                .pug
-                    h2.pug.font-light.m-b-xs
-                        span.pug.head 
-                            .pug.title #{token + network} WALLET
-                        span.head.pug.right
-                            img.pug(src="#{wallet.coin.image}")
-                .pug
-                    form.pug(method='get')
-                        .pug.form-group
-                            label.pug.control-label Send From
-                            .address.pug 
-                                a.pug(href="#{link}") #{wallet.address}
-                        .pug.form-group
-                            label.pug.control-label Recepient
-                            .pug
-                                input.pug(type='text' on-change=recepient-change value="#{send.to}" placeholder="#{store.current.send-to-mask}")
-                        .pug.form-group
-                            label.pug.control-label
-                                span.pug Amount
-                            .pug
-                                .pug
-                                    input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{send.amount-send}")
-                                    if wallet.network.topup
-                                        a.pug.topup(href="#{wallet.network.topup}" target="_blank") Top up?
-                                .pug.usd Balance #{wallet.balance}
-                                .pug.control-label.not-enough.text-left #{send.error}
-                        if is-data
-                            .pug.form-group
-                                label.pug.control-label 
-                                    span.pug Data
-                                    span.pug.gray
-                                .pug
-                                    input.pug(read-only="readonly" value="#{show-data!}")
-                                    button.pug(type="button" on-click=encode-decode) Show #{show-label!}
+            .pug.header
+                span.pug.head #{token + network} WALLET
+                span.head.pug.right
+                    img.pug(src="#{wallet.coin.image}")
+            form.pug
+                form-group 'Send From', ->
+                    .address.pug 
+                        a.pug(href="#{link}") #{wallet.address}
+                form-group 'Recepient', ->
+                    input.pug(type='text' on-change=recepient-change value="#{send.to}" placeholder="#{store.current.send-to-mask}")
+                form-group 'Amount', ->
+                    .pug
                         .pug
-                            table.table.table-striped.pug
-                                tbody.pug
-                                    tr.pug
-                                        td.pug You Send 
-                                        td.pug
-                                            .pug #{when-empty(send.amount-send, 0) + '  ' + token}
-                                            .pug.usd $ #{send.amount-send-usd}
-                                    tr.pug.green
-                                        td.pug Recepient obtains
-                                        td.pug
-                                            .pug.bold #{send.amount-obtain + '  ' + token}
-                                            .pug.usd $ #{send.amount-obtain-usd}
-                                    tr.pug.orange
-                                        td.pug Transaction Fee 
-                                        td.pug
-                                            .pug #{send.amount-send-fee + '  ' + token}
-                                            .pug.usd $ #{send.amount-send-fee-usd}
-                        .pug.escrow
-                            if send.propose-escrow
-                                .pug You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically
-            .pug.buttons
-                .pug
+                            input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{send.amount-send}")
+                            if wallet.network.topup
+                                a.pug.topup(href="#{wallet.network.topup}" target="_blank") Top up?
+                        .pug.usd Balance #{wallet.balance}
+                        .pug.control-label.not-enough.text-left #{send.error}
+                if is-data
+                    form-group 'Data', ->
+                        .pug
+                            input.pug(read-only="readonly" value="#{show-data!}")
+                            button.pug(type="button" on-click=encode-decode) Show #{show-label!}
+                table.pug
+                    tbody.pug
+                        tr.pug
+                            td.pug You Send 
+                            td.pug
+                                .pug #{when-empty(send.amount-send, 0) + '  ' + token}
+                                .pug.usd $ #{send.amount-send-usd}
+                        tr.pug.green
+                            td.pug Recepient obtains
+                            td.pug
+                                .pug.bold #{send.amount-obtain + '  ' + token}
+                                .pug.usd $ #{send.amount-obtain-usd}
+                        tr.pug.orange
+                            td.pug Transaction Fee
+                            td.pug
+                                .pug #{send.amount-send-fee + '  ' + token}
+                                .pug.usd $ #{send.amount-send-fee-usd}
+                .pug.escrow
                     if send.propose-escrow
-                        a.pug.btn.btn-primary(on-click=send-escrow)
-                            span.pug Send (Escrow)
-                            if send.sending
-                                span.pug ...
-                    else
-                        a.pug.btn.btn-primary(on-click=send-money)
-                            span.pug Send
-                            if send.sending
-                                span.pug ...
-                    a.pug.btn.btn-default(on-click=cancel) Cancel
+                        .pug You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically
+            .pug.buttons
+                a.pug.btn.btn-primary(on-click=send-anyway)
+                    span.pug #{send-title}
+                    if send.sending
+                        span.pug ...
+                a.pug.btn.btn-default(on-click=cancel) Cancel
         if not is-data
             .pug.more-buttons
                 a.pug.more.receive(on-click=receive) Receive

@@ -12,7 +12,7 @@ require! {
     \./navigate.ls
     \./close.ls
 }
-# .content1469325038
+# .content1990191598
 #     @import scheme
 #     $border-radius: 20px
 #     $label-padding: 12px
@@ -44,58 +44,63 @@ require! {
 #                 background: white
 #                 color: $primary
 #     >.content-body
-#         >.padded-content
-#             padding: 13px
+#         padding: 13px
 #         @import scheme
 #         background: white
 #         color: gray
-#         .control-label
-#             padding-top: 5px
-#             padding-left: $label-padding
-#             font-size: $label-font
-#         table
-#             background: rgba(243, 243, 243, 0.3)
-#             border-radius: 3px
-#             width: 100%
-#             border-spacing: 0
-#             td
-#                 padding: 5px $label-padding
-#                 font-size: 14px
-#                 &:last-child
-#                     text-align: right
-#         h2 
-#             margin: 0
-#             padding: 10px
 #         a
 #             color: gray
-#         form
+#         >form
+#             >table
+#                 background: rgba(243, 243, 243, 0.3)
+#                 border-radius: 3px
+#                 width: 100%
+#                 border-spacing: 0
+#                 tr
+#                     &.gray
+#                         color: #CCC
+#                     &.orange
+#                         color: #cf952c
+#                     &.green
+#                         color: #23b723
+#                     td
+#                         padding: 5px $label-padding
+#                         font-size: 14px
+#                         &:last-child
+#                             text-align: right
 #             max-width: 400px
 #             text-align: left
-#             .form-group
+#             >.control-label
+#                 padding-top: 5px
+#                 padding-left: $label-padding
+#                 font-size: $label-font
+#             >.form-group
 #                 margin-top: 4px
-#             .address
-#                 padding: 5px 10px
-#                 overflow: hidden
-#                 text-overflow: ellipsis
-#                 background: #dcdada
-#                 border-radius: $border-radius
-#                 font-size: 13px
-#                 overflow: hidden
-#                 text-overflow: ellipsis
-#                 background: #E6F0FF
-#                 color: #677897
-#             input
-#                 outline: none
-#                 width: 100%
-#                 box-sizing: border-box
-#                 border: 0
-#                 height: 30px
-#                 border-radius: $border-radius
-#                 padding: 0px 10px
-#                 font-size: 12px
-#                 margin: 1px
-#                 border: 1px solid gray
-#         .font-light
+#                 .address
+#                     padding: 5px 10px
+#                     overflow: hidden
+#                     text-overflow: ellipsis
+#                     background: #dcdada
+#                     border-radius: $border-radius
+#                     font-size: 13px
+#                     overflow: hidden
+#                     text-overflow: ellipsis
+#                     background: #E6F0FF
+#                     color: #677897
+#                 input
+#                     outline: none
+#                     width: 100%
+#                     box-sizing: border-box
+#                     border: 0
+#                     height: 30px
+#                     border-radius: $border-radius
+#                     padding: 0px 10px
+#                     font-size: 12px
+#                     margin: 1px
+#                     border: 1px solid gray
+#         >.header
+#             margin: 0
+#             padding: 10px
 #             text-align: left
 #             padding: 0
 #             >.head
@@ -104,13 +109,7 @@ require! {
 #                 vertical-align: middle
 #                 line-height: 29px
 #                 display: inline-block
-#                 >.title
-#                     color: #4469b1
-#                 >.from
-#                     font-size: $label-font
-#                     color: gray
-#                     font-weight: 100
-#                     padding-left: $label-padding
+#                 color: #4469b1
 #                 &.right
 #                     text-align: right
 #             img
@@ -130,17 +129,11 @@ require! {
 #         .not-enough
 #             color: red
 #             min-height: 30px
-#         .gray
-#             color: #CCC
-#         .orange
-#             color: #cf952c
 #         .escrow
 #             padding: 5px 11px
 #             min-height: 20px
 #             color: #cc625a
 #             font-size: 14px
-#         .green
-#             color: #23b723
 #         .bold
 #             font-weight: bold
 #         .buttons
@@ -197,7 +190,7 @@ send = ({ store })->
         send-tx { wallet, ...send }, cb
     perform-send-unsafe = (cb)->
         send-tx { wallet, ...send }, cb
-    send-money = (event)->
+    send-money = ->
         return if send.sending is yes
         send.sending = yes
         err, data <- perform-send-safe
@@ -206,10 +199,16 @@ send = ({ store })->
         notify-form-result send.id, null, data
         store.current.last-tx-url = "#{send.network.api.url}/transfer/#{data}"
         navigate store, \sent
-    send-escrow = (event)->
+    send-escrow = ->
         name = send.to
         amount-ethers = send.amount-send
         err <- send-to { name, amount-ethers }
+    send-anyway = ->
+        return send-escrow! if send.propose-escrow
+        send-money!
+    send-title = 
+        | send.propose-escrow then 'Send (Escrow)'
+        | _ => "Send"
     cancel = (event)->
         navigate store, \wallets
         notify-form-result send.id, "Cancelled by user"
@@ -244,77 +243,61 @@ send = ({ store })->
         navigate store, \receive
     token = send.coin.token.to-upper-case!
     is-data = (send.data ? "").length > 0
-    react.create-element 'div', { className: 'content content1469325038' }, children = 
+    form-group = (title, content)->
+        react.create-element 'div', { className: 'form-group' }, children = 
+            react.create-element 'label', { className: 'control-label' }, ' ' + title
+            content!
+    react.create-element 'div', { className: 'content content1990191598' }, children = 
         react.create-element 'div', { className: 'content-body' }, children = 
-            react.create-element 'div', { className: 'padded-content' }, children = 
-                react.create-element 'div', {}, children = 
-                    react.create-element 'h2', { className: 'font-light m-b-xs' }, children = 
-                        react.create-element 'span', { className: 'head' }, children = 
-                            react.create-element 'div', { className: 'title' }, ' ' + token + network + ' WALLET'
-                        react.create-element 'span', { className: 'head right' }, children = 
-                            react.create-element 'img', { src: "#{wallet.coin.image}" }
-                react.create-element 'div', {}, children = 
-                    react.create-element 'form', { method: 'get' }, children = 
-                        react.create-element 'div', { className: 'form-group' }, children = 
-                            react.create-element 'label', { className: 'control-label' }, ' Send From'
-                            react.create-element 'div', { className: 'address' }, children = 
-                                react.create-element 'a', { href: "#{link}" }, ' ' + wallet.address
-                        react.create-element 'div', { className: 'form-group' }, children = 
-                            react.create-element 'label', { className: 'control-label' }, ' Recepient'
-                            react.create-element 'div', {}, children = 
-                                react.create-element 'input', { type: 'text', on-change: recepient-change, value: "#{send.to}", placeholder: "#{store.current.send-to-mask}" }
-                        react.create-element 'div', { className: 'form-group' }, children = 
-                            react.create-element 'label', { className: 'control-label' }, children = 
-                                react.create-element 'span', {}, ' Amount'
-                            react.create-element 'div', {}, children = 
-                                react.create-element 'div', {}, children = 
-                                    react.create-element 'input', { type: 'text', on-change: amount-change, placeholder: "0", value: "#{send.amount-send}", className: 'amount' }
-                                    if wallet.network.topup
-                                        react.create-element 'a', { href: "#{wallet.network.topup}", target: "_blank", className: 'topup' }, ' Top up?'
-                                react.create-element 'div', { className: 'usd' }, ' Balance ' + wallet.balance
-                                react.create-element 'div', { className: 'control-label not-enough text-left' }, ' ' + send.error
-                        if is-data
-                            react.create-element 'div', { className: 'form-group' }, children = 
-                                react.create-element 'label', { className: 'control-label' }, children = 
-                                    react.create-element 'span', {}, ' Data'
-                                    react.create-element 'span', { className: 'gray' }
-                                react.create-element 'div', {}, children = 
-                                    react.create-element 'input', { read-only: "readonly", value: "#{show-data!}" }
-                                    react.create-element 'button', { type: "button", on-click: encode-decode }, ' Show ' + show-label!
+            react.create-element 'div', { className: 'header' }, children = 
+                react.create-element 'span', { className: 'head' }, ' ' + token + network + ' WALLET'
+                react.create-element 'span', { className: 'head right' }, children = 
+                    react.create-element 'img', { src: "#{wallet.coin.image}" }
+            react.create-element 'form', {}, children = 
+                form-group 'Send From', ->
+                    react.create-element 'div', { className: 'address' }, children = 
+                        react.create-element 'a', { href: "#{link}" }, ' ' + wallet.address
+                form-group 'Recepient', ->
+                    react.create-element 'input', { type: 'text', on-change: recepient-change, value: "#{send.to}", placeholder: "#{store.current.send-to-mask}" }
+                form-group 'Amount', ->
+                    react.create-element 'div', {}, children = 
                         react.create-element 'div', {}, children = 
-                            react.create-element 'table', { className: 'table table-striped' }, children = 
-                                react.create-element 'tbody', {}, children = 
-                                    react.create-element 'tr', {}, children = 
-                                        react.create-element 'td', {}, ' You Send '
-                                        react.create-element 'td', {}, children = 
-                                            react.create-element 'div', {}, ' ' + when-empty(send.amount-send, 0) + '  ' + token
-                                            react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-send-usd
-                                    react.create-element 'tr', { className: 'green' }, children = 
-                                        react.create-element 'td', {}, ' Recepient obtains'
-                                        react.create-element 'td', {}, children = 
-                                            react.create-element 'div', { className: 'bold' }, ' ' + send.amount-obtain + '  ' + token
-                                            react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-obtain-usd
-                                    react.create-element 'tr', { className: 'orange' }, children = 
-                                        react.create-element 'td', {}, ' Transaction Fee '
-                                        react.create-element 'td', {}, children = 
-                                            react.create-element 'div', {}, ' ' + send.amount-send-fee + '  ' + token
-                                            react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-send-fee-usd
-                        react.create-element 'div', { className: 'escrow' }, children = 
-                            if send.propose-escrow
-                                react.create-element 'div', {}, ' You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically'
-            react.create-element 'div', { className: 'buttons' }, children = 
-                react.create-element 'div', {}, children = 
+                            react.create-element 'input', { type: 'text', on-change: amount-change, placeholder: "0", value: "#{send.amount-send}", className: 'amount' }
+                            if wallet.network.topup
+                                react.create-element 'a', { href: "#{wallet.network.topup}", target: "_blank", className: 'topup' }, ' Top up?'
+                        react.create-element 'div', { className: 'usd' }, ' Balance ' + wallet.balance
+                        react.create-element 'div', { className: 'control-label not-enough text-left' }, ' ' + send.error
+                if is-data
+                    form-group 'Data', ->
+                        react.create-element 'div', {}, children = 
+                            react.create-element 'input', { read-only: "readonly", value: "#{show-data!}" }
+                            react.create-element 'button', { type: "button", on-click: encode-decode }, ' Show ' + show-label!
+                react.create-element 'table', {}, children = 
+                    react.create-element 'tbody', {}, children = 
+                        react.create-element 'tr', {}, children = 
+                            react.create-element 'td', {}, ' You Send '
+                            react.create-element 'td', {}, children = 
+                                react.create-element 'div', {}, ' ' + when-empty(send.amount-send, 0) + '  ' + token
+                                react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-send-usd
+                        react.create-element 'tr', { className: 'green' }, children = 
+                            react.create-element 'td', {}, ' Recepient obtains'
+                            react.create-element 'td', {}, children = 
+                                react.create-element 'div', { className: 'bold' }, ' ' + send.amount-obtain + '  ' + token
+                                react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-obtain-usd
+                        react.create-element 'tr', { className: 'orange' }, children = 
+                            react.create-element 'td', {}, ' Transaction Fee'
+                            react.create-element 'td', {}, children = 
+                                react.create-element 'div', {}, ' ' + send.amount-send-fee + '  ' + token
+                                react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-send-fee-usd
+                react.create-element 'div', { className: 'escrow' }, children = 
                     if send.propose-escrow
-                        react.create-element 'a', { on-click: send-escrow, className: 'btn btn-primary' }, children = 
-                            react.create-element 'span', {}, ' Send (Escrow)'
-                            if send.sending
-                                react.create-element 'span', {}, ' ...'
-                    else
-                        react.create-element 'a', { on-click: send-money, className: 'btn btn-primary' }, children = 
-                            react.create-element 'span', {}, ' Send'
-                            if send.sending
-                                react.create-element 'span', {}, ' ...'
-                    react.create-element 'a', { on-click: cancel, className: 'btn btn-default' }, ' Cancel'
+                        react.create-element 'div', {}, ' You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically'
+            react.create-element 'div', { className: 'buttons' }, children = 
+                react.create-element 'a', { on-click: send-anyway, className: 'btn btn-primary' }, children = 
+                    react.create-element 'span', {}, ' ' + send-title
+                    if send.sending
+                        react.create-element 'span', {}, ' ...'
+                react.create-element 'a', { on-click: cancel, className: 'btn btn-default' }, ' Cancel'
         if not is-data
             react.create-element 'div', { className: 'more-buttons' }, children = 
                 react.create-element 'a', { on-click: receive, className: 'more receive' }, ' Receive'

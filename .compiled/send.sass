@@ -1,4 +1,4 @@
-.content1469325038
+.content1990191598
     @import scheme
     $border-radius: 20px
     $label-padding: 12px
@@ -30,58 +30,63 @@
                 background: white
                 color: $primary
     >.content-body
-        >.padded-content
-            padding: 13px
+        padding: 13px
         @import scheme
         background: white
         color: gray
-        .control-label
-            padding-top: 5px
-            padding-left: $label-padding
-            font-size: $label-font
-        table
-            background: rgba(243, 243, 243, 0.3)
-            border-radius: 3px
-            width: 100%
-            border-spacing: 0
-            td
-                padding: 5px $label-padding
-                font-size: 14px
-                &:last-child
-                    text-align: right
-        h2 
-            margin: 0
-            padding: 10px
         a
             color: gray
-        form
+        >form
+            >table
+                background: rgba(243, 243, 243, 0.3)
+                border-radius: 3px
+                width: 100%
+                border-spacing: 0
+                tr
+                    &.gray
+                        color: #CCC
+                    &.orange
+                        color: #cf952c
+                    &.green
+                        color: #23b723
+                    td
+                        padding: 5px $label-padding
+                        font-size: 14px
+                        &:last-child
+                            text-align: right
             max-width: 400px
             text-align: left
-            .form-group
+            >.control-label
+                padding-top: 5px
+                padding-left: $label-padding
+                font-size: $label-font
+            >.form-group
                 margin-top: 4px
-            .address
-                padding: 5px 10px
-                overflow: hidden
-                text-overflow: ellipsis
-                background: #dcdada
-                border-radius: $border-radius
-                font-size: 13px
-                overflow: hidden
-                text-overflow: ellipsis
-                background: #E6F0FF
-                color: #677897
-            input
-                outline: none
-                width: 100%
-                box-sizing: border-box
-                border: 0
-                height: 30px
-                border-radius: $border-radius
-                padding: 0px 10px
-                font-size: 12px
-                margin: 1px
-                border: 1px solid gray
-        .font-light
+                .address
+                    padding: 5px 10px
+                    overflow: hidden
+                    text-overflow: ellipsis
+                    background: #dcdada
+                    border-radius: $border-radius
+                    font-size: 13px
+                    overflow: hidden
+                    text-overflow: ellipsis
+                    background: #E6F0FF
+                    color: #677897
+                input
+                    outline: none
+                    width: 100%
+                    box-sizing: border-box
+                    border: 0
+                    height: 30px
+                    border-radius: $border-radius
+                    padding: 0px 10px
+                    font-size: 12px
+                    margin: 1px
+                    border: 1px solid gray
+        >.header
+            margin: 0
+            padding: 10px
             text-align: left
             padding: 0
             >.head
@@ -90,13 +95,7 @@
                 vertical-align: middle
                 line-height: 29px
                 display: inline-block
-                >.title
-                    color: #4469b1
-                >.from
-                    font-size: $label-font
-                    color: gray
-                    font-weight: 100
-                    padding-left: $label-padding
+                color: #4469b1
                 &.right
                     text-align: right
             img
@@ -116,17 +115,11 @@
         .not-enough
             color: red
             min-height: 30px
-        .gray
-            color: #CCC
-        .orange
-            color: #cf952c
         .escrow
             padding: 5px 11px
             min-height: 20px
             color: #cc625a
             font-size: 14px
-        .green
-            color: #23b723
         .bold
             font-weight: bold
         .buttons
