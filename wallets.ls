@@ -53,7 +53,7 @@ wallets = ({ store })->
     { list } = store.current
     max = 4
     can-up = store.current.list > 0
-    can-down = store.current.list + 4 < store.current.account.wallets.length / max
+    can-down = store.current.list < store.current.account.wallets.length / max
     go-up = ->
         return if not can-up
         store.current.list -= max

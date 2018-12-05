@@ -6,19 +6,23 @@ require! {
 export calc-crypto = (store, amount-send-usd)->
     return \0 if not amount-send-usd?
     { send } = store.current
-    { wallet, token } = send.coin
+    { wallet } = send
+    { token } = send.coin
     usd-rate = wallet?usd-rate ? 0
     amount-send-usd `div` usd-rate
 export calc-usd = (store, amount-send)->
     return \0 if not amount-send?
     { send } = store.current
-    { wallet, token } = send.coin
+    { wallet } = send
+    { token } = send.coin
     usd-rate = wallet?usd-rate ? 0
     amount-send `times` usd-rate
 export change-amount = (store, amount-send)->
     { send } = store.current
-    { wallet, token } = send.coin
+    { wallet } = send
+    { token } = send.coin
     #return if not send.wallet
+    return send.error = "Balance is not loaded" if not wallet?
     result-amount-send = amount-send ? 0
     err, calced-fee <- calc-fee { token, send.network, amount: result-amount-send }
     return send.error = "Calc Fee Error: #{err.message ? err}" if err?
@@ -38,8 +42,10 @@ export change-amount = (store, amount-send)->
         | _ => result-amount-send `plus` tx-fee
     send.amount-charged-usd =  send.amount-charged `times` usd-rate
     send.amount-send-fee-usd = tx-fee `times` usd-rate
+    balance = 
+        | wallet.balance is \... => 0
+        | _ => wallet.balance
     send.error = 
-        if parse-float(wallet.balance `minus` result-amount-send) < 0
+        if parse-float(balance `minus` result-amount-send) < 0
         then "Not Enough Funds"
         else ""
-    console.log send, result-amount-send

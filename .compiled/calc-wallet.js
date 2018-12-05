@@ -20,34 +20,32 @@
     coins = getCoins();
     buildLoader = function(wallet){
       return task(function(cb){
-        var token;
+        var token, usdRate, coin;
         token = wallet.coin.token;
         wallet.balance = '...';
         wallet.balanceUsd = 0;
+        token = wallet.coin.token.toLowerCase();
+        usdRate = rates[token];
+        wallet.usdRate = round5(usdRate);
+        coin = find(function(it){
+          return it.token === wallet.coin.token;
+        })(
+        coins);
+        if (coin == null) {
+          return cb("Coin Not Found");
+        }
+        coin.wallet = wallet;
         return getBalance({
           address: wallet.address,
           network: wallet.network,
           token: token
         }, function(err, balance){
-          var token, usdRate, coin;
           if (err != null) {
             return cb(err);
           }
           wallet.balance = balance;
-          token = wallet.coin.token.toLowerCase();
-          usdRate = rates[token];
           wallet.balanceUsd = times(balance, usdRate);
           state.balanceUsd = plus(state.balanceUsd, wallet.balanceUsd);
-          store.current.balanceUsd = round5(state.balanceUsd);
-          wallet.usdRate = round5(usdRate);
-          coin = find(function(it){
-            return it.token === wallet.coin.token;
-          })(
-          coins);
-          if (coin == null) {
-            return cb("Coin Not Found");
-          }
-          coin.wallet = wallet;
           return cb();
         });
       });
@@ -63,6 +61,7 @@
       if (typeof err != 'undefined' && err !== null) {
         return cb(err);
       }
+      console.log(store.current.account);
       store.current.balanceUsd = round5(state.balanceUsd);
       return cb(null);
     });

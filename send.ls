@@ -208,7 +208,7 @@ send = ({ store })->
     return null if not store?
     { send-to } = ethnamed store
     { send } = store.current
-    { wallet } = send.coin
+    { wallet } = send
     link = "#{send.network.api.url}/address/#{send.address}"
     send-tx = ({ to, wallet, network, amount-send, amount-send-fee, data, coin }, cb)->
         { token } = send.coin
@@ -286,7 +286,7 @@ send = ({ store })->
     when-empty = (str, def)->
         if (str ? "").length is 0 then def else str
     history = ->
-        store.current.filter = [\IN, \OUT, wallet.coin.token]
+        store.current.filter = [\IN, \OUT, send.coin.token]
         navigate store, \history
     topup = ->
         if wallet.network.topup
@@ -310,7 +310,7 @@ send = ({ store })->
             .pug.header
                 span.pug.head #{token + network} WALLET
                 span.head.pug.right
-                    img.pug(src="#{wallet.coin.image}")
+                    img.pug(src="#{send.coin.image}")
             form.pug
                 form-group 'Send From', ->
                     .address.pug 

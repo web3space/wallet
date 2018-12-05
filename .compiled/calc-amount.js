@@ -5,29 +5,35 @@
   ref$ = require('mobx'), toJS = ref$.toJS, transaction = ref$.transaction;
   calcFee = require('./api.ls').calcFee;
   out$.calcCrypto = calcCrypto = function(store, amountSendUsd){
-    var send, ref$, wallet, token, usdRate;
+    var send, wallet, token, usdRate, ref$;
     if (amountSendUsd == null) {
       return '0';
     }
     send = store.current.send;
-    ref$ = send.coin, wallet = ref$.wallet, token = ref$.token;
+    wallet = send.wallet;
+    token = send.coin.token;
     usdRate = (ref$ = wallet != null ? wallet.usdRate : void 8) != null ? ref$ : 0;
     return div(amountSendUsd, usdRate);
   };
   out$.calcUsd = calcUsd = function(store, amountSend){
-    var send, ref$, wallet, token, usdRate;
+    var send, wallet, token, usdRate, ref$;
     if (amountSend == null) {
       return '0';
     }
     send = store.current.send;
-    ref$ = send.coin, wallet = ref$.wallet, token = ref$.token;
+    wallet = send.wallet;
+    token = send.coin.token;
     usdRate = (ref$ = wallet != null ? wallet.usdRate : void 8) != null ? ref$ : 0;
     return times(amountSend, usdRate);
   };
   out$.changeAmount = changeAmount = function(store, amountSend){
-    var send, ref$, wallet, token, resultAmountSend;
+    var send, wallet, token, resultAmountSend;
     send = store.current.send;
-    ref$ = send.coin, wallet = ref$.wallet, token = ref$.token;
+    wallet = send.wallet;
+    token = send.coin.token;
+    if (wallet == null) {
+      return send.error = "Balance is not loaded";
+    }
     resultAmountSend = amountSend != null ? amountSend : 0;
     return calcFee({
       token: token,
@@ -43,6 +49,7 @@
         : send.network.txFee;
       usdRate = (ref$ = wallet != null ? wallet.usdRate : void 8) != null ? ref$ : 0;
       return transaction(function(){
+        var balance;
         send.amountSend = amountSend != null ? amountSend : "";
         send.value = times(resultAmountSend, Math.pow(10, send.network.decimals));
         send.amountObtain = resultAmountSend;
@@ -63,8 +70,15 @@
         }());
         send.amountChargedUsd = times(send.amountCharged, usdRate);
         send.amountSendFeeUsd = times(txFee, usdRate);
-        send.error = parseFloat(minus(wallet.balance, resultAmountSend)) < 0 ? "Not Enough Funds" : "";
-        return console.log(send, resultAmountSend);
+        balance = (function(){
+          switch (false) {
+          case wallet.balance !== '...':
+            return 0;
+          default:
+            return wallet.balance;
+          }
+        }());
+        return send.error = parseFloat(minus(balance, resultAmountSend)) < 0 ? "Not Enough Funds" : "";
       });
     });
   };

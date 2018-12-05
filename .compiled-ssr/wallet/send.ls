@@ -208,7 +208,7 @@ send = ({ store })->
     return null if not store?
     { send-to } = ethnamed store
     { send } = store.current
-    { wallet } = send.coin
+    { wallet } = send
     link = "#{send.network.api.url}/address/#{send.address}"
     send-tx = ({ to, wallet, network, amount-send, amount-send-fee, data, coin }, cb)->
         { token } = send.coin
@@ -286,7 +286,7 @@ send = ({ store })->
     when-empty = (str, def)->
         if (str ? "").length is 0 then def else str
     history = ->
-        store.current.filter = [\IN, \OUT, wallet.coin.token]
+        store.current.filter = [\IN, \OUT, send.coin.token]
         navigate store, \history
     topup = ->
         if wallet.network.topup
@@ -310,7 +310,7 @@ send = ({ store })->
             react.create-element 'div', { className: 'header' }, children = 
                 react.create-element 'span', { className: 'head' }, ' ' + token + network + ' WALLET'
                 react.create-element 'span', { className: 'head right' }, children = 
-                    react.create-element 'img', { src: "#{wallet.coin.image}" }
+                    react.create-element 'img', { src: "#{send.coin.image}" }
             react.create-element 'form', {}, children = 
                 form-group 'Send From', ->
                     react.create-element 'div', { className: 'address' }, children = 

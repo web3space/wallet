@@ -17,19 +17,18 @@ calc-wallet = (store, cb)->
         { token } = wallet.coin
         wallet.balance = \...
         wallet.balance-usd = 0
-        err, balance <- get-balance { wallet.address, wallet.network, token }
-        return cb err if err?
-        wallet.balance = balance
         token = wallet.coin.token.to-lower-case!
         usd-rate = rates[token]
-        wallet.balance-usd = balance `times` usd-rate
-        state.balance-usd = state.balance-usd `plus` wallet.balance-usd
-        store.current.balance-usd = round5 state.balance-usd
         wallet.usd-rate = round5 usd-rate
         coin = 
             coins |> find (.token is wallet.coin.token)
         return cb "Coin Not Found" if not coin?
         coin.wallet = wallet
+        err, balance <- get-balance { wallet.address, wallet.network, token }
+        return cb err if err?
+        wallet.balance = balance
+        wallet.balance-usd = balance `times` usd-rate
+        state.balance-usd = state.balance-usd `plus` wallet.balance-usd
         cb!
     loaders =
         wallets |> map build-loader
@@ -39,6 +38,7 @@ calc-wallet = (store, cb)->
             |> pairs-to-obj
     <- run [tasks] .then
     return cb err if err?
+    console.log store.current.account
     store.current.balance-usd = round5 state.balance-usd
     cb null
 module.exports = calc-wallet

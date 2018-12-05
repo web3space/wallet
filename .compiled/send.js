@@ -23,7 +23,7 @@
     }
     sendTo = ethnamed(store).sendTo;
     send = store.current.send;
-    wallet = send.coin.wallet;
+    wallet = send.wallet;
     link = send.network.api.url + "/address/" + send.address;
     sendTx = function(arg$, cb){
       var to, wallet, network, amountSend, amountSendFee, data, coin, token, tx;
@@ -187,7 +187,7 @@
       }
     };
     history = function(){
-      store.current.filter = ['IN', 'OUT', wallet.coin.token];
+      store.current.filter = ['IN', 'OUT', send.coin.token];
       return navigate(store, 'history');
     };
     topup = function(){
@@ -236,7 +236,7 @@
           }, ' ' + token + network + ' WALLET'), react.createElement('span', {
             className: 'head right'
           }, children = react.createElement('img', {
-            src: wallet.coin.image + ""
+            src: send.coin.image + ""
           }))
         ]), react.createElement('form', {}, children = [
           formGroup('Send From', function(){

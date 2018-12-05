@@ -1,6 +1,6 @@
 require! {
     \./plugin-loader.ls : { get-coins }
-    \prelude-ls : { obj-to-pairs, map, pairs-to-obj, each }
+    \prelude-ls : { obj-to-pairs, map, pairs-to-obj, each, find }
     \./guid.ls
     \./send-form.ls : { wait-form-result }
     \./calc-amount.ls : { change-amount }
@@ -42,8 +42,9 @@ build-send-transaction = (store, coin)-> (tx, cb)->
     amount-send-fee-usd = \0
     propose-escrow = no
     amount-send = value `div` (10 ^ network.decimals)
+    wallet = store.current.account.wallets |> find (.coin.token is coin.token)
     send <<<< { 
-        to, data, decoded-data, network, coin, value, gas, id, amount-send,
+        to, data, decoded-data, network, coin, wallet, value, gas, id, amount-send,
         amount-obtain, amount-obtain-usd, amount-send-usd,
         amount-send-fee, amount-send-fee-usd, propose-escrow
     }

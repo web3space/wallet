@@ -18,7 +18,7 @@
     list = store.current.list;
     max = 4;
     canUp = store.current.list > 0;
-    canDown = store.current.list + 4 < store.current.account.wallets.length / max;
+    canDown = store.current.list < store.current.account.wallets.length / max;
     goUp = function(){
       if (!canUp) {
         return;
