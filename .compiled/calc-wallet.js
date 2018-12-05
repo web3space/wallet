@@ -6,17 +6,7 @@
   ref$ = require('prelude-ls'), find = ref$.find, map = ref$.map, pairsToObj = ref$.pairsToObj;
   getCoins = require('./plugin-loader.ls').getCoins;
   ref$ = require('./workflow.ls'), run = ref$.run, task = ref$.task;
-  round5 = function(value){
-    var ref$, head, dec;
-    if (value == null) {
-      return '...';
-    }
-    ref$ = value.toString().split('.'), head = ref$[0], dec = ref$[1];
-    if (dec == null) {
-      return head;
-    }
-    return head + "." + dec.substr(0, 5);
-  };
+  round5 = require('./round5.ls');
   calcWallet = function(store, cb){
     var wallets, rates, state, coins, buildLoader, loaders, tasks;
     if (store == null) {

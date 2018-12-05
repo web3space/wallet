@@ -54,8 +54,8 @@ require! {
             100%
                 transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg)
 module.exports = ->
-    .loading-page.pug
+    .loading-page.pug(key="loading")
         .loading.pug
-            .inner.one.pug
-            .inner.two.pug
-            .inner.three.pug
+            .inner.one.pug(key="loading-1")
+            .inner.two.pug(key="loading-2")
+            .inner.three.pug(key="loading-3")

@@ -36,22 +36,28 @@
     wallets = take(max)(
     drop(list)(
     store.current.account.wallets));
-    return react.createElement('div', {}, children = [
+    return react.createElement('div', {
+      key: "wallets"
+    }, children = [
       menu({
         store: store
       }), react.createElement('div', {
+        key: "wallets-body",
         className: 'wallets wallets-1312736338'
       }, children = [
         react.createElement('div', {
           onClick: goUp,
+          key: "arrow-up",
           className: canUp + " arrow arrow-t"
         }, children = react.createElement('img', {
           src: arrow + ""
         })), react.createElement('div', {
+          key: "wallets-viewport",
           className: 'wallet-container'
         }, children = map(wallet(store, wallets))(
         wallets)), react.createElement('div', {
           onClick: goDown,
+          key: "arrow-down",
           className: canDown + " arrow arrow-d"
         }, children = react.createElement('img', {
           src: arrow + ""

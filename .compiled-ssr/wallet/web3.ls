@@ -3,7 +3,7 @@ require! {
     \prelude-ls : { obj-to-pairs, map, pairs-to-obj, each }
     \./guid.ls
     \./send-form.ls : { wait-form-result }
-    \./change-amount.ls
+    \./calc-amount.ls : { change-amount }
     \./math.ls : { div, plus }
     \../eth.ls : web3
     \protect

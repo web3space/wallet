@@ -23,7 +23,6 @@
   getRegistry = function(){
     var registryString, ref$;
     registryString = (ref$ = localStorage.getItem('plugin-registry')) != null ? ref$ : "[]";
-    console.log(registryString);
     return JSON.parse(registryString);
   };
   getPlugin = function(name){

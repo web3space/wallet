@@ -81,9 +81,10 @@ require! {
             color: orange
 module.exports = (store)->
     return null if store.current.demo is no
+    return null
     close-demo = ->
         store.current.demo = no
-    .pug.description
+    .pug.description(key="description")
         h1.pug Ethnamed Smart-Wallet
         .line.pug
             span.pug This is a demo of the wallet connected to the 
@@ -112,7 +113,7 @@ module.exports = (store)->
                 span.pug.part.mark testnet
                 span.pug.part `);
         for item in <[ eth btc xem ]>
-            pre.pug 
+            pre.pug(key="#{item}")
                 span.pug.part web3t.
                 span.pug.part.mark #{item}
                 span.pug.part .sendTransaction({ to, amount }, cb)

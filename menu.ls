@@ -227,8 +227,11 @@ require! {
                     border-radius: $pad / 2
                     background: #FFFFFF
                     box-sizing: border-box
+                    input
+                        border-radius: 25px
+                    textarea
+                        border-radius: 7px
                     input, textarea
-                        border-radius: 23px
                         outline: none
                         border: 1px solid #dedcdc
                         padding: 3px 10px
@@ -267,10 +270,12 @@ require! {
                         display: inline-block
                         >*
                             display: block
-                            max-width: 80%
-                            text-align: right
+                            max-width: 100%
+                            margin: 0 auto
+                            text-align: center
                         >.decor
-                            color: rgba(#7083e8, 0.05)
+                            color: rgba(#7083e8, 0.1)
+                            transform: rotate(10deg)
                             position: absolute
                             top: -35px
                             right: -20px
@@ -288,7 +293,7 @@ require! {
                                 margin-top: -8px
                                 font-weight: 100
                             >.number
-                                font-size: 50px
+                                font-size: 40px
                                 font-weight: 400
                 &.s3
                     width: $width - $pad * 6
@@ -327,7 +332,7 @@ module.exports = ({ store })->
     cancel-try = ->
         current.try-edit-seed = no
     enter-pin = (e)->
-        store.current.pin = e.target.value
+        store.current.pin = e.target.value ? ""
         return if not check(store.current.pin)
         cancel-try!
         current.saved-seed = no
@@ -345,7 +350,7 @@ module.exports = ({ store })->
     activate-s1 = activate-s \s1
     activate-s2 = activate-s \s2
     activate-s3 = activate-s \s3
-    .menu.pug
+    .menu.pug(key="menu")
         .viewport.pug
             .viewport-icons.pug
                 img.reload.pug(class="#{store.current.refreshing}" src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png" on-click=refresh)
@@ -353,9 +358,9 @@ module.exports = ({ store })->
                 span.chevron.pug(on-click=switch-network) ▿
                 img.lock.pug(src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png" on-click=lock)
             .viewport-header.viewport-move.pug(class="#{store.menu.active}")
-                .text.pug.s1(on-click=activate-s1) Secret Phrase
-                .text.pug.s2(on-click=activate-s2) Balance
-                .text.pug.s3(on-click=activate-s3) Register Name
+                .text.pug.s1(on-click=activate-s1 key="switch-s1") Secret Phrase
+                .text.pug.s2(on-click=activate-s2 key="switch-s2") Balance
+                .text.pug.s3(on-click=activate-s3 key="switch-s3") Register Name
                 .text-line.pug
             .viewport-background.viewport-move.pug(class="#{store.menu.active}")
             .viewport-content.viewport-move.pug(class="#{store.menu.active}")
@@ -363,13 +368,13 @@ module.exports = ({ store })->
                     .slide-body.pug
                         switch
                             case current.try-edit-seed is yes
-                                .pug.box
+                                .pug.box(key="try-edit-seed")
                                     .pug
                                         input.pug(on-change=enter-pin value="#{current.pin}" placeholder="Enter PIN")
                                     .pug    
                                         button.pug(on-click=cancel-try) Cancel
                             case current.saved-seed is no
-                                .pug.box
+                                .pug.box(key="edit-phrase")
                                     .pug.title 
                                         span.pug Secret Text
                                         a.pug.generate(on-click=generate) (generate)
@@ -377,7 +382,7 @@ module.exports = ({ store })->
                                     .pug
                                         button.pug(on-click=save-seed) Save
                             case current.saved-seed is yes
-                                .pug
+                                .pug(key="init-edit")
                                     button.pug(on-click=edit-seed) Edit Secret
                 .slide.pug.s2(on-click=activate-s2)
                     .slide-body.pug
@@ -395,10 +400,10 @@ module.exports = ({ store })->
                         if store.current.network is \mainnet
                             naming { store }
                         else 
-                            .pug Not Available
+                            .pug(key="not-available") Not Available
             .viewport-switchs.viewport-move.pug(class="#{store.menu.active}")
-                .switch.pug.s1(on-click=activate-s1)
-                .switch.pug.s2(on-click=activate-s2)
-                .switch.pug.s3(on-click=activate-s3)
+                .switch.pug.s1(on-click=activate-s1 key="switch-s1")
+                .switch.pug.s2(on-click=activate-s2 key="switch-s2")
+                .switch.pug.s3(on-click=activate-s3 key="switch-s3")
             .viewport-decoration.viewport-move.pug(class="#{store.menu.active}")
                 .circle.pug

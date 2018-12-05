@@ -8,6 +8,7 @@ require! {
     \ethereumjs-util : { BN }
     \../json-parse.ls
     \whitebox : { get-fullpair-by-index }
+    \../deadline.ls
 }
 export calc-fee = ({ network, tx }, cb)->
     cb null
@@ -34,7 +35,7 @@ export get-transactions = ({ network, address }, cb)->
     sort = \asc
     apikey = \4TNDAGS373T78YJDYBFH32ADXPVRMXZEIG
     query = stringify { module, action, apikey, address, sort, startblock, endblock }
-    err, resp <- get "#{api-url}?#{query}" .timeout { deadline: 2000 } .end
+    err, resp <- get "#{api-url}?#{query}" .timeout { deadline } .end
     return cb err if err?
     err, result <- json-parse resp.text
     return cb err if err?

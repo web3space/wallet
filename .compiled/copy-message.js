@@ -5,9 +5,13 @@
   module.exports = function(store){
     var copied, copiedClass, children;
     copied = store.current.copied;
+    if (copied === '') {
+      return null;
+    }
     copiedClass = copied === '' ? '' : 'opened';
     return react.createElement('div', {
-      className: copiedClass + " copied copied372389720"
+      key: "copy-message",
+      className: copiedClass + " copied copied-995214266"
     }, children = [react.createElement('div', {}, ' Copied'), react.createElement('div', {}, ' ' + copied)]);
   };
 }).call(this);

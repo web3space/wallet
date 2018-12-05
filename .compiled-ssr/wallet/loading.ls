@@ -54,8 +54,8 @@ require! {
 #             100%
 #                 transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg)
 module.exports = ->
-    react.create-element 'div', { className: 'loading-page loading-page-1737251852' }, children = 
+    react.create-element 'div', { key: "loading", className: 'loading-page loading-page-1737251852' }, children = 
         react.create-element 'div', { className: 'loading' }, children = 
-            react.create-element 'div', { className: 'inner one' }
-            react.create-element 'div', { className: 'inner two' }
-            react.create-element 'div', { className: 'inner three' }
+            react.create-element 'div', { key: "loading-1", className: 'inner one' }
+            react.create-element 'div', { key: "loading-2", className: 'inner two' }
+            react.create-element 'div', { key: "loading-3", className: 'inner three' }

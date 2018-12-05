@@ -29,6 +29,12 @@
   };
   out$.check = check = function(value){
     var res, ref$, key, decrypted;
+    if (toString$.call(value).slice(8, -1) !== 'String') {
+      return false;
+    }
+    if (value.length !== 4) {
+      return false;
+    }
     mem.encrypt = function(str){
       return md5(value + '234ef' + str).toString();
     };

@@ -26,7 +26,6 @@ module.exports = (store, page)->
     scroll-top!
     store.current.page = \loading
     name = get-page store, page
-    console.log { next: name }
     <- init-control store, name
     store.current.page = name
     <- focus-control store, name

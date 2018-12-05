@@ -196,7 +196,7 @@ export modal-control = (store)->
         cancel-ask store
     coin-image=
         background-image: "url(#{store.ask.image})"
-    react.create-element 'div', { className: 'modal-container modal-container-884661047' }, children = 
+    react.create-element 'div', { key: "modal-container", className: 'modal-container modal-container-884661047' }, children = 
         react.create-element 'div', { className: 'modal' }, children = 
             react.create-element 'div', { className: 'bg' }
             react.create-element 'div', { className: 'blur' }

@@ -196,7 +196,7 @@ export modal-control = (store)->
         cancel-ask store
     coin-image=
         background-image: "url(#{store.ask.image})"
-    .modal-container.pug
+    .modal-container.pug(key="modal-container")
         .modal.pug
             .bg.pug
             .blur.pug

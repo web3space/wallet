@@ -45,7 +45,9 @@
         to: to,
         value: value
       }, function(err){
-        return console.log(err);
+        if (err != null) {
+          return console.log(err);
+        }
       });
     });
     usdRate = (ref$ = wallet != null ? wallet.usdRate : void 8) != null ? ref$ : 0;

@@ -3,7 +3,7 @@ require! {
     \mobx : { toJS }
     \./math.ls : { times, minus }
     \./api.ls : { create-transaction, push-tx }
-    \./change-amount.ls
+    \./calc-amount.ls : { change-amount, calc-crypto }
     \./send-form.ls : { notify-form-result }
     \./get-name-mask.ls
     \./resolve-address.ls
@@ -11,23 +11,29 @@ require! {
     \./browser/window.ls
     \./navigate.ls
     \./close.ls
+    \./round.ls
+    \./round5.ls
 }
-# .content1990191598
+# .content-1690134222
+#     position: relative
 #     @import scheme
 #     $border-radius: 20px
 #     $label-padding: 12px
 #     $label-font: 12px
 #     >*
 #         display: inline-block
-#         margin: 10px 0 0 0
 #         text-align: center
-#         width: 94%
+#         width: 376px
 #         box-sizing: border-box
-#         border-radius: 5px
+#         border-radius: $border-radius
+#         position: absolute
+#         left: 11px
 #     >.more-buttons
-#         border: 1px solid #e6e4e4
 #         background: rgba(255, 255, 255, 0.24)
+#         top: 545px
 #         color: white
+#         padding: 5px
+#         border-radius: 20px
 #         >.more
 #             color: white
 #             width: 33.333%
@@ -41,10 +47,18 @@ require! {
 #             &:first-child
 #                 border-left: 0    
 #             &:hover
-#                 background: white
-#                 color: $primary
+#                 color: white - 20
+#     >.decoration
+#         top: 8px
+#         left: 28px
+#         width: 344px
+#         background: rgba(255, 255, 255, 0.24)
+#         height: 23px
+#         border-radius: 15px
 #     >.content-body
-#         padding: 13px
+#         top: 15px
+#         padding: 12px 12px 0px 12px
+#         height: 520px
 #         @import scheme
 #         background: white
 #         color: gray
@@ -52,8 +66,8 @@ require! {
 #             color: gray
 #         >form
 #             >table
-#                 background: rgba(243, 243, 243, 0.3)
-#                 border-radius: 3px
+#                 background: #e6f0ff
+#                 border-radius: 10px
 #                 width: 100%
 #                 border-spacing: 0
 #                 tr
@@ -64,17 +78,17 @@ require! {
 #                     &.green
 #                         color: #23b723
 #                     td
-#                         padding: 5px $label-padding
+#                         padding: 3px 10px
 #                         font-size: 14px
 #                         &:last-child
 #                             text-align: right
 #             max-width: 400px
 #             text-align: left
-#             >.control-label
-#                 padding-top: 5px
-#                 padding-left: $label-padding
-#                 font-size: $label-font
 #             >.form-group
+#                 >.control-label
+#                     padding-top: 5px
+#                     padding-left: $label-padding
+#                     font-size: $label-font
 #                 margin-top: 4px
 #                 .address
 #                     padding: 5px 10px
@@ -91,32 +105,59 @@ require! {
 #                     outline: none
 #                     width: 100%
 #                     box-sizing: border-box
-#                     border: 0
 #                     height: 30px
 #                     border-radius: $border-radius
 #                     padding: 0px 10px
 #                     font-size: 12px
 #                     margin: 1px
-#                     border: 1px solid gray
+#                     border: 1px solid #5E72E4
+#                 .amount-field
+#                     position: relative
+#                     >.label
+#                         position: absolute
+#                         top: 5px
+#                         display: inline
+#                         &.lusd
+#                             left: 184px
+#                         &.crypto
+#                             left: 138px
+#                             color: #5E72E4
+#                     input
+#                         width: 50%
+#                         display: inline-block
+#                         box-sizing: border-box
+#                         margin: 0
+#                         &.amount
+#                             border-radius: $border-radius 0 0 $border-radius
+#                             border-right: 0
+#                         &.amount-usd
+#                             background: #f1eeee
+#                             padding-left: 20px
+#                             border-radius: 0 $border-radius $border-radius 0
 #         >.header
 #             margin: 0
 #             padding: 10px
 #             text-align: left
 #             padding: 0
 #             >.head
-#                 width: 50%
+#                 width: 70%
 #                 line-height: 70px
+#                 font-size: 27px
+#                 font-weight: 700
 #                 vertical-align: middle
 #                 line-height: 29px
 #                 display: inline-block
-#                 color: #4469b1
+#                 color: #677897
 #                 &.right
 #                     text-align: right
+#                     width: 30%
 #             img
 #                 width: 34px
+#                 border-radius: 50px
 #         .usd
 #             font-size: 11px
 #             padding-left: $label-padding
+#             color: gray
 #         .topup
 #             display: inline-block
 #             margin-left: 5px
@@ -126,9 +167,13 @@ require! {
 #             border-radius: 3px
 #             line-height: 12px
 #             font-size: 12px
+#         .balance
+#             color: #5E72E4
 #         .not-enough
 #             color: red
 #             min-height: 30px
+#             padding: 0 11px
+#             font-size: 12px
 #         .escrow
 #             padding: 5px 11px
 #             min-height: 20px
@@ -136,27 +181,29 @@ require! {
 #             font-size: 14px
 #         .bold
 #             font-weight: bold
-#         .buttons
-#             margin-top: 10px
-#             text-align: left
-#             border-radius: 0px 0px 5px 5px
-#             overflow: hidden
-#             border: 1px solid white
-#             border-top: 1px solid $primary
-#             .btn
-#                 width: 187px
-#                 height: 40px
-#                 line-height: 40px
-#                 text-align: center
-#                 font-size: 16px
-#                 color: $primary
+#         .button-container
+#             text-align: center
+#             .buttons
+#                 margin-top: 10px
+#                 text-align: left
+#                 border-radius: 100px
+#                 width: 260px
 #                 display: inline-block
-#                 cursor: pointer
-#                 box-sizing: border-box
-#                 &.btn-primary
-#                     background: $primary
-#                     color: white
-#                     width: 161px
+#                 overflow: hidden
+#                 box-shadow: 0px 0px 9px #bbbbbb
+#                 .btn
+#                     width: 50%
+#                     height: 40px
+#                     line-height: 40px
+#                     text-align: center
+#                     font-size: 16px
+#                     color: $primary
+#                     display: inline-block
+#                     cursor: pointer
+#                     box-sizing: border-box
+#                     &.btn-primary
+#                         background: #5E72E4
+#                         color: white
 send = ({ store })->
     return null if not store?
     { send-to } = ethnamed store
@@ -207,19 +254,26 @@ send = ({ store })->
         return send-escrow! if send.propose-escrow
         send-money!
     send-title = 
-        | send.propose-escrow then 'Send (Escrow)'
+        | send.propose-escrow then 'SEND (Escrow)'
         | _ => "Send"
     cancel = (event)->
         navigate store, \wallets
         notify-form-result send.id, "Cancelled by user"
     recepient-change = (event)->
         send.to = event.target.value ? ""
-    amount-change = (event)->
+    get-value = (event)->
         value = event.target.value.match(/^[0-9]+([.]([0-9]+)?)?$/)?0
         value2 = 
             | value?0 is \0 and value?1? and value?1 isnt \. => value.substr(1, value.length)
             | _ => value
-        change-amount store, value2
+        value2
+    amount-change = (event)->
+        value = get-value event
+        change-amount store, value
+    amount-usd-change = (event)->
+        value = get-value event
+        to-send = calc-crypto store, value
+        change-amount store, to-send
     encode-decode = ->
         send.show-data-mode =
             | send.show-data-mode is \decoded => \encoded 
@@ -235,7 +289,10 @@ send = ({ store })->
         store.current.filter = [\IN, \OUT, wallet.coin.token]
         navigate store, \history
     topup = ->
-        alert "Topup Service is not installed"
+        if wallet.network.topup
+            window.open wallet.network.topup
+        else
+            alert "Topup Service is not installed"
     network = 
         | store.current.network is \testnet => " (TESTNET) "
         | _ => ""
@@ -247,7 +304,8 @@ send = ({ store })->
         react.create-element 'div', { className: 'form-group' }, children = 
             react.create-element 'label', { className: 'control-label' }, ' ' + title
             content!
-    react.create-element 'div', { className: 'content content1990191598' }, children = 
+    react.create-element 'div', { className: 'content content-1690134222' }, children = 
+        react.create-element 'div', { className: 'decoration' }
         react.create-element 'div', { className: 'content-body' }, children = 
             react.create-element 'div', { className: 'header' }, children = 
                 react.create-element 'span', { className: 'head' }, ' ' + token + network + ' WALLET'
@@ -261,11 +319,14 @@ send = ({ store })->
                     react.create-element 'input', { type: 'text', on-change: recepient-change, value: "#{send.to}", placeholder: "#{store.current.send-to-mask}" }
                 form-group 'Amount', ->
                     react.create-element 'div', {}, children = 
-                        react.create-element 'div', {}, children = 
-                            react.create-element 'input', { type: 'text', on-change: amount-change, placeholder: "0", value: "#{send.amount-send}", className: 'amount' }
-                            if wallet.network.topup
-                                react.create-element 'a', { href: "#{wallet.network.topup}", target: "_blank", className: 'topup' }, ' Top up?'
-                        react.create-element 'div', { className: 'usd' }, ' Balance ' + wallet.balance
+                        react.create-element 'div', { className: 'amount-field' }, children = 
+                            react.create-element 'div', { className: 'label lusd' }, ' $'
+                            react.create-element 'div', { className: 'label crypto' }, ' ' + token
+                            react.create-element 'input', { type: 'text', on-change: amount-change, placeholder: "0", value: "#{round5 send.amount-send}", className: 'amount' }
+                            react.create-element 'input', { type: 'text', on-change: amount-usd-change, placeholder: "0", value: "#{round5 send.amount-send-usd}", className: 'amount-usd' }
+                        react.create-element 'div', { className: 'usd' }, children = 
+                            react.create-element 'span', {}, ' Balance'
+                            react.create-element 'span', { className: 'balance' }, ' ' + wallet.balance + ' ' + token + ' '
                         react.create-element 'div', { className: 'control-label not-enough text-left' }, ' ' + send.error
                 if is-data
                     form-group 'Data', ->
@@ -277,30 +338,31 @@ send = ({ store })->
                         react.create-element 'tr', {}, children = 
                             react.create-element 'td', {}, ' You Send '
                             react.create-element 'td', {}, children = 
-                                react.create-element 'div', {}, ' ' + when-empty(send.amount-send, 0) + '  ' + token
-                                react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-send-usd
+                                react.create-element 'div', {}, ' ' + round5(send.amount-charged) + '  ' + token
+                                react.create-element 'div', { className: 'usd' }, ' $ ' + round5 send.amount-charged-usd
                         react.create-element 'tr', { className: 'green' }, children = 
                             react.create-element 'td', {}, ' Recepient obtains'
                             react.create-element 'td', {}, children = 
-                                react.create-element 'div', { className: 'bold' }, ' ' + send.amount-obtain + '  ' + token
-                                react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-obtain-usd
+                                react.create-element 'div', { className: 'bold' }, ' ' + round5(send.amount-obtain) + '  ' + token
+                                react.create-element 'div', { className: 'usd' }, ' $ ' + round5 send.amount-obtain-usd
                         react.create-element 'tr', { className: 'orange' }, children = 
                             react.create-element 'td', {}, ' Transaction Fee'
                             react.create-element 'td', {}, children = 
-                                react.create-element 'div', {}, ' ' + send.amount-send-fee + '  ' + token
-                                react.create-element 'div', { className: 'usd' }, ' $ ' + send.amount-send-fee-usd
+                                react.create-element 'div', {}, ' ' + round5(send.amount-send-fee) + '  ' + token
+                                react.create-element 'div', { className: 'usd' }, ' $ ' + round5(send.amount-send-fee-usd)
                 react.create-element 'div', { className: 'escrow' }, children = 
                     if send.propose-escrow
                         react.create-element 'div', {}, ' You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically'
-            react.create-element 'div', { className: 'buttons' }, children = 
-                react.create-element 'a', { on-click: send-anyway, className: 'btn btn-primary' }, children = 
-                    react.create-element 'span', {}, ' ' + send-title
-                    if send.sending
-                        react.create-element 'span', {}, ' ...'
-                react.create-element 'a', { on-click: cancel, className: 'btn btn-default' }, ' Cancel'
+            react.create-element 'div', { className: 'button-container' }, children = 
+                react.create-element 'div', { className: 'buttons' }, children = 
+                    react.create-element 'a', { on-click: send-anyway, className: 'btn btn-primary' }, children = 
+                        react.create-element 'span', {}, ' ' + send-title
+                        if send.sending
+                            react.create-element 'span', {}, ' ...'
+                    react.create-element 'a', { on-click: cancel, className: 'btn btn-default' }, ' CANCEL'
         if not is-data
             react.create-element 'div', { className: 'more-buttons' }, children = 
-                react.create-element 'a', { on-click: receive, className: 'more receive' }, ' Receive'
-                react.create-element 'a', { on-click: history, className: 'more history' }, ' History'
-                react.create-element 'a', { on-click: topup, className: 'more history' }, ' Topup'
+                react.create-element 'a', { on-click: receive, className: 'more receive' }, ' RECEIVE'
+                react.create-element 'a', { on-click: history, className: 'more history' }, ' HISTORY'
+                react.create-element 'a', { on-click: topup, className: 'more history' }, ' TOPUP'
 module.exports = send

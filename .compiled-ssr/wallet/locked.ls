@@ -66,7 +66,7 @@ check-pin = (store)->
     return wrong-pin store if not check(store.current.pin)
     store.current.pin-trial = 0
     store.current.pin = ""
-    console.log \start
+    #console.log \start
     navigate store, \:init
 go-back = (store, number)->
     prev = number - 1
@@ -98,16 +98,16 @@ input = (store)-> (number)->
     type = 
         | not exists! => \input
         | _ => \password
-    react.create-element 'input', { key: "#{number}", type: "#{type}", value: "#{val number}", placeholder: "0", on-key-down: keydown(number), tabindex: "#{number + 1}", pattern: "[0-9]", inputmode: "numeric" }
+    react.create-element 'input', { key: "pin-#{number}", type: "#{type}", value: "#{val number}", placeholder: "0", on-key-down: keydown(number), tab-index: "#{number + 1}", pattern: "[0-9]", input-mode: "numeric", auto-complete: "off" }
 wrong-trials = (store)->
     return null if store.current.pin-trial is 0
-    react.create-element 'div', { className: 'wrong' }, ' Wrong PIN. Trials: ' + store.current.pin-trial
+    react.create-element 'div', { key: "wrong-trial", className: 'wrong' }, ' Wrong PIN. Trials: ' + store.current.pin-trial
 setup-button = (store)->
     setup = ->
         return alert('PIN should be 4 digits') if not store.current.pin.match(/^[0-9]{4}$/)?
         set store.current.pin
         check-pin store
-    react.create-element 'div', {}, children = 
+    react.create-element 'div', { key: "setup-button" }, children = 
         react.create-element 'button', { on-click: setup, className: 'setup' }, ' Setup'
         react.create-element 'div', { className: 'hint' }, ' Please memorize this PIN and do not provide it to third party.'
 locked = ({ store })->
@@ -117,9 +117,9 @@ locked = ({ store })->
     footer =
         | not exists! => setup-button
         | _ => wrong-trials
-    react.create-element 'div', { className: 'locked locked203904420' }, children = 
-        react.create-element 'div', { className: 'title' }, ' ' + title
-        react.create-element 'div', { className: 'inputs' }, children = 
+    react.create-element 'div', { key: "locked", className: 'locked locked203904420' }, children = 
+        react.create-element 'div', { key: "locked-title", className: 'title' }, ' ' + title
+        react.create-element 'div', { key: "locked-inputs", className: 'inputs' }, children = 
             [0 to 3] |> map input store
         footer store
 focus = (store, cb)->

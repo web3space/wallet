@@ -35,7 +35,6 @@
     }
     store.current.pinTrial = 0;
     store.current.pin = "";
-    console.log('start');
     return navigate(store, ':init');
   };
   goBack = function(store, number){
@@ -106,14 +105,15 @@
         }
       }());
       return react.createElement('input', {
-        key: number + "",
+        key: "pin-" + number,
         type: type + "",
         value: val(number) + "",
         placeholder: "0",
         onKeyDown: keydown(number),
-        tabindex: (number + 1) + "",
+        tabIndex: (number + 1) + "",
         pattern: "[0-9]",
-        inputmode: "numeric"
+        inputMode: "numeric",
+        autoComplete: "off"
       });
     };
   };
@@ -122,6 +122,7 @@
       return null;
     }
     return react.createElement('div', {
+      key: "wrong-trial",
       className: 'wrong'
     }, ' Wrong PIN. Trials: ' + store.current.pinTrial);
   };
@@ -134,7 +135,9 @@
       set(store.current.pin);
       return checkPin(store);
     };
-    return react.createElement('div', {}, children = [
+    return react.createElement('div', {
+      key: "setup-button"
+    }, children = [
       react.createElement('button', {
         onClick: setup,
         className: 'setup'
@@ -163,11 +166,14 @@
       }
     }());
     return react.createElement('div', {
+      key: "locked",
       className: 'locked locked203904420'
     }, children = [
       react.createElement('div', {
+        key: "locked-title",
         className: 'title'
       }, ' ' + title), react.createElement('div', {
+        key: "locked-inputs",
         className: 'inputs'
       }, children = map(input(store))(
       [0, 1, 2, 3])), footer(store)

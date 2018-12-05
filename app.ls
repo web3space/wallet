@@ -25,7 +25,7 @@ module.exports = ({ store, reload })->
         pages[store.current.page]
     .pug
         description store
-        .app.pug
+        .app.pug(key="content")
             modal-control store
             copy-message store
             current-page { store }

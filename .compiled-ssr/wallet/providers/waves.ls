@@ -2,6 +2,7 @@ require! {
     \superagent : { get }
     \../math.ls : { div }
     \../json-parse.ls
+    \../deadline.ls
 }
 export calc-fee = ({ network, tx }, cb)->
     cb null
@@ -12,7 +13,7 @@ export create-transaction = ({ sender, recepient, amount, amount-fee } , cb)-->
 export push-tx = ({ network, rawtx } , cb)-->
     cb "Not implemented"
 export get-balance = ({ address } , cb)->
-    err, res <- get "https://nodes.wavesnodes.com/addresses/balance/#address"  .timeout(deadline: 15000).end
+    err, res <- get "https://nodes.wavesnodes.com/addresses/balance/#address"  .timeout({ deadline }).end
     return cb err if err?
     err, result <- json-parse res.text
     return cb err if err?

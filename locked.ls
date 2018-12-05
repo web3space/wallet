@@ -66,7 +66,7 @@ check-pin = (store)->
     return wrong-pin store if not check(store.current.pin)
     store.current.pin-trial = 0
     store.current.pin = ""
-    console.log \start
+    #console.log \start
     navigate store, \:init
 go-back = (store, number)->
     prev = number - 1
@@ -98,16 +98,16 @@ input = (store)-> (number)->
     type = 
         | not exists! => \input
         | _ => \password
-    input.pug(key="#{number}" type="#{type}" value="#{val number}" placeholder="0" on-key-down=keydown(number) tabindex="#{number + 1}" pattern="[0-9]" inputmode="numeric")
+    input.pug(key="pin-#{number}" type="#{type}" value="#{val number}" placeholder="0" on-key-down=keydown(number) tab-index="#{number + 1}" pattern="[0-9]" input-mode="numeric" auto-complete="off")
 wrong-trials = (store)->
     return null if store.current.pin-trial is 0
-    .pug.wrong Wrong PIN. Trials: #{store.current.pin-trial}
+    .pug.wrong(key="wrong-trial") Wrong PIN. Trials: #{store.current.pin-trial}
 setup-button = (store)->
     setup = ->
         return alert('PIN should be 4 digits') if not store.current.pin.match(/^[0-9]{4}$/)?
         set store.current.pin
         check-pin store
-    .pug
+    .pug(key="setup-button")
         button.setup.pug(on-click=setup) Setup
         .hint.pug Please memorize this PIN and do not provide it to third party.
 locked = ({ store })->
@@ -117,9 +117,9 @@ locked = ({ store })->
     footer =
         | not exists! => setup-button
         | _ => wrong-trials
-    .pug.locked
-        .pug.title #{title}
-        .pug.inputs
+    .pug.locked(key="locked")
+        .pug.title(key="locked-title") #{title}
+        .pug.inputs(key="locked-inputs")
             [0 to 3] |> map input store
         footer store
 focus = (store, cb)->

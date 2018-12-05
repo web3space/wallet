@@ -117,11 +117,11 @@ module.exports = ({ store })->
         react.create-element 'div', { className: 'box' }, children = 
             react.create-element 'div', { className: 'custom-domain' }, children = 
                 react.create-element 'div', { className: 'part hidden' }, children = 
-                    react.create-element 'input', { value: "#{store.current.nicknamefull}" }
+                    react.create-element 'input', { default-value: "#{store.current.nicknamefull}" }
                 react.create-element 'div', { className: 'part visible' }, children = 
                     react.create-element 'input', { value: "#{store.current.nickname}", on-change: enter-nick }
             if (store.current.message ? "").length > 0
-                react.create-element 'textarea', { value: "#{store.current.message}", title: "#{store.current.message}", className: 'message' }
+                react.create-element 'textarea', { default-value: "#{store.current.message}", title: "#{store.current.message}", className: 'message' }
             react.create-element 'div', {}, children = 
                 switch store.current.status
                     case \verify

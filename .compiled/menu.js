@@ -60,7 +60,8 @@
       return current.tryEditSeed = false;
     };
     enterPin = function(e){
-      store.current.pin = e.target.value;
+      var ref$;
+      store.current.pin = (ref$ = e.target.value) != null ? ref$ : "";
       if (!check(store.current.pin)) {
         return;
       }
@@ -93,7 +94,8 @@
     activateS2 = activateS('s2');
     activateS3 = activateS('s3');
     return react.createElement('div', {
-      className: 'menu menu1833732630'
+      key: "menu",
+      className: 'menu menu-1361926599'
     }, children = react.createElement('div', {
       className: 'viewport'
     }, children = [
@@ -120,12 +122,15 @@
       }, children = [
         react.createElement('div', {
           onClick: activateS1,
+          key: "switch-s1",
           className: 'text s1'
         }, ' Secret Phrase'), react.createElement('div', {
           onClick: activateS2,
+          key: "switch-s2",
           className: 'text s2'
         }, ' Balance'), react.createElement('div', {
           onClick: activateS3,
+          key: "switch-s3",
           className: 'text s3'
         }, ' Register Name'), react.createElement('div', {
           className: 'text-line'
@@ -144,6 +149,7 @@
           switch (false) {
           case current.tryEditSeed !== true:
             return react.createElement('div', {
+              key: "try-edit-seed",
               className: 'box'
             }, children = [
               react.createElement('div', {}, children = react.createElement('input', {
@@ -156,6 +162,7 @@
             ]);
           case current.savedSeed !== false:
             return react.createElement('div', {
+              key: "edit-phrase",
               className: 'box'
             }, children = [
               react.createElement('div', {
@@ -174,7 +181,9 @@
               }, ' Save'))
             ]);
           case current.savedSeed !== true:
-            return react.createElement('div', {}, children = react.createElement('button', {
+            return react.createElement('div', {
+              key: "init-edit"
+            }, children = react.createElement('button', {
               onClick: editSeed
             }, ' Edit Secret'));
           }
@@ -208,18 +217,23 @@
           ? naming({
             store: store
           })
-          : react.createElement('div', {}, ' Not Available')))
+          : react.createElement('div', {
+            key: "not-available"
+          }, ' Not Available')))
       ]), react.createElement('div', {
         className: store.menu.active + " viewport-switchs viewport-move"
       }, children = [
         react.createElement('div', {
           onClick: activateS1,
+          key: "switch-s1",
           className: 'switch s1'
         }), react.createElement('div', {
           onClick: activateS2,
+          key: "switch-s2",
           className: 'switch s2'
         }), react.createElement('div', {
           onClick: activateS3,
+          key: "switch-s3",
           className: 'switch s3'
         })
       ]), react.createElement('div', {

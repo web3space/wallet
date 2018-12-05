@@ -5,15 +5,19 @@
   module.exports = function(){
     var children;
     return react.createElement('div', {
+      key: "loading",
       className: 'loading-page loading-page-1737251852'
     }, children = react.createElement('div', {
       className: 'loading'
     }, children = [
       react.createElement('div', {
+        key: "loading-1",
         className: 'inner one'
       }), react.createElement('div', {
+        key: "loading-2",
         className: 'inner two'
       }), react.createElement('div', {
+        key: "loading-3",
         className: 'inner three'
       })
     ]));

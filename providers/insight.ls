@@ -7,6 +7,7 @@ require! {
     \bitcoinjs-lib : BitcoinLib
     \../json-parse.ls
     \whitebox : { get-fullpair-by-index }
+    \../deadline.ls
 }
 export calc-fee = ({ network, tx }, cb)->
     cb null
@@ -69,7 +70,7 @@ export push-tx = ({ network, rawtx } , cb)-->
     cb null, res.body
 export get-balance = ({ address, network } , cb)->
     return cb "Url is not defined" if not network?api?url?
-    err, data <- get "#{network.api.url}/api/addr/#{address}/balance" .timeout { deadline: 2000 } .end
+    err, data <- get "#{network.api.url}/api/addr/#{address}/balance" .timeout { deadline } .end
     return cb err if err? or data.text.length is 0
     dec = get-dec network
     num = data.text `div` dec
@@ -87,7 +88,7 @@ transform-tx = (net, t)-->
     { network, tx, amount, fee, time, url, to }
 export get-transactions = ({ network, address}, cb)->
     return cb "Url is not defined" if not network?api?url?
-    err, data <- get "#{network.api.url}/api/txs/?address=#{address}" .timeout { deadline: 2000 } .end
+    err, data <- get "#{network.api.url}/api/txs/?address=#{address}" .timeout { deadline } .end
     return cb err if err?   
     err, result <- json-parse data.text
     return cb err if err?

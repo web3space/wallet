@@ -117,11 +117,11 @@ module.exports = ({ store })->
         .pug.box
             .pug.custom-domain
                 .part.hidden.pug
-                    input.pug(value="#{store.current.nicknamefull}")
+                    input.pug(default-value="#{store.current.nicknamefull}")
                 .part.visible.pug
                     input.pug(value="#{store.current.nickname}" on-change=enter-nick)
             if (store.current.message ? "").length > 0
-                textarea.pug.message(value="#{store.current.message}" title="#{store.current.message}")
+                textarea.pug.message(default-value="#{store.current.message}" title="#{store.current.message}")
             .pug
                 switch store.current.status
                     case \verify

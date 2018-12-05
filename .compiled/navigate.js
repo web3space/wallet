@@ -45,9 +45,6 @@
     scrollTop();
     store.current.page = 'loading';
     name = getPage(store, page);
-    console.log({
-      next: name
-    });
     return initControl(store, name, function(){
       store.current.page = name;
       return focusControl(store, name, function(){});

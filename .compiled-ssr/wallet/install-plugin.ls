@@ -13,7 +13,7 @@ verify-plugin = (plugin, cb)->
     cb null
 get-registry = ->
     registry-string = local-storage.get-item(\plugin-registry) ? "[]"
-    console.log registry-string
+    #console.log registry-string
     JSON.parse registry-string
 get-plugin = (name)->
     item = local-storage.get-item name

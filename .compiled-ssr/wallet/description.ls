@@ -81,9 +81,10 @@ require! {
 #             color: orange
 module.exports = (store)->
     return null if store.current.demo is no
+    return null
     close-demo = ->
         store.current.demo = no
-    react.create-element 'div', { className: 'description description1821565793' }, children = 
+    react.create-element 'div', { key: "description", className: 'description description1821565793' }, children = 
         react.create-element 'h1', {}, ' Ethnamed Smart-Wallet'
         react.create-element 'div', { className: 'line' }, children = 
             react.create-element 'span', {}, ' This is a demo of the wallet connected to the '
@@ -112,7 +113,7 @@ module.exports = (store)->
                 react.create-element 'span', { className: 'part mark' }, ' testnet'
                 react.create-element 'span', { className: 'part' }, ' `);'
         for item in <[ eth btc xem ]>
-            react.create-element 'pre', {}, children = 
+            react.create-element 'pre', { key: "#{item}" }, children = 
                 react.create-element 'span', { className: 'part' }, ' web3t.'
                 react.create-element 'span', { className: 'part mark' }, ' ' + item
                 react.create-element 'span', { className: 'part' }, ' .sendTransaction({ to, amount }, cb)'

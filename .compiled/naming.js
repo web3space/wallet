@@ -142,7 +142,7 @@
         react.createElement('div', {
           className: 'part hidden'
         }, children = react.createElement('input', {
-          value: store.current.nicknamefull + ""
+          defaultValue: store.current.nicknamefull + ""
         })), react.createElement('div', {
           className: 'part visible'
         }, children = react.createElement('input', {
@@ -150,7 +150,7 @@
           onChange: enterNick
         }))
       ]), ((ref$ = store.current.message) != null ? ref$ : "").length > 0 ? react.createElement('textarea', {
-        value: store.current.message + "",
+        defaultValue: store.current.message + "",
         title: store.current.message + "",
         className: 'message'
       }) : void 8, react.createElement('div', {}, children = (function(){

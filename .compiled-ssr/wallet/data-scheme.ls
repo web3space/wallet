@@ -47,6 +47,7 @@ store =
             value: \0
             amount-send: \0
             amount-charged: \0
+            amount-charged-usd: \0
             amount-send-usd: \0
             amount-send-fee: \0
             amount-send-fee-usd: \0

@@ -66,14 +66,14 @@ wallets = ({ store })->
         store.current.account.wallets 
             |> drop list 
             |> take max
-    react.create-element 'div', {}, children = 
+    react.create-element 'div', { key: "wallets" }, children = 
         menu { store }
-        react.create-element 'div', { className: 'wallets wallets-1312736338' }, children = 
-            react.create-element 'div', { on-click: go-up, className: "#{can-up} arrow arrow-t" }, children = 
+        react.create-element 'div', { key: "wallets-body", className: 'wallets wallets-1312736338' }, children = 
+            react.create-element 'div', { on-click: go-up, key: "arrow-up", className: "#{can-up} arrow arrow-t" }, children = 
                 react.create-element 'img', { src: "#{arrow}" }
-            react.create-element 'div', { className: 'wallet-container' }, children = 
+            react.create-element 'div', { key: "wallets-viewport", className: 'wallet-container' }, children = 
                 wallets |> map wallet store, wallets
-            react.create-element 'div', { on-click: go-down, className: "#{can-down} arrow arrow-d" }, children = 
+            react.create-element 'div', { on-click: go-down, key: "arrow-down", className: "#{can-down} arrow arrow-d" }, children = 
                 react.create-element 'img', { src: "#{arrow}" }
 wallets.init = (store, cb)->
     return cb null if store.current.account?

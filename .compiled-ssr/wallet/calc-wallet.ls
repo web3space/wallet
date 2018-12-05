@@ -4,12 +4,8 @@ require! {
     \prelude-ls : { find, map, pairs-to-obj }
     \./plugin-loader.ls : { get-coins }
     \./workflow.ls : { run, task }
+    \./round5.ls
 }
-round5 = (value)->
-    return \... if not value?
-    [head, dec] = value.to-string!.split(\.)
-    return head if not dec?
-    "#{head}.#{dec.substr 0, 5}"
 calc-wallet = (store, cb)->
     return cb "Store is required" if not store?
     { wallets } = store.current.account

@@ -5,6 +5,7 @@ require! {
     \../math.ls : { plus, minus, div, times }
     \bitcoinjs-lib-zcash : BitcoinLib
     \../json-parse.ls
+    \../deadline.ls
 }
 export calc-fee = ({ network, tx }, cb)->
 export get-keys = ({ network, mnemonic, index }, cb)->

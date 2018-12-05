@@ -5,7 +5,7 @@
   ref$ = require('prelude-ls'), objToPairs = ref$.objToPairs, map = ref$.map, pairsToObj = ref$.pairsToObj, each = ref$.each;
   guid = require('./guid.ls');
   waitFormResult = require('./send-form.ls').waitFormResult;
-  changeAmount = require('./change-amount.ls');
+  changeAmount = require('./calc-amount.ls').changeAmount;
   ref$ = require('./math.ls'), div = ref$.div, plus = ref$.plus;
   web3 = require('../eth.ls');
   protect = require('protect');

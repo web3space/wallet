@@ -139,7 +139,7 @@ module.exports = (store, wallets, wallet)-->
         to = ""
         value = 0
         err <- send-transaction { to, value }
-        console.log err
+        console.log err if err?
     usd-rate = wallet?usd-rate ? 0
     expand = ->
         store.current.wallet-index = index

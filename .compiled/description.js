@@ -7,10 +7,12 @@
     if (store.current.demo === false) {
       return null;
     }
+    return null;
     closeDemo = function(){
       return store.current.demo = false;
     };
     return react.createElement('div', {
+      key: "description",
       className: 'description description1821565793'
     }, children = [
       react.createElement('h1', {}, ' Ethnamed Smart-Wallet'), react.createElement('div', {
@@ -53,7 +55,9 @@
         var i$, ref$, len$, results$ = [];
         for (i$ = 0, len$ = (ref$ = ['eth', 'btc', 'xem']).length; i$ < len$; ++i$) {
           item = ref$[i$];
-          results$.push(react.createElement('pre', {}, children = [
+          results$.push(react.createElement('pre', {
+            key: item + ""
+          }, children = [
             react.createElement('span', {
               className: 'part'
             }, ' web3t.'), react.createElement('span', {

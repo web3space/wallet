@@ -1,4 +1,4 @@
-.menu1833732630
+.menu-1361926599
     @import scheme
     $viewport-height: $height / 2.5
     $cards-height: 324px
@@ -214,8 +214,11 @@
                     border-radius: $pad / 2
                     background: #FFFFFF
                     box-sizing: border-box
+                    input
+                        border-radius: 25px
+                    textarea
+                        border-radius: 7px
                     input, textarea
-                        border-radius: 23px
                         outline: none
                         border: 1px solid #dedcdc
                         padding: 3px 10px
@@ -254,10 +257,12 @@
                         display: inline-block
                         >*
                             display: block
-                            max-width: 80%
-                            text-align: right
+                            max-width: 100%
+                            margin: 0 auto
+                            text-align: center
                         >.decor
-                            color: rgba(#7083e8, 0.05)
+                            color: rgba(#7083e8, 0.1)
+                            transform: rotate(10deg)
                             position: absolute
                             top: -35px
                             right: -20px
@@ -275,7 +280,7 @@
                                 margin-top: -8px
                                 font-weight: 100
                             >.number
-                                font-size: 50px
+                                font-size: 40px
                                 font-weight: 400
                 &.s3
                     width: $width - $pad * 6

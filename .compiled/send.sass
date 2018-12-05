@@ -1,19 +1,23 @@
-.content1990191598
+.content-1690134222
+    position: relative
     @import scheme
     $border-radius: 20px
     $label-padding: 12px
     $label-font: 12px
     >*
         display: inline-block
-        margin: 10px 0 0 0
         text-align: center
-        width: 94%
+        width: 376px
         box-sizing: border-box
-        border-radius: 5px
+        border-radius: $border-radius
+        position: absolute
+        left: 11px
     >.more-buttons
-        border: 1px solid #e6e4e4
         background: rgba(255, 255, 255, 0.24)
+        top: 545px
         color: white
+        padding: 5px
+        border-radius: 20px
         >.more
             color: white
             width: 33.333%
@@ -27,10 +31,18 @@
             &:first-child
                 border-left: 0    
             &:hover
-                background: white
-                color: $primary
+                color: white - 20
+    >.decoration
+        top: 8px
+        left: 28px
+        width: 344px
+        background: rgba(255, 255, 255, 0.24)
+        height: 23px
+        border-radius: 15px
     >.content-body
-        padding: 13px
+        top: 15px
+        padding: 12px 12px 0px 12px
+        height: 520px
         @import scheme
         background: white
         color: gray
@@ -38,8 +50,8 @@
             color: gray
         >form
             >table
-                background: rgba(243, 243, 243, 0.3)
-                border-radius: 3px
+                background: #e6f0ff
+                border-radius: 10px
                 width: 100%
                 border-spacing: 0
                 tr
@@ -50,17 +62,17 @@
                     &.green
                         color: #23b723
                     td
-                        padding: 5px $label-padding
+                        padding: 3px 10px
                         font-size: 14px
                         &:last-child
                             text-align: right
             max-width: 400px
             text-align: left
-            >.control-label
-                padding-top: 5px
-                padding-left: $label-padding
-                font-size: $label-font
             >.form-group
+                >.control-label
+                    padding-top: 5px
+                    padding-left: $label-padding
+                    font-size: $label-font
                 margin-top: 4px
                 .address
                     padding: 5px 10px
@@ -77,32 +89,59 @@
                     outline: none
                     width: 100%
                     box-sizing: border-box
-                    border: 0
                     height: 30px
                     border-radius: $border-radius
                     padding: 0px 10px
                     font-size: 12px
                     margin: 1px
-                    border: 1px solid gray
+                    border: 1px solid #5E72E4
+                .amount-field
+                    position: relative
+                    >.label
+                        position: absolute
+                        top: 5px
+                        display: inline
+                        &.lusd
+                            left: 184px
+                        &.crypto
+                            left: 138px
+                            color: #5E72E4
+                    input
+                        width: 50%
+                        display: inline-block
+                        box-sizing: border-box
+                        margin: 0
+                        &.amount
+                            border-radius: $border-radius 0 0 $border-radius
+                            border-right: 0
+                        &.amount-usd
+                            background: #f1eeee
+                            padding-left: 20px
+                            border-radius: 0 $border-radius $border-radius 0
         >.header
             margin: 0
             padding: 10px
             text-align: left
             padding: 0
             >.head
-                width: 50%
+                width: 70%
                 line-height: 70px
+                font-size: 27px
+                font-weight: 700
                 vertical-align: middle
                 line-height: 29px
                 display: inline-block
-                color: #4469b1
+                color: #677897
                 &.right
                     text-align: right
+                    width: 30%
             img
                 width: 34px
+                border-radius: 50px
         .usd
             font-size: 11px
             padding-left: $label-padding
+            color: gray
         .topup
             display: inline-block
             margin-left: 5px
@@ -112,9 +151,13 @@
             border-radius: 3px
             line-height: 12px
             font-size: 12px
+        .balance
+            color: #5E72E4
         .not-enough
             color: red
             min-height: 30px
+            padding: 0 11px
+            font-size: 12px
         .escrow
             padding: 5px 11px
             min-height: 20px
@@ -122,24 +165,26 @@
             font-size: 14px
         .bold
             font-weight: bold
-        .buttons
-            margin-top: 10px
-            text-align: left
-            border-radius: 0px 0px 5px 5px
-            overflow: hidden
-            border: 1px solid white
-            border-top: 1px solid $primary
-            .btn
-                width: 187px
-                height: 40px
-                line-height: 40px
-                text-align: center
-                font-size: 16px
-                color: $primary
+        .button-container
+            text-align: center
+            .buttons
+                margin-top: 10px
+                text-align: left
+                border-radius: 100px
+                width: 260px
                 display: inline-block
-                cursor: pointer
-                box-sizing: border-box
-                &.btn-primary
-                    background: $primary
-                    color: white
-                    width: 161px
+                overflow: hidden
+                box-shadow: 0px 0px 9px #bbbbbb
+                .btn
+                    width: 50%
+                    height: 40px
+                    line-height: 40px
+                    text-align: center
+                    font-size: 16px
+                    color: $primary
+                    display: inline-block
+                    cursor: pointer
+                    box-sizing: border-box
+                    &.btn-primary
+                        background: #5E72E4
+                        color: white

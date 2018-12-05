@@ -25,7 +25,7 @@ module.exports = ({ store, reload })->
         pages[store.current.page]
     react.create-element 'div', {}, children = 
         description store
-        react.create-element 'div', { className: 'app app-1800129419' }, children = 
+        react.create-element 'div', { key: "content", className: 'app app-1800129419' }, children = 
             modal-control store
             copy-message store
             current-page { store }

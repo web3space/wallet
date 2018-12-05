@@ -50,6 +50,7 @@
         value: '0',
         amountSend: '0',
         amountCharged: '0',
+        amountChargedUsd: '0',
         amountSendUsd: '0',
         amountSendFee: '0',
         amountSendFeeUsd: '0',

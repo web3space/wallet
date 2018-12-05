@@ -18,6 +18,8 @@ export encrypt = (str)->
     return mem.encrypt(str) if typeof! mem.encrypt is \Function
     \unsecure
 export check = (value)->
+    return no if typeof! value isnt \String
+    return no if value.length isnt 4
     mem.encrypt = (str)->
         md5(value + '234ef' + str).toString!
     res = local-storage.get-item(\spin) ? ""

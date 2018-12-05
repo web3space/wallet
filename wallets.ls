@@ -66,14 +66,14 @@ wallets = ({ store })->
         store.current.account.wallets 
             |> drop list 
             |> take max
-    .pug
+    .pug(key="wallets")
         menu { store }
-        .wallets.pug
-            .arrow.arrow-t.pug(on-click=go-up class="#{can-up}")
+        .wallets.pug(key="wallets-body")
+            .arrow.arrow-t.pug(on-click=go-up class="#{can-up}" key="arrow-up")
                 img.pug(src="#{arrow}")
-            .wallet-container.pug
+            .wallet-container.pug(key="wallets-viewport")
                 wallets |> map wallet store, wallets
-            .arrow.arrow-d.pug(on-click=go-down class="#{can-down}")
+            .arrow.arrow-d.pug(on-click=go-down class="#{can-down}" key="arrow-down")
                 img.pug(src="#{arrow}")
 wallets.init = (store, cb)->
     return cb null if store.current.account?
