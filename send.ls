@@ -112,28 +112,30 @@ require! {
                     margin: 1px
                     border: 1px solid #5E72E4
                 .amount-field
-                    position: relative
-                    >.label
-                        position: absolute
-                        top: 5px
-                        display: inline
-                        &.lusd
-                            left: 184px
-                        &.crypto
-                            left: 138px
-                            color: #5E72E4
-                    input
+                    >.input-wrapper
+                        position: relative
                         width: 50%
                         display: inline-block
                         box-sizing: border-box
                         margin: 0
-                        &.amount
-                            border-radius: $border-radius 0 0 $border-radius
-                            border-right: 0
-                        &.amount-usd
-                            background: #f1eeee
-                            padding-left: 20px
-                            border-radius: 0 $border-radius $border-radius 0
+                        >.label
+                            position: absolute
+                            top: 5px
+                            display: inline
+                            &.lusd
+                                left: 5px
+                            &.crypto
+                                right: 5px
+                                color: #5E72E4
+                        input
+                            width: 100%
+                            &.amount
+                                border-radius: $border-radius 0 0 $border-radius
+                                border-right: 0
+                            &.amount-usd
+                                background: #f1eeee
+                                padding-left: 20px
+                                border-radius: 0 $border-radius $border-radius 0
         >.header
             margin: 0
             padding: 10px
@@ -238,6 +240,7 @@ send = ({ store })->
     perform-send-unsafe = (cb)->
         send-tx { wallet, ...send }, cb
     send-money = ->
+        return if wallet.balance is \...
         return if send.sending is yes
         send.sending = yes
         err, data <- perform-send-safe
@@ -320,10 +323,12 @@ send = ({ store })->
                 form-group 'Amount', ->
                     .pug
                         .pug.amount-field
-                            .label.lusd.pug $
-                            .label.crypto.pug #{token}
-                            input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{round5 send.amount-send}")
-                            input.pug.amount-usd(type='text' on-change=amount-usd-change placeholder="0" value="#{round5 send.amount-send-usd}")
+                            .input-wrapper.pug
+                                .label.crypto.pug #{token}
+                                input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{round5 send.amount-send}")
+                            .input-wrapper.pug
+                                .label.lusd.pug $
+                                input.pug.amount-usd(type='text' on-change=amount-usd-change placeholder="0" value="#{round5 send.amount-send-usd}")
                         .pug.usd
                             span.pug Balance
                             span.pug.balance #{wallet.balance + ' ' + token} 
@@ -336,12 +341,12 @@ send = ({ store })->
                 table.pug
                     tbody.pug
                         tr.pug
-                            td.pug You Send 
+                            td.pug You Spend 
                             td.pug
                                 .pug #{round5(send.amount-charged) + '  ' + token}
                                 .pug.usd $ #{round5 send.amount-charged-usd}
                         tr.pug.green
-                            td.pug Recepient obtains
+                            td.pug Recepient Obtains
                             td.pug
                                 .pug.bold #{round5(send.amount-obtain) + '  ' + token}
                                 .pug.usd $ #{round5 send.amount-obtain-usd}

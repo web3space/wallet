@@ -2,13 +2,13 @@ require! {
     \react
     \prelude-ls : { filter }
     \whitebox
-    \./tools.ls : { cut, money }
     \./naming.ls
     \./seed.ls
     \./use-network.ls
     \./web3.ls
     \./pin.ls : { check }
     \./navigate.ls
+    \./round5.ls
 }
 { get-container, generate-wallet } = whitebox
 .menu
@@ -216,6 +216,7 @@ require! {
                     color: transparent
                 >.slide-body
                     display: flex
+                    color: $primary
                     align-items: center
                     justify-content: center
                     cursor: pointer
@@ -392,7 +393,7 @@ module.exports = ({ store })->
                             .symbol.pug $
                             .number.pug 
                                 if store.current.refreshing is no
-                                    .pug #{money current.balance-usd}
+                                    .pug #{round5 current.balance-usd}
                                 else
                                     .pug ...
                 .slide.pug.s3(on-click=activate-s3)

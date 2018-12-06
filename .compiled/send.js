@@ -84,6 +84,9 @@
       }, send)), cb);
     };
     sendMoney = function(){
+      if (wallet.balance === '...') {
+        return;
+      }
       if (send.sending === true) {
         return;
       }
@@ -221,7 +224,7 @@
       ]);
     };
     return react.createElement('div', {
-      className: 'content content-1690134222'
+      className: 'content content545998174'
     }, children = [
       react.createElement('div', {
         className: 'decoration'
@@ -260,22 +263,30 @@
                 className: 'amount-field'
               }, children = [
                 react.createElement('div', {
-                  className: 'label lusd'
-                }, ' $'), react.createElement('div', {
-                  className: 'label crypto'
-                }, ' ' + token), react.createElement('input', {
-                  type: 'text',
-                  onChange: amountChange,
-                  placeholder: "0",
-                  value: round5(send.amountSend) + "",
-                  className: 'amount'
-                }), react.createElement('input', {
-                  type: 'text',
-                  onChange: amountUsdChange,
-                  placeholder: "0",
-                  value: round5(send.amountSendUsd) + "",
-                  className: 'amount-usd'
-                })
+                  className: 'input-wrapper'
+                }, children = [
+                  react.createElement('div', {
+                    className: 'label crypto'
+                  }, ' ' + token), react.createElement('input', {
+                    type: 'text',
+                    onChange: amountChange,
+                    placeholder: "0",
+                    value: round5(send.amountSend) + "",
+                    className: 'amount'
+                  })
+                ]), react.createElement('div', {
+                  className: 'input-wrapper'
+                }, children = [
+                  react.createElement('div', {
+                    className: 'label lusd'
+                  }, ' $'), react.createElement('input', {
+                    type: 'text',
+                    onChange: amountUsdChange,
+                    placeholder: "0",
+                    value: round5(send.amountSendUsd) + "",
+                    className: 'amount-usd'
+                  })
+                ])
               ]), react.createElement('div', {
                 className: 'usd'
               }, children = [
@@ -299,7 +310,7 @@
             ]);
           }) : void 8, react.createElement('table', {}, children = react.createElement('tbody', {}, children = [
             react.createElement('tr', {}, children = [
-              react.createElement('td', {}, ' You Send '), react.createElement('td', {}, children = [
+              react.createElement('td', {}, ' You Spend '), react.createElement('td', {}, children = [
                 react.createElement('div', {}, ' ' + round5(send.amountCharged) + '  ' + token), react.createElement('div', {
                   className: 'usd'
                 }, ' $ ' + round5(send.amountChargedUsd))
@@ -307,7 +318,7 @@
             ]), react.createElement('tr', {
               className: 'green'
             }, children = [
-              react.createElement('td', {}, ' Recepient obtains'), react.createElement('td', {}, children = [
+              react.createElement('td', {}, ' Recepient Obtains'), react.createElement('td', {}, children = [
                 react.createElement('div', {
                   className: 'bold'
                 }, ' ' + round5(send.amountObtain) + '  ' + token), react.createElement('div', {

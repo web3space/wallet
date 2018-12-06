@@ -14,7 +14,7 @@ require! {
     \./round.ls
     \./round5.ls
 }
-# .content-1690134222
+# .content545998174
 #     position: relative
 #     @import scheme
 #     $border-radius: 20px
@@ -112,28 +112,30 @@ require! {
 #                     margin: 1px
 #                     border: 1px solid #5E72E4
 #                 .amount-field
-#                     position: relative
-#                     >.label
-#                         position: absolute
-#                         top: 5px
-#                         display: inline
-#                         &.lusd
-#                             left: 184px
-#                         &.crypto
-#                             left: 138px
-#                             color: #5E72E4
-#                     input
+#                     >.input-wrapper
+#                         position: relative
 #                         width: 50%
 #                         display: inline-block
 #                         box-sizing: border-box
 #                         margin: 0
-#                         &.amount
-#                             border-radius: $border-radius 0 0 $border-radius
-#                             border-right: 0
-#                         &.amount-usd
-#                             background: #f1eeee
-#                             padding-left: 20px
-#                             border-radius: 0 $border-radius $border-radius 0
+#                         >.label
+#                             position: absolute
+#                             top: 5px
+#                             display: inline
+#                             &.lusd
+#                                 left: 5px
+#                             &.crypto
+#                                 right: 5px
+#                                 color: #5E72E4
+#                         input
+#                             width: 100%
+#                             &.amount
+#                                 border-radius: $border-radius 0 0 $border-radius
+#                                 border-right: 0
+#                             &.amount-usd
+#                                 background: #f1eeee
+#                                 padding-left: 20px
+#                                 border-radius: 0 $border-radius $border-radius 0
 #         >.header
 #             margin: 0
 #             padding: 10px
@@ -238,6 +240,7 @@ send = ({ store })->
     perform-send-unsafe = (cb)->
         send-tx { wallet, ...send }, cb
     send-money = ->
+        return if wallet.balance is \...
         return if send.sending is yes
         send.sending = yes
         err, data <- perform-send-safe
@@ -304,7 +307,7 @@ send = ({ store })->
         react.create-element 'div', { className: 'form-group' }, children = 
             react.create-element 'label', { className: 'control-label' }, ' ' + title
             content!
-    react.create-element 'div', { className: 'content content-1690134222' }, children = 
+    react.create-element 'div', { className: 'content content545998174' }, children = 
         react.create-element 'div', { className: 'decoration' }
         react.create-element 'div', { className: 'content-body' }, children = 
             react.create-element 'div', { className: 'header' }, children = 
@@ -320,10 +323,12 @@ send = ({ store })->
                 form-group 'Amount', ->
                     react.create-element 'div', {}, children = 
                         react.create-element 'div', { className: 'amount-field' }, children = 
-                            react.create-element 'div', { className: 'label lusd' }, ' $'
-                            react.create-element 'div', { className: 'label crypto' }, ' ' + token
-                            react.create-element 'input', { type: 'text', on-change: amount-change, placeholder: "0", value: "#{round5 send.amount-send}", className: 'amount' }
-                            react.create-element 'input', { type: 'text', on-change: amount-usd-change, placeholder: "0", value: "#{round5 send.amount-send-usd}", className: 'amount-usd' }
+                            react.create-element 'div', { className: 'input-wrapper' }, children = 
+                                react.create-element 'div', { className: 'label crypto' }, ' ' + token
+                                react.create-element 'input', { type: 'text', on-change: amount-change, placeholder: "0", value: "#{round5 send.amount-send}", className: 'amount' }
+                            react.create-element 'div', { className: 'input-wrapper' }, children = 
+                                react.create-element 'div', { className: 'label lusd' }, ' $'
+                                react.create-element 'input', { type: 'text', on-change: amount-usd-change, placeholder: "0", value: "#{round5 send.amount-send-usd}", className: 'amount-usd' }
                         react.create-element 'div', { className: 'usd' }, children = 
                             react.create-element 'span', {}, ' Balance'
                             react.create-element 'span', { className: 'balance' }, ' ' + wallet.balance + ' ' + token + ' '
@@ -336,12 +341,12 @@ send = ({ store })->
                 react.create-element 'table', {}, children = 
                     react.create-element 'tbody', {}, children = 
                         react.create-element 'tr', {}, children = 
-                            react.create-element 'td', {}, ' You Send '
+                            react.create-element 'td', {}, ' You Spend '
                             react.create-element 'td', {}, children = 
                                 react.create-element 'div', {}, ' ' + round5(send.amount-charged) + '  ' + token
                                 react.create-element 'div', { className: 'usd' }, ' $ ' + round5 send.amount-charged-usd
                         react.create-element 'tr', { className: 'green' }, children = 
-                            react.create-element 'td', {}, ' Recepient obtains'
+                            react.create-element 'td', {}, ' Recepient Obtains'
                             react.create-element 'td', {}, children = 
                                 react.create-element 'div', { className: 'bold' }, ' ' + round5(send.amount-obtain) + '  ' + token
                                 react.create-element 'div', { className: 'usd' }, ' $ ' + round5 send.amount-obtain-usd

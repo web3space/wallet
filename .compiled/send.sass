@@ -1,4 +1,4 @@
-.content-1690134222
+.content545998174
     position: relative
     @import scheme
     $border-radius: 20px
@@ -96,28 +96,30 @@
                     margin: 1px
                     border: 1px solid #5E72E4
                 .amount-field
-                    position: relative
-                    >.label
-                        position: absolute
-                        top: 5px
-                        display: inline
-                        &.lusd
-                            left: 184px
-                        &.crypto
-                            left: 138px
-                            color: #5E72E4
-                    input
+                    >.input-wrapper
+                        position: relative
                         width: 50%
                         display: inline-block
                         box-sizing: border-box
                         margin: 0
-                        &.amount
-                            border-radius: $border-radius 0 0 $border-radius
-                            border-right: 0
-                        &.amount-usd
-                            background: #f1eeee
-                            padding-left: 20px
-                            border-radius: 0 $border-radius $border-radius 0
+                        >.label
+                            position: absolute
+                            top: 5px
+                            display: inline
+                            &.lusd
+                                left: 5px
+                            &.crypto
+                                right: 5px
+                                color: #5E72E4
+                        input
+                            width: 100%
+                            &.amount
+                                border-radius: $border-radius 0 0 $border-radius
+                                border-right: 0
+                            &.amount-usd
+                                background: #f1eeee
+                                padding-left: 20px
+                                border-radius: 0 $border-radius $border-radius 0
         >.header
             margin: 0
             padding: 10px

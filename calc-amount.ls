@@ -42,10 +42,7 @@ export change-amount = (store, amount-send)->
         | _ => result-amount-send `plus` tx-fee
     send.amount-charged-usd =  send.amount-charged `times` usd-rate
     send.amount-send-fee-usd = tx-fee `times` usd-rate
-    balance = 
-        | wallet.balance is \... => 0
-        | _ => wallet.balance
     send.error = 
-        if parse-float(balance `minus` result-amount-send) < 0
-        then "Not Enough Funds"
-        else ""
+        | wallet.balance is \... => "Balance is not yet loaded"
+        | parse-float(wallet.balance `minus` result-amount-send) < 0 => "Not Enough Funds"
+        | _ => ""

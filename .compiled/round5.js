@@ -6,8 +6,8 @@
       return '...';
     }
     ref$ = value.toString().split('.'), head = ref$[0], dec = ref$[1];
-    if (dec == null) {
-      return head;
+    if ((dec != null ? dec : "").length === 0) {
+      return head + ".00";
     }
     return head + "." + dec.substr(0, 8);
   };

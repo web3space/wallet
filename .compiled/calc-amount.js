@@ -49,7 +49,6 @@
         : send.network.txFee;
       usdRate = (ref$ = wallet != null ? wallet.usdRate : void 8) != null ? ref$ : 0;
       return transaction(function(){
-        var balance;
         send.amountSend = amountSend != null ? amountSend : "";
         send.value = times(resultAmountSend, Math.pow(10, send.network.decimals));
         send.amountObtain = resultAmountSend;
@@ -70,15 +69,16 @@
         }());
         send.amountChargedUsd = times(send.amountCharged, usdRate);
         send.amountSendFeeUsd = times(txFee, usdRate);
-        balance = (function(){
+        return send.error = (function(){
           switch (false) {
           case wallet.balance !== '...':
-            return 0;
+            return "Balance is not yet loaded";
+          case !(parseFloat(minus(wallet.balance, resultAmountSend)) < 0):
+            return "Not Enough Funds";
           default:
-            return wallet.balance;
+            return "";
           }
         }());
-        return send.error = parseFloat(minus(balance, resultAmountSend)) < 0 ? "Not Enough Funds" : "";
       });
     });
   };

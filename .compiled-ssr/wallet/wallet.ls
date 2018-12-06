@@ -6,6 +6,7 @@ require! {
     \react-copy-to-clipboard : { CopyToClipboard }
     \./copied-inform.ls
     \./copy.ls
+    \./round5.ls
 }
 #
 # .wallet674423384
@@ -144,7 +145,7 @@ module.exports = (store, wallets, wallet)-->
     expand = ->
         store.current.wallet-index = index
     active = if index is store.current.wallet-index then \active else ''
-    balance = cut(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
+    balance = round5(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
     react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active} wallet wallet674423384" }, children = 
         react.create-element 'div', { className: 'wallet-top' }, children = 
             react.create-element 'div', { className: 'top-left' }, children = 

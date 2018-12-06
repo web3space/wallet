@@ -2,16 +2,16 @@ require! {
     \react
     \prelude-ls : { filter }
     \whitebox
-    \./tools.ls : { cut, money }
     \./naming.ls
     \./seed.ls
     \./use-network.ls
     \./web3.ls
     \./pin.ls : { check }
     \./navigate.ls
+    \./round5.ls
 }
 { get-container, generate-wallet } = whitebox
-# .menu-1361926599
+# .menu1435905544
 #     @import scheme
 #     $viewport-height: $height / 2.5
 #     $cards-height: 324px
@@ -216,6 +216,7 @@ require! {
 #                     color: transparent
 #                 >.slide-body
 #                     display: flex
+#                     color: $primary
 #                     align-items: center
 #                     justify-content: center
 #                     cursor: pointer
@@ -350,7 +351,7 @@ module.exports = ({ store })->
     activate-s1 = activate-s \s1
     activate-s2 = activate-s \s2
     activate-s3 = activate-s \s3
-    react.create-element 'div', { key: "menu", className: 'menu menu-1361926599' }, children = 
+    react.create-element 'div', { key: "menu", className: 'menu menu1435905544' }, children = 
         react.create-element 'div', { className: 'viewport' }, children = 
             react.create-element 'div', { className: 'viewport-icons' }, children = 
                 react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png", on-click: refresh, className: "#{store.current.refreshing} reload" }
@@ -392,7 +393,7 @@ module.exports = ({ store })->
                             react.create-element 'div', { className: 'symbol' }, ' $'
                             react.create-element 'div', { className: 'number' }, children = 
                                 if store.current.refreshing is no
-                                    react.create-element 'div', {}, ' ' + money current.balance-usd
+                                    react.create-element 'div', {}, ' ' + round5 current.balance-usd
                                 else
                                     react.create-element 'div', {}, ' ...'
                 react.create-element 'div', { on-click: activate-s3, className: 'slide s3' }, children = 
