@@ -2,16 +2,16 @@ require! {
     \react
     \prelude-ls : { filter }
     \whitebox
+    \./tools.ls : { cut, money }
     \./naming.ls
     \./seed.ls
     \./use-network.ls
     \./web3.ls
     \./pin.ls : { check }
     \./navigate.ls
-    \./round5.ls
 }
 { get-container, generate-wallet } = whitebox
-# .menu1435905544
+# .menu-1361926599
 #     @import scheme
 #     $viewport-height: $height / 2.5
 #     $cards-height: 324px
@@ -216,7 +216,6 @@ require! {
 #                     color: transparent
 #                 >.slide-body
 #                     display: flex
-#                     color: $primary
 #                     align-items: center
 #                     justify-content: center
 #                     cursor: pointer
@@ -333,7 +332,7 @@ module.exports = ({ store })->
     cancel-try = ->
         current.try-edit-seed = no
     enter-pin = (e)->
-        store.current.pin = e.target.value ? ""
+        store.current.pin = e.target.value
         return if not check(store.current.pin)
         cancel-try!
         current.saved-seed = no
@@ -351,17 +350,17 @@ module.exports = ({ store })->
     activate-s1 = activate-s \s1
     activate-s2 = activate-s \s2
     activate-s3 = activate-s \s3
-    react.create-element 'div', { key: "menu", className: 'menu menu1435905544' }, children = 
+    react.create-element 'div', { className: 'menu menu-1361926599' }, children = 
         react.create-element 'div', { className: 'viewport' }, children = 
             react.create-element 'div', { className: 'viewport-icons' }, children = 
                 react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png", on-click: refresh, className: "#{store.current.refreshing} reload" }
                 react.create-element 'span', { on-click: switch-network, className: 'network' }, ' ' + store.current.network
-                react.create-element 'span', { on-click: switch-network, className: 'chevron' }, ' ▿'
+                react.create-element 'span', { on-click: switch-network, className: 'chevron' }, ' >'
                 react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png", on-click: lock, className: 'lock' }
             react.create-element 'div', { className: "#{store.menu.active} viewport-header viewport-move" }, children = 
-                react.create-element 'div', { on-click: activate-s1, key: "switch-s1", className: 'text s1' }, ' Secret Phrase'
-                react.create-element 'div', { on-click: activate-s2, key: "switch-s2", className: 'text s2' }, ' Balance'
-                react.create-element 'div', { on-click: activate-s3, key: "switch-s3", className: 'text s3' }, ' Register Name'
+                react.create-element 'div', { on-click: activate-s1, className: 'text s1' }, ' Secret Phrase'
+                react.create-element 'div', { on-click: activate-s2, className: 'text s2' }, ' Balance'
+                react.create-element 'div', { on-click: activate-s3, className: 'text s3' }, ' Register Name'
                 react.create-element 'div', { className: 'text-line' }
             react.create-element 'div', { className: "#{store.menu.active} viewport-background viewport-move" }
             react.create-element 'div', { className: "#{store.menu.active} viewport-content viewport-move" }, children = 
@@ -369,13 +368,13 @@ module.exports = ({ store })->
                     react.create-element 'div', { className: 'slide-body' }, children = 
                         switch
                             case current.try-edit-seed is yes
-                                react.create-element 'div', { key: "try-edit-seed", className: 'box' }, children = 
+                                react.create-element 'div', { className: 'box' }, children = 
                                     react.create-element 'div', {}, children = 
                                         react.create-element 'input', { on-change: enter-pin, value: "#{current.pin}", placeholder: "Enter PIN" }
                                     react.create-element 'div', {}, '    '
                                         react.create-element 'button', { on-click: cancel-try }, ' Cancel'
                             case current.saved-seed is no
-                                react.create-element 'div', { key: "edit-phrase", className: 'box' }, children = 
+                                react.create-element 'div', { className: 'box' }, children = 
                                     react.create-element 'div', { className: 'title' }, children = 
                                         react.create-element 'span', {}, ' Secret Text'
                                         react.create-element 'a', { on-click: generate, className: 'generate' }, ' (generate)'
@@ -383,7 +382,7 @@ module.exports = ({ store })->
                                     react.create-element 'div', {}, children = 
                                         react.create-element 'button', { on-click: save-seed }, ' Save'
                             case current.saved-seed is yes
-                                react.create-element 'div', { key: "init-edit" }, children = 
+                                react.create-element 'div', {}, children = 
                                     react.create-element 'button', { on-click: edit-seed }, ' Edit Secret'
                 react.create-element 'div', { on-click: activate-s2, className: 'slide s2' }, children = 
                     react.create-element 'div', { className: 'slide-body' }, children = 
@@ -393,7 +392,7 @@ module.exports = ({ store })->
                             react.create-element 'div', { className: 'symbol' }, ' $'
                             react.create-element 'div', { className: 'number' }, children = 
                                 if store.current.refreshing is no
-                                    react.create-element 'div', {}, ' ' + round5 current.balance-usd
+                                    react.create-element 'div', {}, ' ' + money current.balance-usd
                                 else
                                     react.create-element 'div', {}, ' ...'
                 react.create-element 'div', { on-click: activate-s3, className: 'slide s3' }, children = 
@@ -401,10 +400,10 @@ module.exports = ({ store })->
                         if store.current.network is \mainnet
                             naming { store }
                         else 
-                            react.create-element 'div', { key: "not-available" }, ' Not Available'
+                            react.create-element 'div', {}, ' Not Available'
             react.create-element 'div', { className: "#{store.menu.active} viewport-switchs viewport-move" }, children = 
-                react.create-element 'div', { on-click: activate-s1, key: "switch-s1", className: 'switch s1' }
-                react.create-element 'div', { on-click: activate-s2, key: "switch-s2", className: 'switch s2' }
-                react.create-element 'div', { on-click: activate-s3, key: "switch-s3", className: 'switch s3' }
+                react.create-element 'div', { on-click: activate-s1, className: 'switch s1' }
+                react.create-element 'div', { on-click: activate-s2, className: 'switch s2' }
+                react.create-element 'div', { on-click: activate-s3, className: 'switch s3' }
             react.create-element 'div', { className: "#{store.menu.active} viewport-decoration viewport-move" }, children = 
                 react.create-element 'div', { className: 'circle' }

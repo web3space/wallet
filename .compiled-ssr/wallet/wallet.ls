@@ -9,7 +9,7 @@ require! {
     \./round5.ls
 }
 #
-# .wallet674423384
+# .wallet1729544693
 #     $cards-height: 324px
 #     $pad: 20px
 #     $radius: 15px 
@@ -76,6 +76,7 @@ require! {
 #             >.balance
 #                 &:last-child
 #                     font-weight: bold
+#                     font-size: 13px
 #         >.top-right
 #             width: 35%
 #             padding-left: 35px
@@ -93,6 +94,10 @@ require! {
 #                 font-weight: bold
 #                 background: #FFFFFF
 #                 box-shadow: 0 2px 9px 0 rgba(184,184,184,0.50)
+#                 transition: all .5s
+#                 &:hover
+#                     background: #7aa7f3
+#                     color: white
 #     >.wallet-middle
 #         $card-top-height: 50px
 #         width: 100%
@@ -146,7 +151,7 @@ module.exports = (store, wallets, wallet)-->
         store.current.wallet-index = index
     active = if index is store.current.wallet-index then \active else ''
     balance = round5(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
-    react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active} wallet wallet674423384" }, children = 
+    react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active} wallet wallet1729544693" }, children = 
         react.create-element 'div', { className: 'wallet-top' }, children = 
             react.create-element 'div', { className: 'top-left' }, children = 
                 react.create-element 'div', { className: 'img' }, children = 

@@ -10,7 +10,7 @@
       return navigate(store, 'wallets');
     };
     return react.createElement('div', {
-      className: 'sent sent-1645795966'
+      className: 'sent sent-1843679899'
     }, children = [
       react.createElement('div', {
         className: 'icon'

@@ -203,9 +203,13 @@ require! {
                     display: inline-block
                     cursor: pointer
                     box-sizing: border-box
+                    transaction: all .5s
                     &.btn-primary
-                        background: #5E72E4
+                        background: #6CA7ED
                         color: white
+                    &:hover
+                        background: rgba(#6CA7ED, 0.2)
+                        color: #6CA7ED
 send = ({ store })->
     return null if not store?
     { send-to } = ethnamed store

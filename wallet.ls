@@ -76,6 +76,7 @@ require! {
             >.balance
                 &:last-child
                     font-weight: bold
+                    font-size: 13px
         >.top-right
             width: 35%
             padding-left: 35px
@@ -93,6 +94,10 @@ require! {
                 font-weight: bold
                 background: #FFFFFF
                 box-shadow: 0 2px 9px 0 rgba(184,184,184,0.50)
+                transition: all .5s
+                &:hover
+                    background: #7aa7f3
+                    color: white
     >.wallet-middle
         $card-top-height: 50px
         width: 100%

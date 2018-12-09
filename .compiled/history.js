@@ -42,9 +42,9 @@
     arrow = function(type){
       switch (false) {
       case type !== 'IN':
-        return "INC";
+        return 'INC';
       default:
-        return "OUT";
+        return 'OUT';
       }
     };
     goBack = function(){
@@ -113,7 +113,7 @@
     switchTypeOut = switchFilter('OUT');
     coins = getCoins();
     return react.createElement('div', {
-      className: 'normalheader history history798548141'
+      className: 'normalheader history history876008007'
     }, children = [
       react.createElement('div', {
         className: 'header'

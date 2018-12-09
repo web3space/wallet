@@ -5,7 +5,7 @@ require! {
     \./get-record.ls
     \./get-name-mask.ls
 }
-# .naming1860299560
+# .naming-643971748
 #     @import scheme
 #     width: 95%
 #     padding: 0px 0
@@ -40,9 +40,12 @@ require! {
 #         background: transparent
 #         border: none !important
 #         text-align: center
-#         height: 12px
+#         height: 15px
+#         overflow: hidden
+#         text-overflow: ellipsis
 #         color: #595768 - 20
 #         resize: none
+#         padding: 0 !important
 install-record = (name, record)->
     "Please setup html element <meta property='ethnamed' value='#{record}' /> on #{name} to pass verification"
 state =
@@ -113,15 +116,15 @@ module.exports = ({ store })->
         store.current.custom-domain = yes
     change-to-ethnamed = ->
         store.current.custom-domain = no
-    react.create-element 'div', { className: 'box-container naming naming1860299560' }, children = 
+    react.create-element 'div', { className: 'box-container naming naming-643971748' }, children = 
         react.create-element 'div', { className: 'box' }, children = 
             react.create-element 'div', { className: 'custom-domain' }, children = 
                 react.create-element 'div', { className: 'part hidden' }, children = 
-                    react.create-element 'input', { default-value: "#{store.current.nicknamefull}" }
+                    react.create-element 'input', { value: "#{store.current.nicknamefull}" }
                 react.create-element 'div', { className: 'part visible' }, children = 
                     react.create-element 'input', { value: "#{store.current.nickname}", on-change: enter-nick }
             if (store.current.message ? "").length > 0
-                react.create-element 'textarea', { default-value: "#{store.current.message}", title: "#{store.current.message}", className: 'message' }
+                react.create-element 'div', { title: "#{store.current.message}", className: 'message' }, ' ' + store.current.message
             react.create-element 'div', {}, children = 
                 switch store.current.status
                     case \verify

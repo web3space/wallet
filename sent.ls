@@ -3,9 +3,13 @@ require! {
     \./navigate.ls
 }
 .sent
+    @import scheme
     text-align: center
     color: #5bb03e
     padding-top: 100px
+    background: white
+    height: $height
+    width: $width
     .icon
         img
             height: 150px

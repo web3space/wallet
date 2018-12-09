@@ -14,7 +14,7 @@ require! {
     \./round.ls
     \./round5.ls
 }
-# .content545998174
+# .content-1673245415
 #     position: relative
 #     @import scheme
 #     $border-radius: 20px
@@ -203,9 +203,13 @@ require! {
 #                     display: inline-block
 #                     cursor: pointer
 #                     box-sizing: border-box
+#                     transaction: all .5s
 #                     &.btn-primary
-#                         background: #5E72E4
+#                         background: #6CA7ED
 #                         color: white
+#                     &:hover
+#                         background: rgba(#6CA7ED, 0.2)
+#                         color: #6CA7ED
 send = ({ store })->
     return null if not store?
     { send-to } = ethnamed store
@@ -307,7 +311,7 @@ send = ({ store })->
         react.create-element 'div', { className: 'form-group' }, children = 
             react.create-element 'label', { className: 'control-label' }, ' ' + title
             content!
-    react.create-element 'div', { className: 'content content545998174' }, children = 
+    react.create-element 'div', { className: 'content content-1673245415' }, children = 
         react.create-element 'div', { className: 'decoration' }
         react.create-element 'div', { className: 'content-body' }, children = 
             react.create-element 'div', { className: 'header' }, children = 

@@ -60,7 +60,7 @@
     return react.createElement('div', {
       onClick: expand,
       key: wallet.coin.token + "",
-      className: active + " wallet wallet674423384"
+      className: active + " wallet wallet1729544693"
     }, children = [
       react.createElement('div', {
         className: 'wallet-top'

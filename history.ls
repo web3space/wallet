@@ -70,7 +70,6 @@ require! {
         width: 100%
         .head, .record
             &.record
-                border: 1px solid #CCC
                 border-radius: 3px
                 margin: 10px
                 background: white
@@ -124,7 +123,6 @@ module.exports = ({ store })->
     filt = store.current.filter
     filter-txs = (tx)->
         { type, token } = tx
-        #console.log type, token, tx
         type in filt and token in filt
     applied-transactions =
         transactions 
@@ -132,8 +130,8 @@ module.exports = ({ store })->
             |> sort-by (.time) 
             |> reverse
     arrow = (type)->
-        | type is \IN => "INC"
-        | _ => "OUT"
+        | type is \IN => \INC
+        | _ => \OUT
     go-back = ->
         navigate store, \wallets
     extended = (str)->

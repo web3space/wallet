@@ -38,7 +38,6 @@ calc-wallet = (store, cb)->
             |> pairs-to-obj
     <- run [tasks] .then
     return cb err if err?
-    console.log store.current.account
     store.current.balance-usd = round5 state.balance-usd
     cb null
 module.exports = calc-wallet

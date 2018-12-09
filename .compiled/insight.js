@@ -182,7 +182,7 @@
       return cb("Url is not defined");
     }
     return get(network.api.url + "/api/txs/?address=" + address).timeout({
-      deadline: deadline
+      deadline: 5000
     }).end(function(err, data){
       if (err != null) {
         return cb(err);

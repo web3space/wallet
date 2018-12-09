@@ -20,6 +20,7 @@ to-hex = ->
 transform-tx = (network, t)-->
     { url } = network.api
     network = \eth 
+    dec = get-dec network
     tx = t.hash
     amount = t.value `div` dec
     time = t.time-stamp
@@ -80,6 +81,7 @@ export get-balance = ({ network, address} , cb)->
     web3 = get-web3 network
     err, number <- web3.eth.get-balance address
     return cb err if err?
+    #return cb number if number.length > 100
     dec = get-dec network
     balance = number `div` dec
     cb null, balance

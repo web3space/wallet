@@ -12,13 +12,15 @@ extend = ({ address, coin }, tx)-->
         | tx.to `same` address => \IN
         | _ => \OUT
     tx.token = coin.token
+add-transaction = (tx)->
+    transactions.push tx
 build-loader = (wallet)-> task (cb)->
     { address, network, coin } = wallet
     err, data <- get-transactions { address, network, coin.token }
     return cb! if err?
     data 
         |> each extend { address, coin }
-        |> each transactions~push
+        |> each add-transaction
     cb!
 export load-all-transactions = (store, cb)->
     transactions.length = 0

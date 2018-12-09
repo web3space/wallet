@@ -40,9 +40,12 @@ require! {
         background: transparent
         border: none !important
         text-align: center
-        height: 12px
+        height: 15px
+        overflow: hidden
+        text-overflow: ellipsis
         color: #595768 - 20
         resize: none
+        padding: 0 !important
 install-record = (name, record)->
     "Please setup html element <meta property='ethnamed' value='#{record}' /> on #{name} to pass verification"
 state =
@@ -117,11 +120,11 @@ module.exports = ({ store })->
         .pug.box
             .pug.custom-domain
                 .part.hidden.pug
-                    input.pug(default-value="#{store.current.nicknamefull}")
+                    input.pug(value="#{store.current.nicknamefull}")
                 .part.visible.pug
                     input.pug(value="#{store.current.nickname}" on-change=enter-nick)
             if (store.current.message ? "").length > 0
-                textarea.pug.message(default-value="#{store.current.message}" title="#{store.current.message}")
+                .pug.message(title="#{store.current.message}") #{store.current.message}
             .pug
                 switch store.current.status
                     case \verify

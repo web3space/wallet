@@ -2,13 +2,13 @@ require! {
     \react
     \prelude-ls : { filter }
     \whitebox
+    \./tools.ls : { cut, money }
     \./naming.ls
     \./seed.ls
     \./use-network.ls
     \./web3.ls
     \./pin.ls : { check }
     \./navigate.ls
-    \./round5.ls
 }
 { get-container, generate-wallet } = whitebox
 .menu
@@ -216,7 +216,6 @@ require! {
                     color: transparent
                 >.slide-body
                     display: flex
-                    color: $primary
                     align-items: center
                     justify-content: center
                     cursor: pointer
@@ -333,7 +332,7 @@ module.exports = ({ store })->
     cancel-try = ->
         current.try-edit-seed = no
     enter-pin = (e)->
-        store.current.pin = e.target.value ? ""
+        store.current.pin = e.target.value
         return if not check(store.current.pin)
         cancel-try!
         current.saved-seed = no
@@ -351,17 +350,17 @@ module.exports = ({ store })->
     activate-s1 = activate-s \s1
     activate-s2 = activate-s \s2
     activate-s3 = activate-s \s3
-    .menu.pug(key="menu")
+    .menu.pug
         .viewport.pug
             .viewport-icons.pug
                 img.reload.pug(class="#{store.current.refreshing}" src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png" on-click=refresh)
                 span.network.pug(on-click=switch-network) #{store.current.network}
-                span.chevron.pug(on-click=switch-network) ▿
+                span.chevron.pug(on-click=switch-network) >
                 img.lock.pug(src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png" on-click=lock)
             .viewport-header.viewport-move.pug(class="#{store.menu.active}")
-                .text.pug.s1(on-click=activate-s1 key="switch-s1") Secret Phrase
-                .text.pug.s2(on-click=activate-s2 key="switch-s2") Balance
-                .text.pug.s3(on-click=activate-s3 key="switch-s3") Register Name
+                .text.pug.s1(on-click=activate-s1) Secret Phrase
+                .text.pug.s2(on-click=activate-s2) Balance
+                .text.pug.s3(on-click=activate-s3) Register Name
                 .text-line.pug
             .viewport-background.viewport-move.pug(class="#{store.menu.active}")
             .viewport-content.viewport-move.pug(class="#{store.menu.active}")
@@ -369,13 +368,13 @@ module.exports = ({ store })->
                     .slide-body.pug
                         switch
                             case current.try-edit-seed is yes
-                                .pug.box(key="try-edit-seed")
+                                .pug.box
                                     .pug
                                         input.pug(on-change=enter-pin value="#{current.pin}" placeholder="Enter PIN")
                                     .pug    
                                         button.pug(on-click=cancel-try) Cancel
                             case current.saved-seed is no
-                                .pug.box(key="edit-phrase")
+                                .pug.box
                                     .pug.title 
                                         span.pug Secret Text
                                         a.pug.generate(on-click=generate) (generate)
@@ -383,7 +382,7 @@ module.exports = ({ store })->
                                     .pug
                                         button.pug(on-click=save-seed) Save
                             case current.saved-seed is yes
-                                .pug(key="init-edit")
+                                .pug
                                     button.pug(on-click=edit-seed) Edit Secret
                 .slide.pug.s2(on-click=activate-s2)
                     .slide-body.pug
@@ -393,7 +392,7 @@ module.exports = ({ store })->
                             .symbol.pug $
                             .number.pug 
                                 if store.current.refreshing is no
-                                    .pug #{round5 current.balance-usd}
+                                    .pug #{money current.balance-usd}
                                 else
                                     .pug ...
                 .slide.pug.s3(on-click=activate-s3)
@@ -401,10 +400,10 @@ module.exports = ({ store })->
                         if store.current.network is \mainnet
                             naming { store }
                         else 
-                            .pug(key="not-available") Not Available
+                            .pug Not Available
             .viewport-switchs.viewport-move.pug(class="#{store.menu.active}")
-                .switch.pug.s1(on-click=activate-s1 key="switch-s1")
-                .switch.pug.s2(on-click=activate-s2 key="switch-s2")
-                .switch.pug.s3(on-click=activate-s3 key="switch-s3")
+                .switch.pug.s1(on-click=activate-s1)
+                .switch.pug.s2(on-click=activate-s2)
+                .switch.pug.s3(on-click=activate-s3)
             .viewport-decoration.viewport-move.pug(class="#{store.menu.active}")
                 .circle.pug

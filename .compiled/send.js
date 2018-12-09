@@ -224,7 +224,7 @@
       ]);
     };
     return react.createElement('div', {
-      className: 'content content545998174'
+      className: 'content content-1673245415'
     }, children = [
       react.createElement('div', {
         className: 'decoration'

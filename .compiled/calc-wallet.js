@@ -61,7 +61,6 @@
       if (typeof err != 'undefined' && err !== null) {
         return cb(err);
       }
-      console.log(store.current.account);
       store.current.balanceUsd = round5(state.balanceUsd);
       return cb(null);
     });

@@ -2,10 +2,14 @@ require! {
     \react
     \./navigate.ls
 }
-# .sent-1645795966
+# .sent-1843679899
+#     @import scheme
 #     text-align: center
 #     color: #5bb03e
 #     padding-top: 100px
+#     background: white
+#     height: $height
+#     width: $width
 #     .icon
 #         img
 #             height: 150px
@@ -25,7 +29,7 @@ require! {
 module.exports = ({ store })->
     go-home = ->
         navigate store, \wallets
-    react.create-element 'div', { className: 'sent sent-1645795966' }, children = 
+    react.create-element 'div', { className: 'sent sent-1843679899' }, children = 
         react.create-element 'div', { className: 'icon' }, children = 
             react.create-element 'img', { src: "./res/sent.png" }
         react.create-element 'div', { className: 'text' }, children = 

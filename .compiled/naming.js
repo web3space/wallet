@@ -132,7 +132,7 @@
       return store.current.customDomain = false;
     };
     return react.createElement('div', {
-      className: 'box-container naming naming1860299560'
+      className: 'box-container naming naming-643971748'
     }, children = react.createElement('div', {
       className: 'box'
     }, children = [
@@ -142,18 +142,17 @@
         react.createElement('div', {
           className: 'part hidden'
         }, children = react.createElement('input', {
-          defaultValue: store.current.nicknamefull + ""
+          value: store.current.nicknamefull + ""
         })), react.createElement('div', {
           className: 'part visible'
         }, children = react.createElement('input', {
           value: store.current.nickname + "",
           onChange: enterNick
         }))
-      ]), ((ref$ = store.current.message) != null ? ref$ : "").length > 0 ? react.createElement('textarea', {
-        defaultValue: store.current.message + "",
+      ]), ((ref$ = store.current.message) != null ? ref$ : "").length > 0 ? react.createElement('div', {
         title: store.current.message + "",
         className: 'message'
-      }) : void 8, react.createElement('div', {}, children = (function(){
+      }, ' ' + store.current.message) : void 8, react.createElement('div', {}, children = (function(){
         switch (store.current.status) {
         case 'verify':
           return react.createElement('div', {}, ' Nickname Verification...');
