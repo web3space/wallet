@@ -9,9 +9,8 @@ require! {
 }
 providers = { eth, waves, insight , xem, erc20 }
 action = (func)-> (config, cb)->
-    #console.log { config }
-    return cb "token is not defined" if not config?token?
-    provider = providers[config.token] ? insight 
+    return cb "provider is not defined" if not config?network?api?provider?
+    provider = providers[config.network.api.provider] ? insight 
     func provider, config, cb
 export calc-fee = action (provider, config, cb)->
     provider.calc-fee config, cb

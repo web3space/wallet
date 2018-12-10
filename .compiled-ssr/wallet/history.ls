@@ -180,7 +180,7 @@ module.exports = ({ store })->
                 for { token, tx, amount, fee, time, url, type } in applied-transactions
                     coin = 
                         coins |> find (.token is token)
-                    react.create-element 'div', { key: "#{tx}", className: "#{type} record" }, children = 
+                    react.create-element 'div', { key: "#{tx + type}", className: "#{type} record" }, children = 
                         react.create-element 'div', { className: 'cell text-center network' }, children = 
                             react.create-element 'div', {}, children = 
                                 react.create-element 'img', { src: "#{coin.image}" }

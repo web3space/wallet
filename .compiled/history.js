@@ -154,7 +154,7 @@
             coin = find(fn$)(
             coins);
             results$.push(react.createElement('div', {
-              key: tx + "",
+              key: (tx + type) + "",
               className: type + " record"
             }, children = [
               react.createElement('div', {

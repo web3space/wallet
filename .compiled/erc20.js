@@ -216,8 +216,9 @@
     return new BN(it);
   };
   transformTx = curry$(function(network, t){
-    var url, tx, amount, time, fee;
+    var url, dec, tx, amount, time, fee;
     url = network.api.url;
+    dec = getDec(network);
     network = 'eth';
     tx = t.hash;
     amount = div(t.value, dec);

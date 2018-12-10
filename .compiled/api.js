@@ -17,11 +17,11 @@
   };
   action = function(func){
     return function(config, cb){
-      var provider, ref$;
-      if ((config != null ? config.token : void 8) == null) {
-        return cb("token is not defined");
+      var ref$, ref1$, provider, ref2$;
+      if ((config != null ? (ref$ = config.network) != null ? (ref1$ = ref$.api) != null ? ref1$.provider : void 8 : void 8 : void 8) == null) {
+        return cb("provider is not defined");
       }
-      provider = (ref$ = providers[config.token]) != null ? ref$ : insight;
+      provider = (ref2$ = providers[config.network.api.provider]) != null ? ref2$ : insight;
       return func(provider, config, cb);
     };
   };

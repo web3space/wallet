@@ -28,10 +28,11 @@
   transformTx = curry$(function(network, t){
     var url, dec, tx, amount, time, fee;
     url = network.api.url;
-    network = 'eth';
     dec = getDec(network);
+    network = 'eth';
     tx = t.hash;
     amount = div(t.value, dec);
+    console.log(t.value, dec);
     time = t.timeStamp;
     url = url + "/tx/" + tx;
     fee = div(times(t.cumulativeGasUsed, t.gasPrice), dec);

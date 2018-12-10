@@ -180,7 +180,7 @@ module.exports = ({ store })->
                 for { token, tx, amount, fee, time, url, type } in applied-transactions
                     coin = 
                         coins |> find (.token is token)
-                    .record.pug(class="#{type}" key="#{tx}")
+                    .record.pug(class="#{type}" key="#{tx + type}")
                         .cell.pug.text-center.network
                             .pug
                                 img.pug(src="#{coin.image}")
