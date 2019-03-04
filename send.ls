@@ -13,6 +13,13 @@ require! {
     \./close.ls
     \./round.ls
     \./round5.ls
+    \./round5edit.ls
+    \./topup-loader.ls : { get-topup-address }
+    \./get-primary-info.ls
+    \./pending-tx.ls : { create-pending-tx }
+    \./transactions.ls : { rebuild-history }
+    \prelude-ls : { map }
+    \./address-link.ls : { get-address-link, get-address-title }
 }
 .content
     position: relative
@@ -176,6 +183,25 @@ require! {
             min-height: 30px
             padding: 0 11px
             font-size: 12px
+        .fast-cheap
+            text-align: right
+            height: 14px
+            line-height: 14px
+            padding: 3px
+            flex-direction: row
+            display: flex
+            >*
+                padding: 0 5px
+                font-size: 10px
+                border-radius: 4px
+                cursor: pointer
+                text-align: center
+                &.chosen
+                    cursor: default
+                    background: #3a63e4
+                    color: white
+                &.space
+                    flex: 1
         .escrow
             padding: 5px 11px
             min-height: 20px
@@ -210,28 +236,46 @@ require! {
                     &:hover
                         background: rgba(#6CA7ED, 0.2)
                         color: #6CA7ED
+build-send-option = (store, option)-->
+    { send } = store.current
+    chosen =
+        | option is send.tx-type => \chosen
+        | _ => ""
+    select-option = ->
+        send.tx-type = option
+        change-amount store, send.amount-send
+    .pug.switch(class="#{chosen}" on-click=select-option) #{option.to-upper-case!}
 send = ({ store })->
     return null if not store?
     { send-to } = ethnamed store
     { send } = store.current
     { wallet } = send
-    link = "#{send.network.api.url}/address/#{send.address}"
-    send-tx = ({ to, wallet, network, amount-send, amount-send-fee, data, coin }, cb)->
+    return null if not wallet?
+    color = get-primary-info(store).color
+    primary-button-style = 
+        background: color
+    default-button-style = { color }
+    send-tx = ({ to, wallet, network, amount-send, amount-send-fee, data, coin, tx-type }, cb)->
         { token } = send.coin
         tx =
-            sender: { wallet.address, wallet.private-key } 
-            recepient: to
+            account: { wallet.address, wallet.private-key } 
+            recipient: to
             network: network
             token: token
             coin: coin
             amount: amount-send
             amount-fee: amount-send-fee
             data: data
+        #console.log 'before create tx'
         err, data <- create-transaction tx
+        #console.log 'after create tx', err
         return cb err if err?
         agree = confirm "Are you sure to send #{tx.amount} #{send.coin.token} to #{send.to}"
+        #console.log 'after confirm', agree
         return cb "You are not agree" if not agree
-        err, tx <- push-tx { token, network, ...data }
+        err, tx <- push-tx { token, tx-type, network, ...data }
+        return cb err if err?
+        err <- create-pending-tx { store, token, network, tx, amount-send, amount-send-fee }
         cb err, tx
     perform-send-safe = (cb)->
         err, to <- resolve-address send.to, send.coin, send.network
@@ -249,10 +293,11 @@ send = ({ store })->
         send.sending = yes
         err, data <- perform-send-safe
         send.sending = no
-        return send.error = err.message ? err if err?
+        return send.error = "#{err.message ? err}" if err?
         notify-form-result send.id, null, data
-        store.current.last-tx-url = "#{send.network.api.url}/transfer/#{data}"
+        store.current.last-tx-url = "#{send.network.api.url}/tx/#{data}"
         navigate store, \sent
+        <- rebuild-history store, wallet
     send-escrow = ->
         name = send.to
         amount-ethers = send.amount-send
@@ -266,7 +311,7 @@ send = ({ store })->
     cancel = (event)->
         navigate store, \wallets
         notify-form-result send.id, "Cancelled by user"
-    recepient-change = (event)->
+    recipient-change = (event)->
         send.to = event.target.value ? ""
     get-value = (event)->
         value = event.target.value.match(/^[0-9]+([.]([0-9]+)?)?$/)?0
@@ -296,7 +341,13 @@ send = ({ store })->
         store.current.filter = [\IN, \OUT, send.coin.token]
         navigate store, \history
     topup = ->
-        if wallet.network.topup
+        { token } = send.coin
+        { network } = store.current
+        { address } = wallet
+        address = get-topup-address { token, network, address }
+        if address?
+            window.open address
+        else if wallet.network.topup
             window.open wallet.network.topup
         else
             alert "Topup Service is not installed"
@@ -306,7 +357,22 @@ send = ({ store })->
     receive = ->
         navigate store, \receive
     token = send.coin.token.to-upper-case!
+    fee-token = (wallet.network.tx-fee-in ? send.coin.token).to-upper-case!
     is-data = (send.data ? "").length > 0
+    choose-auto = ->
+        send.fee-type = \auto
+        change-amount store, send.amount-send
+    choose-fast = ->
+        send.fee-type = \fast
+        change-amount store, send.amount-send
+    choose-cheap = ->
+        send.fee-type = \cheap
+        change-amount store, send.amount-send
+    chosen-fast  =  if send.fee-type is \fast then \chosen else ""
+    chosen-cheap =  if send.fee-type is \cheap then \chosen else ""
+    chosen-auto  =  if send.fee-type is \auto then \chosen else ""
+    console.log send.network
+    send-options = send.coin.tx-types ? []
     form-group = (title, content)->
         .pug.form-group
             label.pug.control-label #{title}
@@ -320,19 +386,19 @@ send = ({ store })->
                     img.pug(src="#{send.coin.image}")
             form.pug
                 form-group 'Send From', ->
-                    .address.pug 
-                        a.pug(href="#{link}") #{wallet.address}
-                form-group 'Recepient', ->
-                    input.pug(type='text' on-change=recepient-change value="#{send.to}" placeholder="#{store.current.send-to-mask}")
+                    .address.pug
+                        a.pug(href="#{get-address-link wallet}") #{get-address-title wallet}
+                form-group 'Recipient', ->
+                    input.pug(type='text' on-change=recipient-change value="#{send.to}" placeholder="#{store.current.send-to-mask}")
                 form-group 'Amount', ->
                     .pug
                         .pug.amount-field
                             .input-wrapper.pug
                                 .label.crypto.pug #{token}
-                                input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{round5 send.amount-send}")
+                                input.pug.amount(type='text' on-change=amount-change placeholder="0" value="#{round5edit send.amount-send}")
                             .input-wrapper.pug
                                 .label.lusd.pug $
-                                input.pug.amount-usd(type='text' on-change=amount-usd-change placeholder="0" value="#{round5 send.amount-send-usd}")
+                                input.pug.amount-usd(type='text' on-change=amount-usd-change placeholder="0" value="#{round5edit send.amount-send-usd}")
                         .pug.usd
                             span.pug Balance
                             span.pug.balance #{wallet.balance + ' ' + token} 
@@ -350,25 +416,31 @@ send = ({ store })->
                                 .pug #{round5(send.amount-charged) + '  ' + token}
                                 .pug.usd $ #{round5 send.amount-charged-usd}
                         tr.pug.green
-                            td.pug Recepient Obtains
+                            td.pug Recipient Obtains
                             td.pug
                                 .pug.bold #{round5(send.amount-obtain) + '  ' + token}
                                 .pug.usd $ #{round5 send.amount-obtain-usd}
                         tr.pug.orange
                             td.pug Transaction Fee
                             td.pug
-                                .pug #{round5(send.amount-send-fee) + '  ' + token}
+                                .pug #{round5(send.amount-send-fee) + '  ' + fee-token}
                                 .pug.usd $ #{round5(send.amount-send-fee-usd)}
+                .pug.fast-cheap
+                    send-options |> map build-send-option store
+                    .pug.space
+                    .pug.switch(on-click=choose-auto class="#{chosen-auto}") AUTO
+                    .pug.switch(on-click=choose-fast class="#{chosen-fast}") FAST
+                    .pug.switch(on-click=choose-cheap  class="#{chosen-cheap}") CHEAP
                 .pug.escrow
                     if send.propose-escrow
                         .pug You can send this funds to the Ethnamed smart-contract. Once the owner register the name he will obtain funds automatically
             .pug.button-container
                 .pug.buttons
-                    a.pug.btn.btn-primary(on-click=send-anyway)
+                    a.pug.btn.btn-primary(on-click=send-anyway style=primary-button-style)
                         span.pug #{send-title}
                         if send.sending
                             span.pug ...
-                    a.pug.btn.btn-default(on-click=cancel) CANCEL
+                    a.pug.btn.btn-default(on-click=cancel style=default-button-style) CANCEL
         if not is-data
             .pug.more-buttons
                 a.pug.more.receive(on-click=receive) RECEIVE

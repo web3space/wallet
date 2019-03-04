@@ -1,6 +1,7 @@
 require! {
     \react
     \./navigate.ls
+    \./history.ls
 }
 .sent
     @import scheme
@@ -8,11 +9,10 @@ require! {
     color: #5bb03e
     padding-top: 100px
     background: white
-    height: $height
     width: $width
     .icon
         img
-            height: 150px
+            height: 75px
     .text
     a.button
         display: inline-block
@@ -37,3 +37,4 @@ module.exports = ({ store })->
             a.pug(href="#{store.current.last-tx-url}" target="_blank") transaction
             span.pug  has been sent
         a.button.pug(on-click=go-home) Home
+        history { store }

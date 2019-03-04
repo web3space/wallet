@@ -3,6 +3,8 @@ require! {
     \prelude-ls : { any, map }
     #react controls
     \./modal.ls : { install, replace }
+    \superagent : { get }
+    \./json-parse.ls
 }
 required-fields = <[ type token enabled ]>
 not-in = (arr, arr2)-> 
@@ -68,3 +70,13 @@ export build-install = (cweb3, store)-> (plugin, cb)->
     cweb3.refresh cb
 export build-uninstall = (cweb3, store)-> (name, cb)->
     uninstall-plugin name, cb
+export build-install-by-name = (cweb3, store)-> (name, cb)->
+    err, resp <- get "https://raw.githubusercontent.com/web3space/plugin-registry/master/plugins/#{name}.json"
+    return cb err if err?
+    err, plugin <- json-parse resp.text
+    return cb err if err?
+    return cb "type is required" if not plugin.type?
+    return cb "enabled is true" if plugin.enabled isnt yes
+    err <- install-plugin plugin
+    return cb err if err?
+    cweb3.refresh cb

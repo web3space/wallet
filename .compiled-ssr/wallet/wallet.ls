@@ -7,9 +7,11 @@ require! {
     \./copied-inform.ls
     \./copy.ls
     \./round5.ls
+    \./get-primary-info.ls
+    \./address-link.ls : { get-address-link, get-address-title }
 }
 #
-# .wallet1729544693
+# .wallet-618236637
 #     $cards-height: 324px
 #     $pad: 20px
 #     $radius: 15px 
@@ -30,9 +32,10 @@ require! {
 #         box-shadow: none
 #     &.over
 #         background: #CCC
+#     &.big
+#         height: 135px
 #     &.active
 #         background: #fff
-#         height: 135px
 #         >.wallet-middle
 #             display: inline-block
 #     >.wallet-top
@@ -118,7 +121,7 @@ require! {
 #             background: #E6F0FF
 #             box-sizing: border-box
 #             vertical-align: top
-#             text-align: left
+#             text-align: center
 #             padding-left: 20px
 #             padding-right: 25px
 #             height: $card-top-height - 14px
@@ -136,9 +139,6 @@ module.exports = (store, wallets, wallet)-->
         | _ => \middle
     return null if not store? or not wallet?
     lweb3 = web3(store)
-    address-label = 
-        | wallet.coin.token is \xem => \account
-        | _ => \address
     send = (wallet, event)-->
         return alert "Not yet loaded" if not wallet?
         { send-transaction } = lweb3[wallet.coin.token]
@@ -150,8 +150,14 @@ module.exports = (store, wallets, wallet)-->
     expand = ->
         store.current.wallet-index = index
     active = if index is store.current.wallet-index then \active else ''
+    big = 
+        | index is store.current.wallet-index => \big
+        | wallets.length < 3 => \big
+        | _ => ""
     balance = round5(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
-    react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active} wallet wallet1729544693" }, children = 
+    button-style=
+        color: get-primary-info(store).color
+    react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active + ' ' + big} wallet wallet-618236637" }, children = 
         react.create-element 'div', { className: 'wallet-top' }, children = 
             react.create-element 'div', { className: 'top-left' }, children = 
                 react.create-element 'div', { className: 'img' }, children = 
@@ -163,8 +169,8 @@ module.exports = (store, wallets, wallet)-->
                 react.create-element 'div', { className: 'balance' }, ' Balance'
                 react.create-element 'div', { className: 'balance' }, ' ' +  balance 
             react.create-element 'div', { className: 'top-right' }, children = 
-                react.create-element 'button', { on-click: send(wallet) }, ' Open'
+                react.create-element 'button', { on-click: send(wallet), style: button-style }, ' Open'
         react.create-element 'div', { className: 'wallet-middle' }, children = 
-            react.create-element 'a', { target: "_blank", href: "#{wallet.network.api.url}/#{address-label}/#{wallet.address}" }, ' ' + wallet.address
-            react.create-element CopyToClipboard, { text: "#{wallet.address}", on-copy: copied-inform(store) }, children = 
+            react.create-element 'a', { target: "_blank", href: "#{get-address-link wallet}" }, ' ' + get-address-title wallet
+            react.create-element CopyToClipboard, { text: "#{get-address-title wallet}", on-copy: copied-inform(store) }, children = 
                 copy store

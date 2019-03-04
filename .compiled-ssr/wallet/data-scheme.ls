@@ -14,10 +14,11 @@ store =
         enabled: no
         callback: null
         image: ""
+        type: ''
     current:
         list: 0
         wallet-index: 0
-        demo: location.href.index-of('ethnamed.io/wallet') > -1 
+        demo: location.href.index-of('web3.space/wallet') > -1 
         network: \mainnet
         pin: ""
         last-tx-url: ""
@@ -45,6 +46,8 @@ store =
             propose-escrow: no
             address: ''
             value: \0
+            fee-type: \fast
+            tx-type: \regular
             amount-send: \0
             amount-charged: \0
             amount-charged-usd: \0

@@ -31,6 +31,8 @@ transform-tx = (network, t)-->
     url = "#{url}/tx/#{tx}"
     fee = t.cumulative-gas-used `times` t.gas-price `div` dec
     { network, tx, amount, fee, time, url, t.from, t.to }
+up = (s)->
+    (s ? "").to-upper-case!
 export get-transactions = ({ network, address }, cb)->
     { api-url } = network.api
     module = \account
@@ -46,7 +48,9 @@ export get-transactions = ({ network, address }, cb)->
     return cb err if err?
     return cb "Unexpected result" if typeof! result?result isnt \Array
     txs = 
-        result.result |> map transform-tx network
+        result.result 
+            |> filter -> up(it.contract-address) is up(network.address)
+            |> map transform-tx network
     cb null, txs
 get-web3 = (network)->
     { web3-provider } = network.api
@@ -54,26 +58,37 @@ get-web3 = (network)->
 get-dec = (network)->
     { decimals } = network
     10^decimals
-export create-transaction = ({ network, sender, recepient, amount, amount-fee} , cb)-->
+calc-gas-price = ({ web3, fee-type }, cb)->
+    return cb null, \3000000000 if fee-type is \cheap
+    web3.eth.get-gas-price cb
+export create-transaction = ({ network, account, recepient, amount, amount-fee, fee-type} , cb)-->
     web3 = get-web3 network
     dec = get-dec network
-    private-key = new Buffer sender.private-key.replace(/^0x/,''), \hex
-    err, nonce <- web3.eth.get-transaction-count sender.address, \pending
+    private-key = new Buffer account.private-key.replace(/^0x/,''), \hex
+    err, nonce <- web3.eth.get-transaction-count account.address, \pending
     contract = get-contract-instance web3, network.address
     to-wei = -> it `times` dec
+    to-wei-eth = -> it `times` (10^18)
+    to-eth -> it `div` (10^18)
     value = to-wei amount
-    err, gas-price <- web3.eth.get-gas-price
-    gas-estimate = to-wei(amount-fee) `div` gas-price
+    err, gas-price <- calc-gas-price { web3, fee-type }
+    return cb err if err?
+    gas-estimate = to-wei-eth(amount-fee) `div` gas-price
+    return cb "getBalance is not a function" if typeof! web3.eth.get-balance isnt \Function
+    err, balance <- web3.eth.get-balance account.address
+    return cb err if err?
+    balance-eth = to-eth balance
+    return cb "Balance is not enough to send tx" if +balance-eth < +amount-fee
     data = 
         | contract.methods? => contract.methods.transfer(recepient, value).encodeABI!
-        | _ => contract.methods.transfer.get-data recepient, value
+        | _ => contract.transfer.get-data recepient, value
     tx = new Tx do
         nonce: to-hex nonce
         gas-price: to-hex gas-price
-        value: to-hex value
+        value: to-hex "0"
         gas: to-hex gas-estimate
-        to: recepient
-        from: sender.address
+        to: network.address
+        from: account.address
         data: data
     tx.sign private-key
     rawtx = \0x + tx.serialize!.to-string \hex
@@ -89,8 +104,8 @@ export get-balance = ({ network, address} , cb)->
     web3 = get-web3 network
     contract = get-contract-instance web3, network.address
     balance-of =
-        | contract.methods? => contract.methods.balance-of(address).call
-        | _ => (cb)-> contract.balance-of address, cb
+        | contract.methods? => (address, cb)-> contract.methods.balance-of(address).call cb
+        | _ => (address, cb)-> contract.balance-of address, cb
     err, number <- balance-of address
     return cb err if err?
     dec = get-dec network

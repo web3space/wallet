@@ -9,9 +9,11 @@ require! {
     \./web3.ls
     \./pin.ls : { check }
     \./navigate.ls
+    \./get-primary-info.ls
+    \./project-links.ls
 }
 { get-container, generate-wallet } = whitebox
-# .menu-1361926599
+# .menu1338448102
 #     @import scheme
 #     $viewport-height: $height / 2.5
 #     $cards-height: 324px
@@ -40,24 +42,42 @@ require! {
 #             position: relative
 #             display: inline-block
 #             text-align: left
+#             vertical-align: top
 #             >*
 #                 display: inline-block
 #                 color: white
-#             >span
-#                 margin-top: 7px
-#                 padding: 1px 2px
+#             >.absolute
+#                 display: inline-block
+#                 vertical-align: bottom
+#                 position: absolute
+#                 top: 0
+#                 width: 50%
+#                 padding: 0 10px
+#                 &.left
+#                     left: 0
+#                     text-align: left
+#                 &.right
+#                     right: 0
+#                     text-align: right
+#             span
+#                 padding: 3px 0
 #                 border-radius: 2px
 #                 font-size: 12px
 #                 color: white
 #                 vertical-align: top
 #                 cursor: pointer
-#             >img
+#             >span.center
+#                 width: 100%
+#                 text-align: center
+#                 img
+#                     height: 20px
+#                     width: auto
+#             img
 #                 width: $pad / 1.5
 #                 display: inline-block
-#                 margin: $pad / 2 $pad
+#                 margin: 0 5px
 #                 cursor: pointer
 #                 &.reload
-#                     float: left
 #                     &.true
 #                         @keyframes rotating
 #                             from
@@ -164,6 +184,7 @@ require! {
 #                 margin-left: 30px
 #         >.viewport-background
 #             background-image: linear-gradient(90deg, #4650E7 0%, #7CC9FF 89%, #9d78b2 100%)
+#             transition: background-image 0.5s
 #             padding: $viewport-header-height $pad 0 $pad
 #             z-index: 1
 #             width: $width * 3
@@ -300,6 +321,23 @@ require! {
 #                     >.slide-body
 state =
     timeout: null
+adjust-color = (col, amt) ->
+    usePound = false
+    if col.0 is '#'
+        col = col.slice 1
+        usePound = true
+    num = parseInt col, 16
+    r = (num .>>. 16) + amt
+    if r > 255 then r = 255 else if r < 0 then r = 0
+    b = (num .>>. 8 .&. 255) + amt
+    if b > 255 then b = 255 else if b < 0 then b = 0
+    g = (num .&. 255) + amt
+    if g > 255 then g = 255 else if g < 0 then g = 0
+    (if usePound then '#' else '') + (g .|. b .<<. 8 .|. r .<<. 16).toString 16
+build-schema = (first-color)->
+    second-color = adjust-color first-color, 50
+    third-color = adjust-color first-color, 100
+    background-image: "linear-gradient(90deg, #{first-color} 0%, #{second-color} 89%, #{third-color} 100%)"
 module.exports = ({ store })->
     return null if not store?
     { current, accounts } = store
@@ -350,19 +388,28 @@ module.exports = ({ store })->
     activate-s1 = activate-s \s1
     activate-s2 = activate-s \s2
     activate-s3 = activate-s \s3
-    react.create-element 'div', { className: 'menu menu-1361926599' }, children = 
+    info = get-primary-info store
+    primary-color = info.color
+    wallet-style =
+        | not primary-color? => {}
+        | _ => build-schema primary-color
+    react.create-element 'div', { className: 'menu menu1338448102' }, children = 
         react.create-element 'div', { className: 'viewport' }, children = 
             react.create-element 'div', { className: 'viewport-icons' }, children = 
-                react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png", on-click: refresh, className: "#{store.current.refreshing} reload" }
-                react.create-element 'span', { on-click: switch-network, className: 'network' }, ' ' + store.current.network
-                react.create-element 'span', { on-click: switch-network, className: 'chevron' }, ' >'
-                react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png", on-click: lock, className: 'lock' }
+                react.create-element 'div', { className: 'absolute left' }, children = 
+                    react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png", on-click: refresh, className: "#{store.current.refreshing} reload" }
+                    react.create-element 'span', { on-click: switch-network, className: 'network' }, ' ' + store.current.network
+                    react.create-element 'span', { on-click: switch-network, className: 'chevron' }, ' >'
+                react.create-element 'span', { className: 'center' }, children = 
+                    react.create-element 'img', { src: "#{info.branding.logo}", className: 'logo' }
+                react.create-element 'div', { className: 'absolute right' }, children = 
+                    react.create-element 'img', { src: "https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png", on-click: lock, className: 'lock' }
             react.create-element 'div', { className: "#{store.menu.active} viewport-header viewport-move" }, children = 
                 react.create-element 'div', { on-click: activate-s1, className: 'text s1' }, ' Secret Phrase'
                 react.create-element 'div', { on-click: activate-s2, className: 'text s2' }, ' Balance'
-                react.create-element 'div', { on-click: activate-s3, className: 'text s3' }, ' Register Name'
+                react.create-element 'div', { on-click: activate-s3, className: 'text s3' }, ' Project Links'
                 react.create-element 'div', { className: 'text-line' }
-            react.create-element 'div', { className: "#{store.menu.active} viewport-background viewport-move" }
+            react.create-element 'div', { style: wallet-style, className: "#{store.menu.active} viewport-background viewport-move" }
             react.create-element 'div', { className: "#{store.menu.active} viewport-content viewport-move" }, children = 
                 react.create-element 'div', { on-click: activate-s1, className: 'slide s1' }, children = 
                     react.create-element 'div', { className: 'slide-body' }, children = 
@@ -390,17 +437,10 @@ module.exports = ({ store })->
                         react.create-element 'div', { className: 'currency' }, ' USD'
                         react.create-element 'div', { className: 'amount' }, children = 
                             react.create-element 'div', { className: 'symbol' }, ' $'
-                            react.create-element 'div', { className: 'number' }, children = 
-                                if store.current.refreshing is no
-                                    react.create-element 'div', {}, ' ' + money current.balance-usd
-                                else
-                                    react.create-element 'div', {}, ' ...'
+                            react.create-element 'div', { className: 'number' }, ' ' + money current.balance-usd
                 react.create-element 'div', { on-click: activate-s3, className: 'slide s3' }, children = 
                     react.create-element 'div', { className: 'slide-body' }, children = 
-                        if store.current.network is \mainnet
-                            naming { store }
-                        else 
-                            react.create-element 'div', {}, ' Not Available'
+                        project-links { store }
             react.create-element 'div', { className: "#{store.menu.active} viewport-switchs viewport-move" }, children = 
                 react.create-element 'div', { on-click: activate-s1, className: 'switch s1' }
                 react.create-element 'div', { on-click: activate-s2, className: 'switch s2' }

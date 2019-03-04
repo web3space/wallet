@@ -66,11 +66,21 @@
     ]);
   };
   wallets.init = function(store, cb){
+    var ref$, ref1$, refreshTimer;
+    if ((ref$ = store.current.send) != null) {
+      delete ref$.wallet;
+    }
+    if ((ref1$ = store.current.send) != null) {
+      ref1$.txType = 'regular';
+    }
     if (store.current.account != null) {
       return cb(null);
     }
     store.current.seed = get();
-    return web3(store).refresh(function(err){
+    refreshTimer = 30 * 60 * 1000;
+    return web3(store, {
+      refreshTimer: refreshTimer
+    }).refresh(function(err){
       return cb(err);
     });
   };

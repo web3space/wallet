@@ -54,6 +54,9 @@ wallets = ({ store })->
     max = 4
     can-up = store.current.list > 0
     can-down = store.current.list < store.current.account.wallets.length / max
+    #get-wallet-index = ->
+    #    store.current.wallet-index =
+    #        store.current.list * max
     go-up = ->
         return if not can-up
         store.current.list -= max
@@ -63,7 +66,7 @@ wallets = ({ store })->
         store.current.list += max
         store.current.wallet-index = 0
     wallets = 
-        store.current.account.wallets 
+        store.current.account.wallets
             |> drop list 
             |> take max
     .pug(key="wallets")
@@ -76,8 +79,11 @@ wallets = ({ store })->
             .arrow.arrow-d.pug(on-click=go-down class="#{can-down}" key="arrow-down")
                 img.pug(src="#{arrow}")
 wallets.init = (store, cb)->
+    delete store.current.send?wallet
+    store.current.send?tx-type = \regular
     return cb null if store.current.account?
     store.current.seed = get!
-    err <- web3(store).refresh
+    refresh-timer = 30 * 60 * 1000
+    err <- web3(store, { refresh-timer }).refresh
     cb err
 module.exports = wallets

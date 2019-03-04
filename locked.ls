@@ -3,15 +3,23 @@ require! {
     \prelude-ls : { map }
     \./pin.ls : { set, check, exists } 
     \./navigate.ls
+    \./get-primary-info.ls
 }
 .locked
     @import scheme
-    $gradient: $primary - 10
-    background: $primary
-    padding-top: 200px
+    padding-top: 70px
     height: $height
     box-sizing: border-box
     text-align: center
+    >.logo 
+        padding: 20px
+        border-bottom: 1px solid #b1b1b1
+        background: rgba(#ffffff, 0.2)
+        margin: 20px 0
+        >img
+            height: 50px
+        >.title
+            color: white
     >.title
         font-size: 35px
         color: white
@@ -117,7 +125,11 @@ locked = ({ store })->
     footer =
         | not exists! => setup-button
         | _ => wrong-trials
+    info = get-primary-info store
     .pug.locked(key="locked")
+        .pug.logo
+            img.pug(src="#{info.branding.logo}")
+            .title.pug #{info.branding.title}
         .pug.title(key="locked-title") #{title}
         .pug.inputs(key="locked-inputs")
             [0 to 3] |> map input store

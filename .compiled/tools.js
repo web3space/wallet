@@ -28,13 +28,15 @@
     }
     ref$ = value.toString().split('.'), head = ref$[0], tail = ref$[1];
     h = head.split("").reverse().reduce(add, "");
-    t = (tail != null ? tail : "").substr(0, 2);
+    t = (tail != null ? tail : "000").substr(0, 3);
     e = (function(){
       switch (t.length) {
-      case 2:
+      case 3:
         return t;
-      case 1:
+      case 2:
         return t + "0";
+      case 1:
+        return t + "00";
       case 0:
         return "00";
       }

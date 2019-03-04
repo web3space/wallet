@@ -1,3 +1,4 @@
+#web3@0.19.1
 require! {
     \./plugin-loader.ls : { get-coins }
     \prelude-ls : { obj-to-pairs, map, pairs-to-obj, each, find }
@@ -5,13 +6,13 @@ require! {
     \./send-form.ls : { wait-form-result }
     \./calc-amount.ls : { change-amount }
     \./math.ls : { div, plus }
-    \../eth.ls : web3
     \protect
     \./navigate.ls
     \./use-network.ls
     \./api.ls : { get-balance }
-    \./install-plugin.ls : { build-install }
-    \./refresh-account.ls
+    \./install-plugin.ls : { build-install, build-install-by-name }
+    \./refresh-account.ls : { background-refresh-account }
+    \web3 : \Web3
 }
 state =
     time: null
@@ -30,7 +31,7 @@ build-send-transaction = (store, coin)-> (tx, cb)->
     network = coin[store.current.network]
     return cb "Transaction is required" if typeof! tx isnt \Object
     { to, data, decoded-data, value, gas } = tx
-    return cb "Recepient (to) is required" if typeof! tx.to isnt \String
+    return cb "Recipient (to) is required" if typeof! tx.to isnt \String
     return cb "Value is required" if typeof! value not in <[ String Number ]>
     id = guid!
     { current } = store
@@ -57,13 +58,33 @@ build-send-transaction = (store, coin)-> (tx, cb)->
     err, data <- wait-form-result id
     return cb err if err?
     cb null, data
-build-network-specific = (coin)->
-    | coin.token is \eth => web3.eth
-    | _ => {}
-build-api = (store, it)->
-    send-transaction = build-send-transaction store, it
-    get-balance = build-get-balance store, it
-    build-network-specific(it) <<<< { send-transaction, get-balance } 
+build-contract = (store, methods, coin)-> (abi)-> at: (address)->
+    { send-transaction } = methods
+    network = coin[store.current.network]
+    web3 = new Web3!
+    web3.set-provider(new web3.providers.HttpProvider(network.api.web3-provider))
+    web3.eth.send-transaction = ({ value, data, to }, cb)->
+        send-transaction { to, data, value }, cb
+    new web3.eth.Contract(abi, address)
+build-network-ethereum = (store, methods, coin)->
+    { send-transaction, get-balance } = methods
+    contract = build-contract store, methods, coin
+    { send-transaction, get-balance, contract } 
+build-other-networks = (store, methods, coin)->
+    { send-transaction, get-balance } = methods
+    contract = ->
+        throw "Not Implemented For this network"
+    { send-transaction, get-balance, contract } 
+build-network-specific = (store, methods, coin)->
+    builder =
+        | coin.token in <[ eth ]> => build-network-ethereum
+        | _ => build-other-networks
+    builder store, methods, coin
+build-api = (store, coin)->
+    send-transaction = build-send-transaction store, coin
+    get-balance = build-get-balance store, coin
+    methods = { send-transaction, get-balance }
+    build-network-specific store, methods, coin
 build-use = (web3, store)->  (network)->
     <- use-network web3, store, network
 get-apis = (cweb3, store)->
@@ -77,15 +98,25 @@ refresh-apis = (cweb3, store)->
     apis = get-apis cweb3, store
     cweb3 <<<< apis
     refresh-apis.prev = Object.keys apis
-module.exports = (store)->
+setup-refresh-timer = ({ refresh-timer, refresh-balances })->
+    return if typeof! refresh-timer isnt \Number
+    clear-timeout setup-refresh-timer.timer
+    setup-refresh-timer.timer = set-timeout refresh-balances, refresh-timer
+module.exports = (store, config)->
+    refresh-timer = config?refresh-timer
     cweb3 = {}
     use = build-use cweb3, store
     install = build-install cweb3, store
+    install-by-name = build-install-by-name cweb3, store
+    refresh-balances = (cb)->
+        setup-refresh-timer { refresh-timer, refresh-balances }
+        err <- background-refresh-account cweb3, store
+        cb? null
+    setup-refresh-timer { refresh-timer, refresh-balances }
     refresh = (cb)->
         refresh-apis cweb3, store
-        err <- refresh-account cweb3, store
-        return cb err if err?
-        cb null
+        refresh-balances cb
     refresh-apis cweb3, store
-    cweb3 <<<< { web3.utils, use, refresh, install }
+    web3 = new Web3!
+    cweb3 <<<< { web3.utils, use, refresh, install, install-by-name }
     cweb3

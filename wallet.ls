@@ -7,6 +7,8 @@ require! {
     \./copied-inform.ls
     \./copy.ls
     \./round5.ls
+    \./get-primary-info.ls
+    \./address-link.ls : { get-address-link, get-address-title }
 }
 #
 .wallet
@@ -30,9 +32,10 @@ require! {
         box-shadow: none
     &.over
         background: #CCC
+    &.big
+        height: 135px
     &.active
         background: #fff
-        height: 135px
         >.wallet-middle
             display: inline-block
     >.wallet-top
@@ -118,7 +121,7 @@ require! {
             background: #E6F0FF
             box-sizing: border-box
             vertical-align: top
-            text-align: left
+            text-align: center
             padding-left: 20px
             padding-right: 25px
             height: $card-top-height - 14px
@@ -136,9 +139,6 @@ module.exports = (store, wallets, wallet)-->
         | _ => \middle
     return null if not store? or not wallet?
     lweb3 = web3(store)
-    address-label = 
-        | wallet.coin.token is \xem => \account
-        | _ => \address
     send = (wallet, event)-->
         return alert "Not yet loaded" if not wallet?
         { send-transaction } = lweb3[wallet.coin.token]
@@ -150,8 +150,14 @@ module.exports = (store, wallets, wallet)-->
     expand = ->
         store.current.wallet-index = index
     active = if index is store.current.wallet-index then \active else ''
+    big = 
+        | index is store.current.wallet-index => \big
+        | wallets.length < 3 => \big
+        | _ => ""
     balance = round5(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
-    .wallet.pug(on-click=expand class="#{active}" key="#{wallet.coin.token}")
+    button-style=
+        color: get-primary-info(store).color
+    .wallet.pug(on-click=expand class="#{active + ' ' + big}" key="#{wallet.coin.token}")
         .wallet-top.pug
             .top-left.pug
                 .img.pug
@@ -163,8 +169,8 @@ module.exports = (store, wallets, wallet)-->
                 .balance.pug Balance
                 .balance.pug #{ balance }
             .top-right.pug
-                button.pug(on-click=send(wallet)) Open
+                button.pug(on-click=send(wallet) style=button-style) Open
         .wallet-middle.pug
-            a.pug(target="_blank" href="#{wallet.network.api.url}/#{address-label}/#{wallet.address}") #{wallet.address}
-            CopyToClipboard.pug(text="#{wallet.address}" on-copy=copied-inform(store))
+            a.pug(target="_blank" href="#{get-address-link wallet}") #{get-address-title wallet}
+            CopyToClipboard.pug(text="#{get-address-title wallet}" on-copy=copied-inform(store))
                 copy store

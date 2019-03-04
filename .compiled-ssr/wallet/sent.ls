@@ -1,18 +1,18 @@
 require! {
     \react
     \./navigate.ls
+    \./history.ls
 }
-# .sent-1843679899
+# .sent-1180599783
 #     @import scheme
 #     text-align: center
 #     color: #5bb03e
 #     padding-top: 100px
 #     background: white
-#     height: $height
 #     width: $width
 #     .icon
 #         img
-#             height: 150px
+#             height: 75px
 #     .text
 #     a.button
 #         display: inline-block
@@ -29,7 +29,7 @@ require! {
 module.exports = ({ store })->
     go-home = ->
         navigate store, \wallets
-    react.create-element 'div', { className: 'sent sent-1843679899' }, children = 
+    react.create-element 'div', { className: 'sent sent-1180599783' }, children = 
         react.create-element 'div', { className: 'icon' }, children = 
             react.create-element 'img', { src: "./res/sent.png" }
         react.create-element 'div', { className: 'text' }, children = 
@@ -37,3 +37,4 @@ module.exports = ({ store })->
             react.create-element 'a', { href: "#{store.current.last-tx-url}", target: "_blank" }, ' transaction'
             react.create-element 'span', {}, '  has been sent'
         react.create-element 'a', { on-click: go-home, className: 'button' }, ' Home'
+        history { store }

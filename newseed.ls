@@ -13,7 +13,6 @@ require! {
     height: $height
     box-sizing: border-box
     height: 100%
-    background: $primary
     .title
         color: #ebf6f8
         font-size: 35px

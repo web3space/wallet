@@ -1,4 +1,4 @@
-.modal-container-884661047
+.modal-container-500658940
     @import scheme
     z-index: 999
     overflow: hidden
@@ -140,6 +140,14 @@
                                     -webkit-transform: rotateY(90deg) rotateX(22.5deg)
                                 &:nth-child(1)
                                     -webkit-transform: rotateY(90deg) rotateX(11.25deg)
+                        &.topup-type
+                            background: white
+                            >.side>.spoke
+                                &:before, &:after
+                                    -webkit-transform: none !important
+                                    background: white
+                            >.front, >.back
+                                border-radius: 0
             >.button
                 box-sizing: border-box
                 text-align: center

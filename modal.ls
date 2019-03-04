@@ -144,6 +144,14 @@ require! {
                                     -webkit-transform: rotateY(90deg) rotateX(22.5deg)
                                 &:nth-child(1)
                                     -webkit-transform: rotateY(90deg) rotateX(11.25deg)
+                        &.topup-type
+                            background: white
+                            >.side>.spoke
+                                &:before, &:after
+                                    -webkit-transform: none !important
+                                    background: white
+                            >.front, >.back
+                                border-radius: 0
             >.button
                 box-sizing: border-box
                 text-align: center
@@ -196,6 +204,8 @@ export modal-control = (store)->
         cancel-ask store
     coin-image=
         background-image: "url(#{store.ask.image})"
+    coin-type =
+        "#{store.ask.type}-type"
     .modal-container.pug(key="modal-container")
         .modal.pug
             .bg.pug
@@ -209,7 +219,7 @@ export modal-control = (store)->
                 .title.pug #{text}
                 .animation.pug
                     .coin-container.pug
-                        .coin.pug
+                        .coin.pug(class="#{coin-type}")
                             .front.pug(style=coin-image)
                             .back.pug(style=coin-image)
                             .side.pug
@@ -239,6 +249,7 @@ plug = (type)-> (store, plugin, cb)->
     store.ask.enabled = yes
     store.ask.text = "#{plugin.token} #{plugin.type}".to-upper-case!
     store.ask.image = plugin.image
+    store.ask.type = plugin.type
     store.ask.callback = cb
     scroll-top!
     reduce-or-cancel(store, 11)!

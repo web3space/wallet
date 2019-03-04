@@ -1,10 +1,9 @@
 require! {
     \react
 }
-# .loading-page-1737251852
+# .loading-page-399608342
 #     @import scheme
 #     $gradient: $primary - 20
-#     background: $primary
 #     text-align: center
 #     overflow: hidden
 #     height: 100%
@@ -54,7 +53,7 @@ require! {
 #             100%
 #                 transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg)
 module.exports = ->
-    react.create-element 'div', { key: "loading", className: 'loading-page loading-page-1737251852' }, children = 
+    react.create-element 'div', { key: "loading", className: 'loading-page loading-page-399608342' }, children = 
         react.create-element 'div', { className: 'loading' }, children = 
             react.create-element 'div', { key: "loading-1", className: 'inner one' }
             react.create-element 'div', { key: "loading-2", className: 'inner two' }

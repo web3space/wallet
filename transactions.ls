@@ -1,8 +1,9 @@
 require! {
     \mobx : { observable, toJS }
-    \prelude-ls : { each, map, pairs-to-obj }
+    \prelude-ls : { each, map, pairs-to-obj, filter, map }
     \./api.ls : { get-transactions }
     \./workflow.ls : { run, task }
+    \./pending-tx.ls : { get-pending-txs, remove-tx }
 }
 export transactions = observable []
 same = (x, y)->
@@ -12,23 +13,48 @@ extend = ({ address, coin }, tx)-->
         | tx.to `same` address => \IN
         | _ => \OUT
     tx.token = coin.token
-add-transaction = (tx)->
-    transactions.push tx
-build-loader = (wallet)-> task (cb)->
+transform-ptx = ([tx, amount, fee, time])->
+    { tx, amount, to: \pending , url: '#', fee: fee, time }
+export rebuild-history = (store, wallet, cb)->
     { address, network, coin } = wallet
     err, data <- get-transactions { address, network, coin.token }
-    return cb! if err?
+    #console.log { err, data, network }
+    return cb err if err?
+    ids = 
+        data |> map (.tx)
+    dummy = (err, data)->
+        console.log err, data
+    err, ptxs <- get-pending-txs { network, store, coin.token }
+    #console.log { err, ptxs, network, coin.token }
+    return cb err if err?
+    ptxs 
+        |> filter -> ids.index-of(it.0) isnt -1
+        |> each -> remove-tx { store, coin.token, network, tx: it.0 }, dummy
+    err, ptxs <- get-pending-txs { network, store, coin.token }
+    #console.log { err, ptxs, network, coin.token }
+    return cb err if err?
+    txs = transactions
+    txs
+        |> filter (.token is coin.token)
+        |> each -> txs.splice txs.index-of(it), 1
     data 
         |> each extend { address, coin }
-        |> each add-transaction
+        |> each txs~push
+    ptxs 
+        |> map transform-ptx
+        |> each extend { address, coin }
+        |> each txs~push
     cb!
+build-loader = (store)-> (wallet)-> task (cb)->
+    err <- rebuild-history store, wallet
+    return cb! if err? 
+    cb null
 export load-all-transactions = (store, cb)->
-    transactions.length = 0
     { wallets } = store.current.account
     loaders =
-        wallets |> map build-loader
+        wallets |> map build-loader store
     tasks =
-        loaders 
+        loaders
             |> map -> [loaders.index-of(it).to-string!, it]
             |> pairs-to-obj
     run [tasks] .then cb

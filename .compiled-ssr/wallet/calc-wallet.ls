@@ -15,20 +15,26 @@ calc-wallet = (store, cb)->
     coins = get-coins!
     build-loader = (wallet)-> task (cb)->
         { token } = wallet.coin
-        wallet.balance = \...
-        wallet.balance-usd = 0
+        #wallet.balance = \...
+        #wallet.balance-usd = 0
         token = wallet.coin.token.to-lower-case!
-        usd-rate = rates[token]
-        wallet.usd-rate = round5 usd-rate
-        coin = 
+        usd-rate = rates[token] ? \..
+        wallet.usd-rate =
+            | usd-rate is \.. => \..
+            | _ => round5 usd-rate
+        coin =
             coins |> find (.token is wallet.coin.token)
         return cb "Coin Not Found" if not coin?
         coin.wallet = wallet
         err, balance <- get-balance { wallet.address, wallet.network, token }
         return cb err if err?
         wallet.balance = balance
-        wallet.balance-usd = balance `times` usd-rate
-        state.balance-usd = state.balance-usd `plus` wallet.balance-usd
+        wallet.balance-usd =
+            | usd-rate is \.. => \..
+            | _ => balance `times` usd-rate
+        state.balance-usd =
+            | usd-rate is \.. => \..
+            | _ => state.balance-usd `plus` wallet.balance-usd
         cb!
     loaders =
         wallets |> map build-loader

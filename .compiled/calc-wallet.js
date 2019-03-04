@@ -20,13 +20,18 @@
     coins = getCoins();
     buildLoader = function(wallet){
       return task(function(cb){
-        var token, usdRate, coin;
+        var token, usdRate, ref$, coin;
         token = wallet.coin.token;
-        wallet.balance = '...';
-        wallet.balanceUsd = 0;
         token = wallet.coin.token.toLowerCase();
-        usdRate = rates[token];
-        wallet.usdRate = round5(usdRate);
+        usdRate = (ref$ = rates[token]) != null ? ref$ : '..';
+        wallet.usdRate = (function(){
+          switch (false) {
+          case usdRate !== '..':
+            return '..';
+          default:
+            return round5(usdRate);
+          }
+        }());
         coin = find(function(it){
           return it.token === wallet.coin.token;
         })(
@@ -44,8 +49,22 @@
             return cb(err);
           }
           wallet.balance = balance;
-          wallet.balanceUsd = times(balance, usdRate);
-          state.balanceUsd = plus(state.balanceUsd, wallet.balanceUsd);
+          wallet.balanceUsd = (function(){
+            switch (false) {
+            case usdRate !== '..':
+              return '..';
+            default:
+              return times(balance, usdRate);
+            }
+          }());
+          state.balanceUsd = (function(){
+            switch (false) {
+            case usdRate !== '..':
+              return '..';
+            default:
+              return plus(state.balanceUsd, wallet.balanceUsd);
+            }
+          }());
           return cb();
         });
       });

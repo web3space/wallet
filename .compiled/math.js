@@ -7,7 +7,7 @@
     return function(x, y){
       var err;
       try {
-        return new bignumber(x)[$](y).toString();
+        return new bignumber(x)[$](y).toFixed();
       } catch (e$) {
         err = e$;
         throw x + " " + $ + " " + y + " = " + err;

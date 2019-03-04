@@ -4,7 +4,7 @@
   react = require('react');
   scrollTop = require('./scroll-top.ls');
   out$.modalControl = modalControl = function(store){
-    var ref$, text, callback, enabled, accept, reject, coinImage, children, i;
+    var ref$, text, callback, enabled, accept, reject, coinImage, coinType, children, i;
     ref$ = store.ask, text = ref$.text, callback = ref$.callback, enabled = ref$.enabled;
     if (enabled !== true) {
       return;
@@ -18,9 +18,10 @@
     coinImage = {
       backgroundImage: "url(" + store.ask.image + ")"
     };
+    coinType = store.ask.type + "-type";
     return react.createElement('div', {
       key: "modal-container",
-      className: 'modal-container modal-container-884661047'
+      className: 'modal-container modal-container-500658940'
     }, children = react.createElement('div', {
       className: 'modal'
     }, children = [
@@ -51,7 +52,7 @@
         }, children = react.createElement('div', {
           className: 'coin-container'
         }, children = react.createElement('div', {
-          className: 'coin'
+          className: coinType + " coin"
         }, children = [
           react.createElement('div', {
             style: coinImage,
@@ -121,6 +122,7 @@
       store.ask.enabled = true;
       store.ask.text = (plugin.token + " " + plugin.type).toUpperCase();
       store.ask.image = plugin.image;
+      store.ask.type = plugin.type;
       store.ask.callback = cb;
       scrollTop();
       return reduceOrCancel(store, 11)();

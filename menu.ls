@@ -9,6 +9,8 @@ require! {
     \./web3.ls
     \./pin.ls : { check }
     \./navigate.ls
+    \./get-primary-info.ls
+    \./project-links.ls
 }
 { get-container, generate-wallet } = whitebox
 .menu
@@ -40,24 +42,42 @@ require! {
             position: relative
             display: inline-block
             text-align: left
+            vertical-align: top
             >*
                 display: inline-block
                 color: white
-            >span
-                margin-top: 7px
-                padding: 1px 2px
+            >.absolute
+                display: inline-block
+                vertical-align: bottom
+                position: absolute
+                top: 0
+                width: 50%
+                padding: 0 10px
+                &.left
+                    left: 0
+                    text-align: left
+                &.right
+                    right: 0
+                    text-align: right
+            span
+                padding: 3px 0
                 border-radius: 2px
                 font-size: 12px
                 color: white
                 vertical-align: top
                 cursor: pointer
-            >img
+            >span.center
+                width: 100%
+                text-align: center
+                img
+                    height: 20px
+                    width: auto
+            img
                 width: $pad / 1.5
                 display: inline-block
-                margin: $pad / 2 $pad
+                margin: 0 5px
                 cursor: pointer
                 &.reload
-                    float: left
                     &.true
                         @keyframes rotating
                             from
@@ -164,6 +184,7 @@ require! {
                 margin-left: 30px
         >.viewport-background
             background-image: linear-gradient(90deg, #4650E7 0%, #7CC9FF 89%, #9d78b2 100%)
+            transition: background-image 0.5s
             padding: $viewport-header-height $pad 0 $pad
             z-index: 1
             width: $width * 3
@@ -300,6 +321,23 @@ require! {
                     >.slide-body
 state =
     timeout: null
+adjust-color = (col, amt) ->
+    usePound = false
+    if col.0 is '#'
+        col = col.slice 1
+        usePound = true
+    num = parseInt col, 16
+    r = (num .>>. 16) + amt
+    if r > 255 then r = 255 else if r < 0 then r = 0
+    b = (num .>>. 8 .&. 255) + amt
+    if b > 255 then b = 255 else if b < 0 then b = 0
+    g = (num .&. 255) + amt
+    if g > 255 then g = 255 else if g < 0 then g = 0
+    (if usePound then '#' else '') + (g .|. b .<<. 8 .|. r .<<. 16).toString 16
+build-schema = (first-color)->
+    second-color = adjust-color first-color, 50
+    third-color = adjust-color first-color, 100
+    background-image: "linear-gradient(90deg, #{first-color} 0%, #{second-color} 89%, #{third-color} 100%)"
 module.exports = ({ store })->
     return null if not store?
     { current, accounts } = store
@@ -350,19 +388,28 @@ module.exports = ({ store })->
     activate-s1 = activate-s \s1
     activate-s2 = activate-s \s2
     activate-s3 = activate-s \s3
+    info = get-primary-info store
+    primary-color = info.color
+    wallet-style =
+        | not primary-color? => {}
+        | _ => build-schema primary-color
     .menu.pug
         .viewport.pug
             .viewport-icons.pug
-                img.reload.pug(class="#{store.current.refreshing}" src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png" on-click=refresh)
-                span.network.pug(on-click=switch-network) #{store.current.network}
-                span.chevron.pug(on-click=switch-network) >
-                img.lock.pug(src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png" on-click=lock)
+                .absolute.left.pug
+                    img.reload.pug(class="#{store.current.refreshing}" src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543530765/wallet/reload.png" on-click=refresh)
+                    span.network.pug(on-click=switch-network) #{store.current.network}
+                    span.chevron.pug(on-click=switch-network) >
+                span.pug.center
+                    img.logo.pug(src="#{info.branding.logo}")
+                .absolute.right.pug
+                    img.lock.pug(src="https://res.cloudinary.com/dfbhd7liw/image/upload/v1543523582/wallet/Path.png" on-click=lock)
             .viewport-header.viewport-move.pug(class="#{store.menu.active}")
                 .text.pug.s1(on-click=activate-s1) Secret Phrase
                 .text.pug.s2(on-click=activate-s2) Balance
-                .text.pug.s3(on-click=activate-s3) Register Name
+                .text.pug.s3(on-click=activate-s3) Project Links
                 .text-line.pug
-            .viewport-background.viewport-move.pug(class="#{store.menu.active}")
+            .viewport-background.viewport-move.pug(class="#{store.menu.active}" style=wallet-style)
             .viewport-content.viewport-move.pug(class="#{store.menu.active}")
                 .slide.pug.s1(on-click=activate-s1)
                     .slide-body.pug
@@ -390,17 +437,10 @@ module.exports = ({ store })->
                         .currency.pug USD
                         .amount.pug
                             .symbol.pug $
-                            .number.pug 
-                                if store.current.refreshing is no
-                                    .pug #{money current.balance-usd}
-                                else
-                                    .pug ...
+                            .number.pug #{money current.balance-usd}
                 .slide.pug.s3(on-click=activate-s3)
                     .slide-body.pug
-                        if store.current.network is \mainnet
-                            naming { store }
-                        else 
-                            .pug Not Available
+                        project-links { store }
             .viewport-switchs.viewport-move.pug(class="#{store.menu.active}")
                 .switch.pug.s1(on-click=activate-s1)
                 .switch.pug.s2(on-click=activate-s2)

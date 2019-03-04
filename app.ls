@@ -8,8 +8,10 @@ require! {
     \./browser/window.ls
     \./copy-message.ls
     \./modal.ls : { modal-control }
+    \./get-primary-info.ls
 }
 .app
+    overflow-y: scroll
     @import scheme
     background: $primary
     height: 600px
@@ -23,9 +25,11 @@ module.exports = ({ store, reload })->
     window <<<< { store }
     current-page =
         pages[store.current.page]
+    style =
+        background-color: get-primary-info(store).color
     .pug
         description store
-        .app.pug(key="content")
+        .app.pug(key="content" style=style)
             modal-control store
             copy-message store
             current-page { store }

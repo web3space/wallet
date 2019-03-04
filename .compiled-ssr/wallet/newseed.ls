@@ -6,14 +6,13 @@ require! {
     \./seed.ls : { set }
 }
 { get-container, generate-wallet } = whitebox
-# .newseed1559087737
+# .newseed-528124473
 #     @import scheme
 #     padding-top: 50px
 #     width: $width
 #     height: $height
 #     box-sizing: border-box
 #     height: 100%
-#     background: $primary
 #     .title
 #         color: #ebf6f8
 #         font-size: 35px
@@ -59,7 +58,7 @@ newseed = ({ store })->
         set store.current.seed
         navigate store, \:init 
         <- web3(store).refresh
-    react.create-element 'div', { className: 'newseed newseed1559087737' }, children = 
+    react.create-element 'div', { className: 'newseed newseed-528124473' }, children = 
         react.create-element 'div', { className: 'title' }, ' New Seed Phrase'
         react.create-element 'textarea', { value: "#{store.current.seed}", on-change: change-seed, placeholder: "Click Generate or Put Your Seed Phrase here" }
         react.create-element 'div', {}, children = 

@@ -6,7 +6,7 @@
     var children;
     return react.createElement('div', {
       key: "loading",
-      className: 'loading-page loading-page-1737251852'
+      className: 'loading-page loading-page-399608342'
     }, children = react.createElement('div', {
       className: 'loading'
     }, children = [

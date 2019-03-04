@@ -15,12 +15,13 @@
       text: '',
       enabled: false,
       callback: null,
-      image: ""
+      image: "",
+      type: ''
     },
     current: {
       list: 0,
       walletIndex: 0,
-      demo: location.href.indexOf('ethnamed.io/wallet') > -1,
+      demo: location.href.indexOf('web3.space/wallet') > -1,
       network: 'mainnet',
       pin: "",
       lastTxUrl: "",
@@ -48,6 +49,8 @@
         proposeEscrow: false,
         address: '',
         value: '0',
+        feeType: 'fast',
+        txType: 'regular',
         amountSend: '0',
         amountCharged: '0',
         amountChargedUsd: '0',

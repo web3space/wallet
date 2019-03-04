@@ -15,9 +15,10 @@ export money = (value)->
     return null if not value?
     [head, tail] = value.to-string!.split(\.)
     h = head.split("").reverse!.reduce(add, "") 
-    t = (tail ? "").substr(0, 2)
+    t = (tail ? "000").substr(0, 3)
     e = switch t.length 
-        case 2 then t 
-        case 1 then "#{t}0"
+        case 3 then t
+        case 2 then "#{t}0" 
+        case 1 then "#{t}00"
         case 0 then "00"
     "#{h}.#{e}"

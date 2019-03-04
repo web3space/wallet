@@ -1,6 +1,6 @@
 require! {
     \superagent : { get }
-    \prelude-ls : { map, group-by, obj-to-pairs, pairs-to-obj, flatten }
+    \prelude-ls : { map, group-by, obj-to-pairs, pairs-to-obj, flatten, filter }
     \./workflow.ls : { task, run }
 }
 parse-rate-string = (usd-info)->
@@ -30,11 +30,14 @@ extract-val = (data, [head, ...tail])->
     return data if not head?
     extract-val data[head], tail
 modify-item = (data, item)-->
-    val = extract-val data.body, item.extract.split('.').splice(1)
+    val = 
+        | data?body? => extract-val data.body, item.extract.split('.').splice(1)
+        | _ => ""
     { val, item.extract, item.token }
 set-val = (info)->
     [url, { err, data, items }] = info
     return info if invalid-url url
+    return null if err?
     modified-items =
         items |> map modify-item data
     [url, { items: modified-items }]
@@ -42,6 +45,7 @@ set-vals = (res, cb)->
     item =
         res |> obj-to-pairs
             |> map set-val
+            |> filter -> it?
             |> map -> it.1.items
             |> flatten
             |> map -> [it.token, it.val]

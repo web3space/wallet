@@ -4,7 +4,6 @@ require! {
 .loading-page
     @import scheme
     $gradient: $primary - 20
-    background: $primary
     text-align: center
     overflow: hidden
     height: 100%
