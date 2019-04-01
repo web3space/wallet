@@ -6,7 +6,6 @@
     txFee: '0.0001',
     txFeeOptions: {
       auto: '0.0001',
-      fast: '0.0001',
       cheap: '0.000014'
     },
     mask: 'L000000000000000000000000000000000',
@@ -29,7 +28,6 @@
     txFee: '0.0001',
     txFeeOptions: {
       auto: '0.0001',
-      fast: '0.0001',
       cheap: '0.000014'
     },
     topup: 'https://litecoin-faucet.com/',

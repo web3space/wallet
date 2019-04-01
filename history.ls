@@ -7,6 +7,8 @@ require! {
     \./navigate.ls
     \mobx : { toJS }
     \react
+    \./pending-tx.ls : { remove-tx }
+    \./web3.ls
 }
 .history
     width: 100%
@@ -30,7 +32,7 @@ require! {
         width: 100%
         max-width: 400px
         .separator
-            min-width: 14px
+            min-width: 2px
             display: inline-block
         button 
             outline: none
@@ -49,11 +51,17 @@ require! {
                 background: white
             line-height: 12px
             height: 25px
-            width: 33px
+            width: 25px
+            font-size: 10px
             text-align: center
             >*
                 vertical-align: middle
                 display: inline-block
+    .bold
+        color: #b2951bad
+        font-style: italic
+        &.delete
+            cursor: pointer
     .fee
         display: inline-block
         margin-right: 5px
@@ -83,11 +91,11 @@ require! {
                 &.network
                     width: 15%
                 &.txhash
-                    width: 45%
+                    width: 50%
                     a
                         color: black
                 &.amount
-                    width: 40%
+                    width: 35%
                     text-align: right
             .gray
                 color: #CCC
@@ -165,6 +173,11 @@ module.exports = ({ store })->
     switch-type-in = switch-filter \IN
     switch-type-out = switch-filter \OUT
     coins = get-coins!
+    delete-pending-tx = (tx)-> (event)->
+        return if not confirm "Would you like to remove pending transaction? Your balance will be increased till confirmed transaction"
+        err <- remove-tx { store, ...tx }
+        return cb err if err?
+        <- web3(store).refresh
     .pug.normalheader.history
         .header.pug
             button.pug(on-click=go-back) < 
@@ -177,7 +190,8 @@ module.exports = ({ store })->
                     img.pug(src="#{coin.image}")
         .pug
             .pug.table
-                for { token, tx, amount, fee, time, url, type } in applied-transactions
+                for tran in applied-transactions
+                    { token, tx, amount, fee, time, url, type, pending } = tran
                     coin = 
                         coins |> find (.token is token)
                     .record.pug(class="#{type}" key="#{tx + type}")
@@ -187,7 +201,12 @@ module.exports = ({ store })->
                             .pug.direction #{arrow(type)}
                         .cell.pug.txhash
                             a.pug(href="#{url}" target="_blank") #{cut-tx tx}
-                            .pug.gray #{ago time}
+                            .pug.gray 
+                                span.pug #{ago time}
+                                if pending is yes
+                                    span.pug
+                                        span.pug.bold (pending)
+                                        span.pug.bold.delete(on-click=delete-pending-tx(tran)) x
                         .cell.pug.amount
                             .pug(title="#{amount}") 
                                 amount-beautify amount, 8

@@ -1,4 +1,4 @@
-.wallet-618236637
+.wallet183800567
     $cards-height: 324px
     $pad: 20px
     $radius: 15px 
@@ -17,6 +17,8 @@
     &:first-child
         margin-top: 0
         box-shadow: none
+    .pending
+        color: orange
     &.over
         background: #CCC
     &.big
@@ -39,6 +41,8 @@
             height: $card-top-height
         >.top-left
             width: 35%
+            @media screen and (max-width: 390px)
+                width: 20%
             text-align: right
             >*
                 display: inline-block
@@ -54,6 +58,8 @@
             >.info
                 text-align: left
                 margin-left: $pad / 2
+                @media screen and (max-width: 390px)
+                    display: none
                 >.name
                 >.price
                     font-weight: bold
@@ -62,15 +68,22 @@
                     text-overflow: ellipsis
         >.top-middle
             width: 30%
+            @media screen and (max-width: 390px)
+                width: 45%
             text-align: center
             >.balance
                 &:last-child
                     font-weight: bold
                     font-size: 13px
+                &.title
+                    @media screen and (max-width: 220px)
+                        display: none
         >.top-right
             width: 35%
-            padding-left: 35px
-            text-align: left
+            text-align: right
+            padding-right: 21px
+            @media screen and (max-width: 390px)
+                padding-right: 10px
             >button
                 outline: none
                 margin-top: 5px

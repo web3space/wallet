@@ -19,4 +19,7 @@
     return [it, math(it)];
   })(
   ['plus', 'minus', 'times', 'div']));
+  module.exports.fromHex = function(hex){
+    return new bignumber(hex, 16).toFixed();
+  };
 }).call(this);

@@ -3,6 +3,8 @@ require! {
     \./json-parse.ls
     \./api.ls
     \moment
+    \./math.ls : { plus }
+    \prelude-ls : { foldl, map }
 }
 set = (config, arr, cb)->
     name = get-name config
@@ -39,6 +41,17 @@ export remove-tx = (config, cb)->
     err <- set config, arr
     return cb err if err?
     cb null, \done
+export get-pending-amount = (config, cb)->
+    return cb "network is required" if not config.network?
+    return cb "store is required" if not config.store?
+    return cb "token is required" if not config.token?
+    err, arr <- get-all config
+    return cb err if err?
+    total =
+        arr
+            |> map (.1)
+            |> foldl plus, 0
+    cb null, total
 #export check-tx = ({ store, network, tx }, cb)->
 #    err, item <- get-one { network, store, tx }
 #    return cb err if err?
@@ -52,7 +65,6 @@ get-name = ({ network, store, token })->
     "ptx-#{mode}-#{token}"
 export create-pending-tx = (config, cb)->
     { store, network, token, tx, amount-send, amount-send-fee } = config
-    console.log config
     return cb "token is required" if typeof! token isnt \String
     return cb "store is required" if typeof! store isnt \Object
     return cb "network is required" if typeof! network isnt \Object

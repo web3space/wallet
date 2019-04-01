@@ -7,7 +7,7 @@ require! {
     \./web3.ls
     \./navigate.ls
 }
-# .wallets-1312736338
+# .wallets1919940582
 #     @import scheme
 #     $real-height: 300px
 #     $cards-height: 296px
@@ -25,7 +25,7 @@ require! {
 #     z-index: 2
 #     border-radius: $radius
 #     >*
-#         width: $width - $cards-pad * 2
+#         width: 100%
 #     >.arrow
 #         position: absolute
 #         text-align: center
@@ -71,7 +71,7 @@ wallets = ({ store })->
             |> take max
     react.create-element 'div', { key: "wallets" }, children = 
         menu { store }
-        react.create-element 'div', { key: "wallets-body", className: 'wallets wallets-1312736338' }, children = 
+        react.create-element 'div', { key: "wallets-body", className: 'wallets wallets1919940582' }, children = 
             react.create-element 'div', { on-click: go-up, key: "arrow-up", className: "#{can-up} arrow arrow-t" }, children = 
                 react.create-element 'img', { src: "#{arrow}" }
             react.create-element 'div', { key: "wallets-viewport", className: 'wallet-container' }, children = 

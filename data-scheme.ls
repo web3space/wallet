@@ -46,7 +46,7 @@ store =
             propose-escrow: no
             address: ''
             value: \0
-            fee-type: \fast
+            fee-type: \auto
             tx-type: \regular
             amount-send: \0
             amount-charged: \0

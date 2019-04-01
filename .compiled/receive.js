@@ -18,14 +18,11 @@
     store = arg$.store;
     send = store.current.send;
     wallet = send.coin.wallet;
-    if ((wallet != null ? wallet.address : void 8) == null) {
-      return null;
-    }
     back = function(){
       return navigate(store, 'send');
     };
     return react.createElement('div', {
-      className: 'receive receive-827314692'
+      className: 'receive receive-1401936116'
     }, children = [
       react.createElement('div', {
         className: 'receive-body'

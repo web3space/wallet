@@ -7,8 +7,10 @@ require! {
     \./navigate.ls
     \mobx : { toJS }
     \react
+    \./pending-tx.ls : { remove-tx }
+    \./web3.ls
 }
-# .history876008007
+# .history989660169
 #     width: 100%
 #     color: black
 #     position: relative
@@ -30,7 +32,7 @@ require! {
 #         width: 100%
 #         max-width: 400px
 #         .separator
-#             min-width: 14px
+#             min-width: 2px
 #             display: inline-block
 #         button 
 #             outline: none
@@ -49,11 +51,17 @@ require! {
 #                 background: white
 #             line-height: 12px
 #             height: 25px
-#             width: 33px
+#             width: 25px
+#             font-size: 10px
 #             text-align: center
 #             >*
 #                 vertical-align: middle
 #                 display: inline-block
+#     .bold
+#         color: #b2951bad
+#         font-style: italic
+#         &.delete
+#             cursor: pointer
 #     .fee
 #         display: inline-block
 #         margin-right: 5px
@@ -83,11 +91,11 @@ require! {
 #                 &.network
 #                     width: 15%
 #                 &.txhash
-#                     width: 45%
+#                     width: 50%
 #                     a
 #                         color: black
 #                 &.amount
-#                     width: 40%
+#                     width: 35%
 #                     text-align: right
 #             .gray
 #                 color: #CCC
@@ -165,7 +173,12 @@ module.exports = ({ store })->
     switch-type-in = switch-filter \IN
     switch-type-out = switch-filter \OUT
     coins = get-coins!
-    react.create-element 'div', { className: 'normalheader history history876008007' }, children = 
+    delete-pending-tx = (tx)-> (event)->
+        return if not confirm "Would you like to remove pending transaction? Your balance will be increased till confirmed transaction"
+        err <- remove-tx { store, ...tx }
+        return cb err if err?
+        <- web3(store).refresh
+    react.create-element 'div', { className: 'normalheader history history989660169' }, children = 
         react.create-element 'div', { className: 'header' }, children = 
             react.create-element 'button', { on-click: go-back }, ' < '
             react.create-element 'span', { className: 'separator' }
@@ -177,7 +190,8 @@ module.exports = ({ store })->
                     react.create-element 'img', { src: "#{coin.image}" }
         react.create-element 'div', {}, children = 
             react.create-element 'div', { className: 'table' }, children = 
-                for { token, tx, amount, fee, time, url, type } in applied-transactions
+                for tran in applied-transactions
+                    { token, tx, amount, fee, time, url, type, pending } = tran
                     coin = 
                         coins |> find (.token is token)
                     react.create-element 'div', { key: "#{tx + type}", className: "#{type} record" }, children = 
@@ -187,7 +201,12 @@ module.exports = ({ store })->
                             react.create-element 'div', { className: 'direction' }, ' ' + arrow(type)
                         react.create-element 'div', { className: 'cell txhash' }, children = 
                             react.create-element 'a', { href: "#{url}", target: "_blank" }, ' ' + cut-tx tx
-                            react.create-element 'div', { className: 'gray' }, ' ' + ago time
+                            react.create-element 'div', { className: 'gray' }, children = 
+                                react.create-element 'span', {}, ' ' + ago time
+                                if pending is yes
+                                    react.create-element 'span', {}, children = 
+                                        react.create-element 'span', { className: 'bold' }, ' (pending)'
+                                        react.create-element 'span', { on-click: delete-pending-tx(tran), className: 'bold delete' }, ' x'
                         react.create-element 'div', { className: 'cell amount' }, children = 
                             react.create-element 'div', { title: "#{amount}" }, ' '
                                 amount-beautify amount, 8

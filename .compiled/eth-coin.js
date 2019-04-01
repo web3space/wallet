@@ -6,7 +6,6 @@
     txFee: '0.0014',
     txFeeOptions: {
       auto: '0.0014',
-      fast: '0.0014',
       cheap: '0.00014'
     },
     messagePrefix: 'Ethereum',
@@ -22,7 +21,7 @@
     decimals: 18,
     txFee: '0.0014',
     txFeeOptions: {
-      fast: '0.0014',
+      auto: '0.0014',
       cheap: '0.00014'
     },
     messagePrefix: 'Ethereum',
@@ -39,7 +38,6 @@
     txFee: '0.0014',
     txFeeOptions: {
       auto: '0.0014',
-      fast: '0.0014',
       cheap: '0.00014'
     },
     messagePrefix: 'Ethereum',
@@ -48,7 +46,7 @@
       provider: 'eth',
       web3Provider: 'https://ropsten.infura.io/UoCkF4efTrbEGU8Qpcs0',
       url: 'https://ropsten.etherscan.io',
-      apiUrl: 'http://api-ropsten.etherscan.io/api'
+      apiUrl: 'https://api-ropsten.etherscan.io/api'
     }
   };
   out$.color = color = '#5838B8';

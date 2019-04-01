@@ -3,13 +3,13 @@
   var mainnet, testnet, txTypes, color, type, enabled, token, image, usdInfo, out$ = typeof exports != 'undefined' && exports || this;
   out$.mainnet = mainnet = {
     decimals: 8,
-    txFee: '0.0001',
+    txFee: '0.0004',
     txFeeOptions: {
-      fast: '0.0001',
-      cheap: '0.0000004',
-      auto: '0.0001',
+      cheap: '0.0001',
+      auto: '0.0004',
       instantPerInput: '0.001',
-      privatePerInput: '0.05'
+      privatePerInput: '0.05',
+      feePerByte: '0.0000001'
     },
     mask: 'X000000000000000000000000000000000',
     api: {
@@ -33,9 +33,9 @@
     decimals: 8,
     txFee: '0.0001',
     txFeeOptions: {
-      auto: '0.0001',
-      fast: '0.0001',
-      cheap: '0.0000004'
+      auto: '0.0004',
+      cheap: '0.0001',
+      feePerByte: '0.0000001'
     },
     mask: 'y000000000000000000000000000000000',
     topup: 'https://test.faucet.dashninja.pl/',

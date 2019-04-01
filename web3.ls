@@ -31,6 +31,7 @@ build-send-transaction = (store, coin)-> (tx, cb)->
     network = coin[store.current.network]
     return cb "Transaction is required" if typeof! tx isnt \Object
     { to, data, decoded-data, value, gas } = tx
+    console.log \tx, tx
     return cb "Recipient (to) is required" if typeof! tx.to isnt \String
     return cb "Value is required" if typeof! value not in <[ String Number ]>
     id = guid!
@@ -58,6 +59,9 @@ build-send-transaction = (store, coin)-> (tx, cb)->
     err, data <- wait-form-result id
     return cb err if err?
     cb null, data
+get-contract-instance = (web3, abi, addr)->
+    | typeof! web3.eth.contract is \Function => web3.eth.contract(abi).at(addr)
+    | _ => new web3.eth.Contract(abi, addr)
 build-contract = (store, methods, coin)-> (abi)-> at: (address)->
     { send-transaction } = methods
     network = coin[store.current.network]
@@ -65,7 +69,7 @@ build-contract = (store, methods, coin)-> (abi)-> at: (address)->
     web3.set-provider(new web3.providers.HttpProvider(network.api.web3-provider))
     web3.eth.send-transaction = ({ value, data, to }, cb)->
         send-transaction { to, data, value }, cb
-    new web3.eth.Contract(abi, address)
+    get-contract-instance web3, abi, address
 build-network-ethereum = (store, methods, coin)->
     { send-transaction, get-balance } = methods
     contract = build-contract store, methods, coin

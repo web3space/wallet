@@ -18,7 +18,6 @@
     }
     return setTimeout(function(){
       input.focus();
-      input.setSelectionRange(0, 1);
       return cb(null);
     }, 100);
   };
@@ -77,6 +76,9 @@
         if (keyCode >= 48 && keyCode <= 57) {
           return setVal(store, number, keyCode - 48);
         }
+        if (keyCode >= 96 && keyCode <= 105) {
+          return setVal(store, number, keyCode - 96);
+        }
         if (keyCode === 8 || keyCode === 37) {
           return goBack(store, number);
         }
@@ -94,27 +96,21 @@
   };
   input = function(store){
     return function(number){
-      var keydown, val, type;
+      var keydown, val;
       keydown = setupKeydown(store);
       val = setupVal(store);
-      type = (function(){
-        switch (false) {
-        case !!exists():
-          return 'input';
-        default:
-          return 'password';
-        }
-      }());
       return react.createElement('input', {
         key: "pin-" + number,
-        type: type + "",
+        type: "number",
         value: val(number) + "",
         placeholder: "0",
         onKeyDown: keydown(number),
         tabIndex: (number + 1) + "",
-        pattern: "[0-9]",
-        inputMode: "numeric",
-        autoComplete: "off"
+        pattern: "[0-9]*",
+        inputmode: "numeric",
+        step: "1",
+        autoComplete: "off",
+        className: 'password'
       });
     };
   };
@@ -169,7 +165,7 @@
     info = getPrimaryInfo(store);
     return react.createElement('div', {
       key: "locked",
-      className: 'locked locked-1169012682'
+      className: 'locked locked2141860090'
     }, children = [
       react.createElement('div', {
         className: 'logo'

@@ -30,6 +30,8 @@ require! {
     &:first-child
         margin-top: 0
         box-shadow: none
+    .pending
+        color: orange
     &.over
         background: #CCC
     &.big
@@ -52,6 +54,8 @@ require! {
             height: $card-top-height
         >.top-left
             width: 35%
+            @media screen and (max-width: 390px)
+                width: 20%
             text-align: right
             >*
                 display: inline-block
@@ -67,6 +71,8 @@ require! {
             >.info
                 text-align: left
                 margin-left: $pad / 2
+                @media screen and (max-width: 390px)
+                    display: none
                 >.name
                 >.price
                     font-weight: bold
@@ -75,15 +81,22 @@ require! {
                     text-overflow: ellipsis
         >.top-middle
             width: 30%
+            @media screen and (max-width: 390px)
+                width: 45%
             text-align: center
             >.balance
                 &:last-child
                     font-weight: bold
                     font-size: 13px
+                &.title
+                    @media screen and (max-width: 220px)
+                        display: none
         >.top-right
             width: 35%
-            padding-left: 35px
-            text-align: left
+            text-align: right
+            padding-right: 21px
+            @media screen and (max-width: 390px)
+                padding-right: 10px
             >button
                 outline: none
                 margin-top: 5px
@@ -155,6 +168,7 @@ module.exports = (store, wallets, wallet)-->
         | wallets.length < 3 => \big
         | _ => ""
     balance = round5(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
+    pending = round5(wallet.pending-sent) + ' ' + wallet.coin.token.to-upper-case!
     button-style=
         color: get-primary-info(store).color
     .wallet.pug(on-click=expand class="#{active + ' ' + big}" key="#{wallet.coin.token}")
@@ -166,8 +180,13 @@ module.exports = (store, wallets, wallet)-->
                     .name.pug PRICE
                     .price.pug $#{ money(usd-rate)}
             .top-middle.pug
-                .balance.pug Balance
-                .balance.pug #{ balance }
+                if +wallet.pending-sent is 0
+                    .balance.pug.title Balance
+                .balance.pug
+                    .pug #{ balance }
+                    if +wallet.pending-sent >0
+                        .pug.pending 
+                            span.pug -#{pending} pending
             .top-right.pug
                 button.pug(on-click=send(wallet) style=button-style) Open
         .wallet-middle.pug

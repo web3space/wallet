@@ -3,14 +3,14 @@ require! {
     \qrcode.react : QRCode
     \./navigate.ls
 }
-# .receive-827314692
+# .receive-1401936116
 #     text-align: center
 #     .receive-body
 #         padding: 50px 20px
 #         background: white
 #         canvas
-#             width: 256px
-#             height: 256px
+#             width: 60%
+#             height: auto
 #     .bottom
 #         color: white
 #         cursor: pointer
@@ -21,10 +21,9 @@ qrcode = (wallet)->
 module.exports = ({ store })->
     { send } = store.current
     { wallet } = send.coin
-    return null if not wallet?address?
     back = ->
         navigate store, \send
-    react.create-element 'div', { className: 'receive receive-827314692' }, children = 
+    react.create-element 'div', { className: 'receive receive-1401936116' }, children = 
         react.create-element 'div', { className: 'receive-body' }, children = 
             qrcode wallet
         react.create-element 'div', { className: 'bottom' }, children = 

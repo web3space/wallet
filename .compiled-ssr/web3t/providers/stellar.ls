@@ -31,6 +31,8 @@ transform-tx = (network, t)-->
     from = t.sender
     to = t.receiver
     { network, tx, amount, fee, time, url, from, to }
+export get-unconfirmed-balance = ({ network, address} , cb)->
+    cb "Not Implemented"
 export get-transactions = ({ network, address }, cb)->
     cb "Not Implemented"
 export create-transaction = ({ network, account, recipient, amount, amount-fee, data, fee-type, tx-type} , cb)-->
@@ -38,6 +40,8 @@ export create-transaction = ({ network, account, recipient, amount, amount-fee, 
 export push-tx = ({ network, rawtx } , cb)-->
     cb "Not Implemented"
 export check-tx-status = ({ network, tx }, cb)->
+    cb "Not Implemented"
+export get-total-received = ({ address, network }, cb)->
     cb "Not Implemented"
 export get-balance = ({ network, address }, cb)->
     cb "Not Implemented"

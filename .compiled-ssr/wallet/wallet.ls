@@ -11,7 +11,7 @@ require! {
     \./address-link.ls : { get-address-link, get-address-title }
 }
 #
-# .wallet-618236637
+# .wallet183800567
 #     $cards-height: 324px
 #     $pad: 20px
 #     $radius: 15px 
@@ -30,6 +30,8 @@ require! {
 #     &:first-child
 #         margin-top: 0
 #         box-shadow: none
+#     .pending
+#         color: orange
 #     &.over
 #         background: #CCC
 #     &.big
@@ -52,6 +54,8 @@ require! {
 #             height: $card-top-height
 #         >.top-left
 #             width: 35%
+#             @media screen and (max-width: 390px)
+#                 width: 20%
 #             text-align: right
 #             >*
 #                 display: inline-block
@@ -67,6 +71,8 @@ require! {
 #             >.info
 #                 text-align: left
 #                 margin-left: $pad / 2
+#                 @media screen and (max-width: 390px)
+#                     display: none
 #                 >.name
 #                 >.price
 #                     font-weight: bold
@@ -75,15 +81,22 @@ require! {
 #                     text-overflow: ellipsis
 #         >.top-middle
 #             width: 30%
+#             @media screen and (max-width: 390px)
+#                 width: 45%
 #             text-align: center
 #             >.balance
 #                 &:last-child
 #                     font-weight: bold
 #                     font-size: 13px
+#                 &.title
+#                     @media screen and (max-width: 220px)
+#                         display: none
 #         >.top-right
 #             width: 35%
-#             padding-left: 35px
-#             text-align: left
+#             text-align: right
+#             padding-right: 21px
+#             @media screen and (max-width: 390px)
+#                 padding-right: 10px
 #             >button
 #                 outline: none
 #                 margin-top: 5px
@@ -155,9 +168,10 @@ module.exports = (store, wallets, wallet)-->
         | wallets.length < 3 => \big
         | _ => ""
     balance = round5(wallet.balance) + ' ' + wallet.coin.token.to-upper-case!
+    pending = round5(wallet.pending-sent) + ' ' + wallet.coin.token.to-upper-case!
     button-style=
         color: get-primary-info(store).color
-    react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active + ' ' + big} wallet wallet-618236637" }, children = 
+    react.create-element 'div', { on-click: expand, key: "#{wallet.coin.token}", className: "#{active + ' ' + big} wallet wallet183800567" }, children = 
         react.create-element 'div', { className: 'wallet-top' }, children = 
             react.create-element 'div', { className: 'top-left' }, children = 
                 react.create-element 'div', { className: 'img' }, children = 
@@ -166,8 +180,13 @@ module.exports = (store, wallets, wallet)-->
                     react.create-element 'div', { className: 'name' }, ' PRICE'
                     react.create-element 'div', { className: 'price' }, ' $' +  money(usd-rate)
             react.create-element 'div', { className: 'top-middle' }, children = 
-                react.create-element 'div', { className: 'balance' }, ' Balance'
-                react.create-element 'div', { className: 'balance' }, ' ' +  balance 
+                if +wallet.pending-sent is 0
+                    react.create-element 'div', { className: 'balance title' }, ' Balance'
+                react.create-element 'div', { className: 'balance' }, children = 
+                    react.create-element 'div', {}, ' ' +  balance 
+                    if +wallet.pending-sent >0
+                        react.create-element 'div', { className: 'pending' }, children = 
+                            react.create-element 'span', {}, ' -' + pending + ' pending'
             react.create-element 'div', { className: 'top-right' }, children = 
                 react.create-element 'button', { on-click: send(wallet), style: button-style }, ' Open'
         react.create-element 'div', { className: 'wallet-middle' }, children = 

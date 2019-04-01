@@ -91,6 +91,9 @@
       return current.savedSeed = true;
     };
     editSeed = function(){
+      if (!confirm("If you edit this, your old wallet is gone and all your coins are lost")) {
+        return;
+      }
       store.current.pin = "";
       return current.tryEditSeed = true;
     };
@@ -141,7 +144,7 @@
       }
     }());
     return react.createElement('div', {
-      className: 'menu menu1338448102'
+      className: 'menu menu2034493859'
     }, children = react.createElement('div', {
       className: 'viewport'
     }, children = [

@@ -1,24 +1,24 @@
-.menu1338448102
+.menu2034493859
     @import scheme
     $viewport-height: $height / 2.5
     $cards-height: 324px
     $pad: 20px
     $radius: 15px
     height: $height
-    width: $width
+    width: 100%
     position: relative
     >*
         position: absolute
         left: 0
     >.viewport
-        width: $width
+        width: 100%
         height: $height
         top: 0
         overflow: hidden
         >*
             position: absolute
             top: 0
-            width: $width
+            width: 100%
         $viewport-header-height: 32px
         $slide-height: $viewport-height / 2
         >.viewport-icons
@@ -38,6 +38,8 @@
                 top: 0
                 width: 50%
                 padding: 0 10px
+                height: 30px
+                line-height: 30px
                 &.left
                     left: 0
                     text-align: left
@@ -55,7 +57,7 @@
                 width: 100%
                 text-align: center
                 img
-                    height: 20px
+                    height: 25px
                     width: auto
             img
                 width: $pad / 1.5
@@ -78,11 +80,12 @@
                                 -o-transform: rotate(360deg)
                                 transform: rotate(360deg)
                         animation: rotating 2s linear infinite
-                &.lock
-                    float: right
                 &:hover
                     color: #eee
+        $small-info: 386px
         >.viewport-header
+            @media screen and (max-width: $small-info)
+                display: none
             z-index: 4
             position: relative
             height: $viewport-header-height
@@ -255,6 +258,8 @@
                             color: $primary
                 &.s1
                     width: $width - $pad * 6
+                    @media screen and (max-width: $small-info)
+                        width: 80vw
                     >.slide-body
                         .title
                             color: $primary
@@ -268,6 +273,8 @@
                             font-size: 12px
                 &.s2
                     width: $width - $pad * 6
+                    @media screen and (max-width: $small-info)
+                        width: 80vw
                     >.slide-body
                         overflow: hidden
                         margin: 0 auto
@@ -303,4 +310,6 @@
                                 font-weight: 400
                 &.s3
                     width: $width - $pad * 6
+                    @media screen and (max-width: $small-info)
+                        width: 80vw
                     >.slide-body

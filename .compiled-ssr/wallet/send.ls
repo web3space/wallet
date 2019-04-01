@@ -1,36 +1,21 @@
 require! {
     \react
     \mobx : { toJS }
-    \./math.ls : { times, minus }
-    \./api.ls : { create-transaction, push-tx }
-    \./calc-amount.ls : { change-amount, calc-crypto }
-    \./send-form.ls : { notify-form-result }
-    \./get-name-mask.ls
-    \./resolve-address.ls
-    \./ethnamed.ls
-    \./browser/window.ls
-    \./navigate.ls
-    \./close.ls
-    \./round.ls
-    \./round5.ls
-    \./round5edit.ls
-    \./topup-loader.ls : { get-topup-address }
-    \./get-primary-info.ls
-    \./pending-tx.ls : { create-pending-tx }
-    \./transactions.ls : { rebuild-history }
+    \./send-funcs.ls
     \prelude-ls : { map }
-    \./address-link.ls : { get-address-link, get-address-title }
 }
-# .content-1788769299
+# .content342489615
 #     position: relative
 #     @import scheme
 #     $border-radius: 20px
 #     $label-padding: 12px
 #     $label-font: 12px
+#     .pending
+#         color: orange
 #     >*
 #         display: inline-block
 #         text-align: center
-#         width: 376px
+#         width: 94%
 #         box-sizing: border-box
 #         border-radius: $border-radius
 #         position: absolute
@@ -58,7 +43,7 @@ require! {
 #     >.decoration
 #         top: 8px
 #         left: 28px
-#         width: 344px
+#         width: 86%
 #         background: rgba(255, 255, 255, 0.24)
 #         height: 23px
 #         border-radius: 15px
@@ -165,7 +150,7 @@ require! {
 #                 border-radius: 50px
 #         .usd
 #             font-size: 11px
-#             padding-left: $label-padding
+#             padding-left: 4px
 #             color: gray
 #         .topup
 #             display: inline-block
@@ -178,11 +163,21 @@ require! {
 #             font-size: 12px
 #         .balance
 #             color: #5E72E4
+#         .send-all
+#             background: #3a63e4
+#             color: white
+#             border-radius: 4px
+#             font-size: 10px
+#             text-align: center
+#             padding: 0 5px
+#             cursor: pointer
 #         .not-enough
 #             color: red
 #             min-height: 30px
-#             padding: 0 11px
+#             padding: 0 4px
 #             font-size: 12px
+#             max-height: 20px
+#             overflow: hidden
 #         .fast-cheap
 #             text-align: right
 #             height: 14px
@@ -205,6 +200,8 @@ require! {
 #         .escrow
 #             padding: 5px 11px
 #             min-height: 20px
+#             @media screen and (max-width: 290px)
+#                 min-height: 0
 #             color: #cc625a
 #             font-size: 14px
 #         .bold
@@ -215,7 +212,7 @@ require! {
 #                 margin-top: 10px
 #                 text-align: left
 #                 border-radius: 100px
-#                 width: 260px
+#                 width: 68%
 #                 display: inline-block
 #                 overflow: hidden
 #                 box-shadow: 0px 0px 9px #bbbbbb
@@ -236,7 +233,7 @@ require! {
 #                     &:hover
 #                         background: rgba(#6CA7ED, 0.2)
 #                         color: #6CA7ED
-build-send-option = (store, option)-->
+build-send-option = ({ store, change-amount} , option)-->
     { send } = store.current
     chosen =
         | option is send.tx-type => \chosen
@@ -245,139 +242,13 @@ build-send-option = (store, option)-->
         send.tx-type = option
         change-amount store, send.amount-send
     react.create-element 'div', { on-click: select-option, className: "#{chosen} switch" }, ' ' + option.to-upper-case!
+form-group = (title, content)->
+    react.create-element 'div', { className: 'form-group' }, children = 
+        react.create-element 'label', { className: 'control-label' }, ' ' + title
+        content!
 send = ({ store })->
-    return null if not store?
-    { send-to } = ethnamed store
-    { send } = store.current
-    { wallet } = send
-    return null if not wallet?
-    color = get-primary-info(store).color
-    primary-button-style = 
-        background: color
-    default-button-style = { color }
-    send-tx = ({ to, wallet, network, amount-send, amount-send-fee, data, coin, tx-type }, cb)->
-        { token } = send.coin
-        tx =
-            account: { wallet.address, wallet.private-key } 
-            recipient: to
-            network: network
-            token: token
-            coin: coin
-            amount: amount-send
-            amount-fee: amount-send-fee
-            data: data
-        #console.log 'before create tx'
-        err, data <- create-transaction tx
-        #console.log 'after create tx', err
-        return cb err if err?
-        agree = confirm "Are you sure to send #{tx.amount} #{send.coin.token} to #{send.to}"
-        #console.log 'after confirm', agree
-        return cb "You are not agree" if not agree
-        err, tx <- push-tx { token, tx-type, network, ...data }
-        return cb err if err?
-        err <- create-pending-tx { store, token, network, tx, amount-send, amount-send-fee }
-        cb err, tx
-    perform-send-safe = (cb)->
-        err, to <- resolve-address send.to, send.coin, send.network
-        send.propose-escrow = err is "Address not found" and send.coin.token is \eth
-        return cb err if err?
-        send.to = to
-        send.error = err.message ? err if err?
-        return cb err if err?
-        send-tx { wallet, ...send }, cb
-    perform-send-unsafe = (cb)->
-        send-tx { wallet, ...send }, cb
-    send-money = ->
-        return if wallet.balance is \...
-        return if send.sending is yes
-        send.sending = yes
-        err, data <- perform-send-safe
-        send.sending = no
-        return send.error = "#{err.message ? err}" if err?
-        notify-form-result send.id, null, data
-        store.current.last-tx-url = "#{send.network.api.url}/tx/#{data}"
-        navigate store, \sent
-        <- rebuild-history store, wallet
-    send-escrow = ->
-        name = send.to
-        amount-ethers = send.amount-send
-        err <- send-to { name, amount-ethers }
-    send-anyway = ->
-        return send-escrow! if send.propose-escrow
-        send-money!
-    send-title = 
-        | send.propose-escrow then 'SEND (Escrow)'
-        | _ => "Send"
-    cancel = (event)->
-        navigate store, \wallets
-        notify-form-result send.id, "Cancelled by user"
-    recipient-change = (event)->
-        send.to = event.target.value ? ""
-    get-value = (event)->
-        value = event.target.value.match(/^[0-9]+([.]([0-9]+)?)?$/)?0
-        value2 = 
-            | value?0 is \0 and value?1? and value?1 isnt \. => value.substr(1, value.length)
-            | _ => value
-        value2
-    amount-change = (event)->
-        value = get-value event
-        change-amount store, value
-    amount-usd-change = (event)->
-        value = get-value event
-        to-send = calc-crypto store, value
-        change-amount store, to-send
-    encode-decode = ->
-        send.show-data-mode =
-            | send.show-data-mode is \decoded => \encoded 
-            | _ => \decoded
-    show-data = ->
-        | send.show-data-mode is \decoded => send.decoded-data
-        | _ => send.data
-    show-label = ->
-        if send.show-data-mode is \decoded then \encoded else \decoded
-    when-empty = (str, def)->
-        if (str ? "").length is 0 then def else str
-    history = ->
-        store.current.filter = [\IN, \OUT, send.coin.token]
-        navigate store, \history
-    topup = ->
-        { token } = send.coin
-        { network } = store.current
-        { address } = wallet
-        address = get-topup-address { token, network, address }
-        if address?
-            window.open address
-        else if wallet.network.topup
-            window.open wallet.network.topup
-        else
-            alert "Topup Service is not installed"
-    network = 
-        | store.current.network is \testnet => " (TESTNET) "
-        | _ => ""
-    receive = ->
-        navigate store, \receive
-    token = send.coin.token.to-upper-case!
-    fee-token = (wallet.network.tx-fee-in ? send.coin.token).to-upper-case!
-    is-data = (send.data ? "").length > 0
-    choose-auto = ->
-        send.fee-type = \auto
-        change-amount store, send.amount-send
-    choose-fast = ->
-        send.fee-type = \fast
-        change-amount store, send.amount-send
-    choose-cheap = ->
-        send.fee-type = \cheap
-        change-amount store, send.amount-send
-    chosen-fast  =  if send.fee-type is \fast then \chosen else ""
-    chosen-cheap =  if send.fee-type is \cheap then \chosen else ""
-    chosen-auto  =  if send.fee-type is \auto then \chosen else ""
-    console.log send.network
-    send-options = send.coin.tx-types ? []
-    form-group = (title, content)->
-        react.create-element 'div', { className: 'form-group' }, children = 
-            react.create-element 'label', { className: 'control-label' }, ' ' + title
-            content!
-    react.create-element 'div', { className: 'content content-1788769299' }, children = 
+    { token, fee-token, network, send, wallet, pending, primary-button-style, recipient-change, amount-change, amount-usd-change, use-max-amount, show-data, show-label, topup, history, receive, cancel, send-anyway, choose-auto, choose-cheap, chosen-auto, chosen-cheap, get-address-link, get-address-title, default-button-style, round5edit, round5, send-options, send-title, is-data, encode-decode, change-amount } = send-funcs store
+    react.create-element 'div', { className: 'content content342489615' }, children = 
         react.create-element 'div', { className: 'decoration' }
         react.create-element 'div', { className: 'content-body' }, children = 
             react.create-element 'div', { className: 'header' }, children = 
@@ -400,9 +271,13 @@ send = ({ store })->
                                 react.create-element 'div', { className: 'label lusd' }, ' $'
                                 react.create-element 'input', { type: 'text', on-change: amount-usd-change, placeholder: "0", value: "#{round5edit send.amount-send-usd}", className: 'amount-usd' }
                         react.create-element 'div', { className: 'usd' }, children = 
+                            react.create-element 'span', { on-click: use-max-amount, className: 'send-all' }, ' USE MAX'
                             react.create-element 'span', {}, ' Balance'
-                            react.create-element 'span', { className: 'balance' }, ' ' + wallet.balance + ' ' + token + ' '
-                        react.create-element 'div', { className: 'control-label not-enough text-left' }, ' ' + send.error
+                            react.create-element 'span', { className: 'balance' }, children = 
+                                react.create-element 'span', {}, ' ' + wallet.balance + ' ' + token
+                                if +wallet.pending-sent >0
+                                    react.create-element 'span', { className: 'pending' }, ' - ' + pending + ' pending'
+                        react.create-element 'div', { title: "#{send.error}", className: 'control-label not-enough text-left' }, ' ' + send.error
                 if is-data
                     form-group 'Data', ->
                         react.create-element 'div', {}, children = 
@@ -426,10 +301,9 @@ send = ({ store })->
                                 react.create-element 'div', {}, ' ' + round5(send.amount-send-fee) + '  ' + fee-token
                                 react.create-element 'div', { className: 'usd' }, ' $ ' + round5(send.amount-send-fee-usd)
                 react.create-element 'div', { className: 'fast-cheap' }, children = 
-                    send-options |> map build-send-option store
+                    send-options |> map build-send-option { store, change-amount }
                     react.create-element 'div', { className: 'space' }
                     react.create-element 'div', { on-click: choose-auto, className: "#{chosen-auto} switch" }, ' AUTO'
-                    react.create-element 'div', { on-click: choose-fast, className: "#{chosen-fast} switch" }, ' FAST'
                     react.create-element 'div', { on-click: choose-cheap, className: "#{chosen-cheap} switch" }, ' CHEAP'
                 react.create-element 'div', { className: 'escrow' }, children = 
                     if send.propose-escrow

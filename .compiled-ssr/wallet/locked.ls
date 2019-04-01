@@ -5,16 +5,21 @@ require! {
     \./navigate.ls
     \./get-primary-info.ls
 }
-# .locked-1169012682
+# .locked2141860090
 #     @import scheme
 #     padding-top: 70px
 #     height: $height
 #     box-sizing: border-box
 #     text-align: center
+#     .password
+#         -webkit-text-security: disc
+#         text-security: disc
+#         &::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+#             -webkit-appearance: none
+#         -moz-appearance: textfield
 #     >.logo 
 #         padding: 20px
-#         border-bottom: 1px solid #b1b1b1
-#         background: rgba(#ffffff, 0.2)
+#         background: rgba(#ffffff, 0.12)
 #         margin: 20px 0
 #         >img
 #             height: 50px
@@ -63,7 +68,7 @@ goto = (store, number, cb)->
     return cb null if not input?
     <- set-timeout _, 100
     input.focus!
-    input.set-selection-range 0, 1
+    #input.set-selection-range 0, 1
     cb null
 wrong-pin = (store)->
     store.current.pin = ""
@@ -96,6 +101,7 @@ set-val = (store, number, value)->
 setup-keydown = (store)-> (number)-> (event)->
     { key-code } = event
     return set-val store, number, key-code - 48 if key-code >= 48 and key-code <= 57
+    return set-val store, number, key-code - 96 if key-code >= 96 and key-code <= 105
     return go-back store, number if key-code in [8, 37]
     return go-forward store, number if key-code is 39
 setup-val = (store)-> (number)->
@@ -103,10 +109,10 @@ setup-val = (store)-> (number)->
 input = (store)-> (number)->
     keydown = setup-keydown store
     val = setup-val store
-    type = 
-        | not exists! => \input
-        | _ => \password
-    react.create-element 'input', { key: "pin-#{number}", type: "#{type}", value: "#{val number}", placeholder: "0", on-key-down: keydown(number), tab-index: "#{number + 1}", pattern: "[0-9]", input-mode: "numeric", auto-complete: "off" }
+    #type = 
+    #    | not exists! => \input
+    #    | _ => \input
+    react.create-element 'input', { key: "pin-#{number}", type: "number", value: "#{val number}", placeholder: "0", on-key-down: keydown(number), tab-index: "#{number + 1}", pattern: "[0-9]*", inputmode: "numeric", step: "1", auto-complete: "off", className: 'password' }
 wrong-trials = (store)->
     return null if store.current.pin-trial is 0
     react.create-element 'div', { key: "wrong-trial", className: 'wrong' }, ' Wrong PIN. Trials: ' + store.current.pin-trial
@@ -126,7 +132,7 @@ locked = ({ store })->
         | not exists! => setup-button
         | _ => wrong-trials
     info = get-primary-info store
-    react.create-element 'div', { key: "locked", className: 'locked locked-1169012682' }, children = 
+    react.create-element 'div', { key: "locked", className: 'locked locked2141860090' }, children = 
         react.create-element 'div', { className: 'logo' }, children = 
             react.create-element 'img', { src: "#{info.branding.logo}" }
             react.create-element 'div', { className: 'title' }, ' ' + info.branding.title

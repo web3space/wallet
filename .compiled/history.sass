@@ -1,4 +1,4 @@
-.history876008007
+.history989660169
     width: 100%
     color: black
     position: relative
@@ -20,7 +20,7 @@
         width: 100%
         max-width: 400px
         .separator
-            min-width: 14px
+            min-width: 2px
             display: inline-block
         button 
             outline: none
@@ -39,11 +39,17 @@
                 background: white
             line-height: 12px
             height: 25px
-            width: 33px
+            width: 25px
+            font-size: 10px
             text-align: center
             >*
                 vertical-align: middle
                 display: inline-block
+    .bold
+        color: #b2951bad
+        font-style: italic
+        &.delete
+            cursor: pointer
     .fee
         display: inline-block
         margin-right: 5px
@@ -73,11 +79,11 @@
                 &.network
                     width: 15%
                 &.txhash
-                    width: 45%
+                    width: 50%
                     a
                         color: black
                 &.amount
-                    width: 40%
+                    width: 35%
                     text-align: right
             .gray
                 color: #CCC

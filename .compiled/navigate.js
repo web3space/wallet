@@ -22,14 +22,12 @@
     return 'wallets';
   };
   initControl = function(store, name, cb){
-    return setTimeout(function(){
-      var control;
-      control = pages[name];
-      if (toString$.call(control != null ? control.init : void 8).slice(8, -1) !== 'Function') {
-        return cb(null);
-      }
-      return control.init(store, cb);
-    }, 1);
+    var control;
+    control = pages[name];
+    if (toString$.call(control != null ? control.init : void 8).slice(8, -1) !== 'Function') {
+      return cb(null);
+    }
+    return control.init(store, cb);
   };
   focusControl = function(store, name, cb){
     var control;

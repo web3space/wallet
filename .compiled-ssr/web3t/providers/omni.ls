@@ -1,8 +1,8 @@
 require! {
     \qs : { stringify }
-    \prelude-ls : { filter, map, foldl, each, find, sum }
+    \prelude-ls : { filter, map, foldl, each, find, sum, values }
     \../math.ls : { plus, minus, times, div }
-    \superagent : { get, post }
+    \./superagent.ls : { get, post }
     \../json-parse.ls
     \whitebox : { get-fullpair-by-index }
     \bitcoinjs-lib : BitcoinLib
@@ -15,11 +15,11 @@ export calc-fee = ({ network, tx, tx-type, account, fee-type }, cb)->
     return cb null, tx-fee if fee-type isnt \auto
     err, data <- get "#{get-api-url network}/utils/estimatefee?nbBlocks=6" .timeout { deadline } .end
     return cb err if err?
-    values = Object.values data.body
-    exists = values.0 ? -1
+    vals = values data.body
+    exists = vals.0 ? -1
     calced-fee = 
-        | values.0 is -1 => network.tx-fee
-        | _ => values.0
+        | vals.0 is -1 => network.tx-fee
+        | _ => vals.0
     cb null, calced-fee
 export get-keys = ({ network, mnemonic, index }, cb)->
     result = get-fullpair-by-index mnemonic, index, network
@@ -93,7 +93,7 @@ export create-transaction = ({ network, account, recipient, amount, amount-fee, 
             |> map (.value)
             |> sum
     return cb 'Total is NaN' if isNaN total
-    return cb "Balance is not enough to send tx" if +(total `minus` fee) < 0
+    return cb "Balance is not enough to send tx" if +(total `minus` fee) <= 0
     err, omni-balance <- get-balance { network, account.address }
     return cb err if err?
     return cb "Balance is not enough to send this amount" if +omni-balance < +amount
@@ -170,18 +170,26 @@ export push-tx = ({ network, rawtx } , cb)-->
 export check-tx-status = ({ network, tx }, cb)->
     cb "Not Implemented"
 str = -> (it ? "").to-string!
+export get-total-received = ({ address, network }, cb)->
+    err, txs <- get-transactions { address, network }
+    total =
+        txs |> filter (-> it.to is address)
+            |> map (.amount)
+            |> foldl plus, 0
+    cb null, total
+export get-unconfirmed-balance = ({ network, address} , cb)->
+    cb "Not Implemented"
 export get-balance = ({ network, address} , cb)->
     { api-url } = network.api
     req =
         addr : address
     err, data <- post("#{api-url}/v1/address/addr/", req).type('form').end
-    #console.log body: data?body
     return cb err if err?
     return cb "expected object" if typeof! data isnt \Object
     return cb "expected balance array. got #{data.text}" if typeof! data.body.balance isnt \Array
     balance =
         data.body.balance |> find (-> str(it.id) is str(network.propertyid) )
-    return cb "Cannot obtain the balance" if not balance?
+    return cb null, 0 if not balance?
     dec = get-dec network
     value = balance.value `div` dec
     cb null, value

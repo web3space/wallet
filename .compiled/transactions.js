@@ -11,8 +11,8 @@
     return (x != null ? typeof x.toUpperCase == 'function' ? x.toUpperCase() : void 8 : void 8) === (y != null ? typeof y.toUpperCase == 'function' ? y.toUpperCase() : void 8 : void 8);
   };
   extend = curry$(function(arg$, tx){
-    var address, coin;
-    address = arg$.address, coin = arg$.coin;
+    var address, coin, pending, network, ref$;
+    address = arg$.address, coin = arg$.coin, pending = arg$.pending, network = arg$.network;
     tx.type = (function(){
       switch (false) {
       case !same(tx.to, address):
@@ -21,7 +21,15 @@
         return 'OUT';
       }
     }());
-    return tx.token = coin.token;
+    tx.token = (ref$ = coin.token) != null
+      ? ref$
+      : tx.token;
+    tx.pending = pending != null
+      ? pending
+      : tx.pending;
+    return tx.network = network != null
+      ? network
+      : tx.network;
   });
   transformPtx = function(arg$){
     var tx, amount, fee, time;
@@ -44,6 +52,11 @@
       token: coin.token
     }, function(err, data){
       var ids, dummy;
+      console.log('get-transactions', {
+        err: err,
+        data: data,
+        network: network
+      });
       if (err != null) {
         return cb(err);
       }
@@ -94,13 +107,16 @@
           each(bind$(txs, 'push'))(
           each(extend({
             address: address,
-            coin: coin
+            coin: coin,
+            network: network
           }))(
           data));
           each(bind$(txs, 'push'))(
           each(extend({
             address: address,
-            coin: coin
+            coin: coin,
+            network: network,
+            pending: true
           }))(
           map(transformPtx)(
           ptxs)));

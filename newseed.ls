@@ -1,11 +1,10 @@
 require! {
     \react
-    \whitebox
     \./navigate.ls
     \./web3.ls
     \./seed.ls : { set }
+    \bip39 : { generate-mnemonic }
 }
-{ get-container, generate-wallet } = whitebox
 .newseed
     @import scheme
     padding-top: 50px
@@ -47,7 +46,7 @@ require! {
         padding: 20px 38px
 newseed = ({ store })->
     generate-seed = ->
-        store.current.seed = generate-wallet!.mnemonic
+        store.current.seed = generate-mnemonic!
     change-seed = (event)->
         store.current.seed = event.target.value
     save = ->

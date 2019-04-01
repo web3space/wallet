@@ -25,7 +25,7 @@ require! {
     z-index: 2
     border-radius: $radius
     >*
-        width: $width - $cards-pad * 2
+        width: 100%
     >.arrow
         position: absolute
         text-align: center

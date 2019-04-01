@@ -8,24 +8,26 @@ require! {
 export transactions = observable []
 same = (x, y)->
     x?toUpperCase?! is y?toUpperCase?!
-extend = ({ address, coin }, tx)-->
+extend = ({ address, coin, pending, network }, tx)-->
     tx.type = 
         | tx.to `same` address => \IN
         | _ => \OUT
-    tx.token = coin.token
+    tx.token = coin.token ? tx.token
+    tx.pending = pending ? tx.pending
+    tx.network = network ? tx.network
 transform-ptx = ([tx, amount, fee, time])->
     { tx, amount, to: \pending , url: '#', fee: fee, time }
 export rebuild-history = (store, wallet, cb)->
     { address, network, coin } = wallet
     err, data <- get-transactions { address, network, coin.token }
-    #console.log { err, data, network }
+    console.log \get-transactions, { err, data, network }
     return cb err if err?
     ids = 
         data |> map (.tx)
     dummy = (err, data)->
         console.log err, data
     err, ptxs <- get-pending-txs { network, store, coin.token }
-    #console.log { err, ptxs, network, coin.token }
+    #console.log \ptxs, { err, ptxs, network, coin.token }
     return cb err if err?
     ptxs 
         |> filter -> ids.index-of(it.0) isnt -1
@@ -38,11 +40,11 @@ export rebuild-history = (store, wallet, cb)->
         |> filter (.token is coin.token)
         |> each -> txs.splice txs.index-of(it), 1
     data 
-        |> each extend { address, coin }
+        |> each extend { address, coin, network }
         |> each txs~push
     ptxs 
         |> map transform-ptx
-        |> each extend { address, coin }
+        |> each extend { address, coin, network, pending: yes }
         |> each txs~push
     cb!
 build-loader = (store)-> (wallet)-> task (cb)->

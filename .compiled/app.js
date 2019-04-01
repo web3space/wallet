@@ -29,7 +29,7 @@
       description(store), react.createElement('div', {
         key: "content",
         style: style,
-        className: 'app app872166188'
+        className: 'app app-1717879222'
       }, children = [
         modalControl(store), copyMessage(store), currentPage({
           store: store

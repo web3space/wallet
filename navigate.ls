@@ -13,7 +13,7 @@ get-page = (store, page)->
     return \newseed if stage2
     \wallets
 init-control = (store, name, cb)->
-    <- set-timeout _, 1
+    #<- set-timeout _, 1
     control = pages[name] 
     return cb null if typeof! control?init isnt \Function
     control.init store, cb

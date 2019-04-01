@@ -9,8 +9,8 @@ require! {
         padding: 50px 20px
         background: white
         canvas
-            width: 256px
-            height: 256px
+            width: 60%
+            height: auto
     .bottom
         color: white
         cursor: pointer
@@ -21,7 +21,6 @@ qrcode = (wallet)->
 module.exports = ({ store })->
     { send } = store.current
     { wallet } = send.coin
-    return null if not wallet?address?
     back = ->
         navigate store, \send
     .pug.receive

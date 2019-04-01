@@ -12,7 +12,7 @@
   getPrimaryInfo = require('./get-primary-info.ls');
   ref$ = require('./address-link.ls'), getAddressLink = ref$.getAddressLink, getAddressTitle = ref$.getAddressTitle;
   module.exports = curry$(function(store, wallets, wallet){
-    var index, type, lweb3, send, usdRate, ref$, expand, active, big, balance, buttonStyle, children;
+    var index, type, lweb3, send, usdRate, ref$, expand, active, big, balance, pending, buttonStyle, children;
     index = wallets.indexOf(wallet);
     type = (function(){
       switch (false) {
@@ -61,13 +61,14 @@
       }
     }());
     balance = round5(wallet.balance) + ' ' + wallet.coin.token.toUpperCase();
+    pending = round5(wallet.pendingSent) + ' ' + wallet.coin.token.toUpperCase();
     buttonStyle = {
       color: getPrimaryInfo(store).color
     };
     return react.createElement('div', {
       onClick: expand,
       key: wallet.coin.token + "",
-      className: (active + ' ' + big) + " wallet wallet-618236637"
+      className: (active + ' ' + big) + " wallet wallet183800567"
     }, children = [
       react.createElement('div', {
         className: 'wallet-top'
@@ -91,11 +92,15 @@
         ]), react.createElement('div', {
           className: 'top-middle'
         }, children = [
-          react.createElement('div', {
+          +wallet.pendingSent === 0 ? react.createElement('div', {
+            className: 'balance title'
+          }, ' Balance') : void 8, react.createElement('div', {
             className: 'balance'
-          }, ' Balance'), react.createElement('div', {
-            className: 'balance'
-          }, ' ' + balance)
+          }, children = [
+            react.createElement('div', {}, ' ' + balance), +wallet.pendingSent > 0 ? react.createElement('div', {
+              className: 'pending'
+            }, children = react.createElement('span', {}, ' -' + pending + ' pending')) : void 8
+          ])
         ]), react.createElement('div', {
           className: 'top-right'
         }, children = react.createElement('button', {

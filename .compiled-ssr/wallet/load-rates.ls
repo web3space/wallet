@@ -1,5 +1,5 @@
 require! {
-    \superagent : { get }
+    \../web3t/providers/superagent.ls : { get }
     \prelude-ls : { map, group-by, obj-to-pairs, pairs-to-obj, flatten, filter }
     \./workflow.ls : { task, run }
 }

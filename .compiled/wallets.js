@@ -43,7 +43,7 @@
         store: store
       }), react.createElement('div', {
         key: "wallets-body",
-        className: 'wallets wallets-1312736338'
+        className: 'wallets wallets1919940582'
       }, children = [
         react.createElement('div', {
           onClick: goUp,

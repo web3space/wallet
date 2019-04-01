@@ -5,7 +5,6 @@
     decimals: 8,
     txFee: '0.0001',
     txFeeOptions: {
-      fast: '0.0002',
       cheap: '0.00005546',
       auto: '0.0002'
     },
@@ -32,7 +31,6 @@
   out$.testnet = testnet = {
     txFee: '0.0001',
     txFeeOptions: {
-      fast: '0.0001',
       cheap: '0.00005546',
       auto: '0.0002'
     },

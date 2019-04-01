@@ -1,8 +1,10 @@
 require! {
-    \prelude-ls : { filter, reverse, head, foldl }
+    \prelude-ls : { filter, reverse, head, foldl, find }
     \./install-plugin.ls : { get-install-list }
+    \./get-primary-coin.ls
 }
 common =
+    * require \../web3t/plugins/gobyte-topup.ls
     * require \../web3t/plugins/trycrypto-topup.ls
     ...
 verify-fields = (t)->
@@ -34,9 +36,19 @@ put = (params, address)-->
     return address if keys.length is 0
     keys 
         |> foldl replace(params), address
-export get-topup-address = ({ token, network, address })->
+filter-by-importance = (store)-> (arr, item)->
+    coin = get-primary-coin store
+    all = arr ++ [item]
+    return all if not coin?branding?topup?
+    #coin.branding.topup
+    important = 
+        all |> find (.token is coin?branding?topup)
+    return [important] if important?
+    return all
+export get-topup-address = (store, { token, network, address })->
     method =
         get-methods!
+            |> foldl filter-by-importance(store), []
             |> filter support { token, network } 
             |> reverse
             |> head

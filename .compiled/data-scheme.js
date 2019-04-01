@@ -49,7 +49,7 @@
         proposeEscrow: false,
         address: '',
         value: '0',
-        feeType: 'fast',
+        feeType: 'auto',
         txType: 'regular',
         amountSend: '0',
         amountCharged: '0',

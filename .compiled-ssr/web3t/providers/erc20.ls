@@ -114,9 +114,19 @@ export check-decoded-data = (decoded-data, data)->
     return no if not (data ? "").length is 0
 export push-tx = ({ network, rawtx } , cb)-->
     web3 = get-web3 network
-    err, txid <- web3.eth.send-signed-transaction rawtx
+    send = web3.eth.send-raw-transaction ? web3.eth.send-signed-transaction
+    err, txid <- send rawtx
     cb err, txid
 export check-tx-status = ({ network, tx }, cb)->
+    cb "Not Implemented"
+export get-total-received = ({ address, network }, cb)->
+    err, txs <- get-transactions { address, network }
+    total =
+        txs |> filter (-> it.to.to-upper-case! is address.to-upper-case!)
+            |> map (.amount)
+            |> foldl plus, 0
+    cb null, total
+export get-unconfirmed-balance = ({ network, address} , cb)->
     cb "Not Implemented"
 export get-balance = ({ network, address} , cb)->
     web3 = get-web3 network

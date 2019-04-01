@@ -1,10 +1,12 @@
 require! {
     \./api.ls : { get-balance }
     \./math.ls : { times, plus }
-    \prelude-ls : { find, map, pairs-to-obj }
+    \prelude-ls : { find, map, pairs-to-obj, foldl, filter }
     \./plugin-loader.ls : { get-coins }
     \./workflow.ls : { run, task }
     \./round5.ls
+    #\./pending-tx.ls : { get-pending-amount }
+    \./transactions.ls : { transactions }
 }
 calc-wallet = (store, cb)->
     return cb "Store is required" if not store?
@@ -28,6 +30,15 @@ calc-wallet = (store, cb)->
         coin.wallet = wallet
         err, balance <- get-balance { wallet.address, wallet.network, token }
         return cb err if err?
+        pending-sent =
+            transactions 
+                |> filter (.token is token)
+                |> filter (.pending is yes)
+                |> map (.amount)
+                |> foldl plus, 0
+        #err, pending-sent <- get-pending-amount { store, token, wallet.network }
+        #console.log { err, pending-sent }
+        wallet.pending-sent = pending-sent
         wallet.balance = balance
         wallet.balance-usd =
             | usd-rate is \.. => \..

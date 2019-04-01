@@ -13,27 +13,27 @@ require! {
     \./project-links.ls
 }
 { get-container, generate-wallet } = whitebox
-# .menu1338448102
+# .menu2034493859
 #     @import scheme
 #     $viewport-height: $height / 2.5
 #     $cards-height: 324px
 #     $pad: 20px
 #     $radius: 15px
 #     height: $height
-#     width: $width
+#     width: 100%
 #     position: relative
 #     >*
 #         position: absolute
 #         left: 0
 #     >.viewport
-#         width: $width
+#         width: 100%
 #         height: $height
 #         top: 0
 #         overflow: hidden
 #         >*
 #             position: absolute
 #             top: 0
-#             width: $width
+#             width: 100%
 #         $viewport-header-height: 32px
 #         $slide-height: $viewport-height / 2
 #         >.viewport-icons
@@ -53,6 +53,8 @@ require! {
 #                 top: 0
 #                 width: 50%
 #                 padding: 0 10px
+#                 height: 30px
+#                 line-height: 30px
 #                 &.left
 #                     left: 0
 #                     text-align: left
@@ -70,7 +72,7 @@ require! {
 #                 width: 100%
 #                 text-align: center
 #                 img
-#                     height: 20px
+#                     height: 25px
 #                     width: auto
 #             img
 #                 width: $pad / 1.5
@@ -93,11 +95,12 @@ require! {
 #                                 -o-transform: rotate(360deg)
 #                                 transform: rotate(360deg)
 #                         animation: rotating 2s linear infinite
-#                 &.lock
-#                     float: right
 #                 &:hover
 #                     color: #eee
+#         $small-info: 386px
 #         >.viewport-header
+#             @media screen and (max-width: $small-info)
+#                 display: none
 #             z-index: 4
 #             position: relative
 #             height: $viewport-header-height
@@ -270,6 +273,8 @@ require! {
 #                             color: $primary
 #                 &.s1
 #                     width: $width - $pad * 6
+#                     @media screen and (max-width: $small-info)
+#                         width: 80vw
 #                     >.slide-body
 #                         .title
 #                             color: $primary
@@ -283,6 +288,8 @@ require! {
 #                             font-size: 12px
 #                 &.s2
 #                     width: $width - $pad * 6
+#                     @media screen and (max-width: $small-info)
+#                         width: 80vw
 #                     >.slide-body
 #                         overflow: hidden
 #                         margin: 0 auto
@@ -318,6 +325,8 @@ require! {
 #                                 font-weight: 400
 #                 &.s3
 #                     width: $width - $pad * 6
+#                     @media screen and (max-width: $small-info)
+#                         width: 80vw
 #                     >.slide-body
 state =
     timeout: null
@@ -364,6 +373,7 @@ module.exports = ({ store })->
         seed.set current.seed
         current.saved-seed = yes
     edit-seed = ->
+        return if not confirm "If you edit this, your old wallet is gone and all your coins are lost"
         store.current.pin = ""
         current.try-edit-seed = yes
         #current.saved-seed = no
@@ -393,7 +403,7 @@ module.exports = ({ store })->
     wallet-style =
         | not primary-color? => {}
         | _ => build-schema primary-color
-    react.create-element 'div', { className: 'menu menu1338448102' }, children = 
+    react.create-element 'div', { className: 'menu menu2034493859' }, children = 
         react.create-element 'div', { className: 'viewport' }, children = 
             react.create-element 'div', { className: 'viewport-icons' }, children = 
                 react.create-element 'div', { className: 'absolute left' }, children = 

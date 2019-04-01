@@ -11,7 +11,7 @@ require! {
     \./get-primary-info.ls
 }
 .app
-    overflow-y: scroll
+    overflow-y: auto
     @import scheme
     background: $primary
     height: 600px
@@ -19,6 +19,7 @@ require! {
     color: white
     text-align: center
     max-width: 400px
+    min-width: 300px
 { get-container } = whitebox
 module.exports = ({ store, reload })->
     return null if not store?

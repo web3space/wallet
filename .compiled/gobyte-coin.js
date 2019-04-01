@@ -4,14 +4,15 @@
   out$.mainnet = mainnet = {
     decimals: 8,
     txFee: '0.0005',
+    txFeeAutoMode: 'per-byte',
     txFeeOptions: {
       auto: '0.0005',
-      fast: '0.0005',
-      cheap: '0.00000226',
+      cheap: '0.00001',
       instantPerInput: '0.0001',
       instantServicePrice: 0,
       privatePerInput: '0.005',
-      privateServicePrice: '0.025'
+      privateServicePrice: '0.025',
+      feePerByte: '0.00000001'
     },
     mask: '1000000000000000000000000000000000',
     api: {
@@ -33,18 +34,19 @@
     dustThreshold: 5460
   };
   out$.testnet = testnet = {
-    txFee: '0.0005',
+    txFee: '0.00005',
     txFeeOptions: {
-      fast: '0.0005',
-      cheap: '0.00000226',
+      fast: '0.00005',
+      cheap: '0.00001',
       instantPerInput: '0.0001',
-      privatePerInput: '0.005'
+      privatePerInput: '0.005',
+      feePerByte: '0.00000001'
     },
     decimals: 8,
     mask: 'n000000000000000000000000000000000',
     api: {
       provider: 'insight',
-      url: 'http://texplorer.gobyte.network:4001',
+      url: 'https://texplorer.gobyte.network:4001',
       apiName: 'insight-api-gobyte',
       decimal: 8
     },
@@ -64,7 +66,9 @@
   out$.color = color = '#545DF1';
   out$.branding = branding = {
     logo: 'https://www.gobyte.network/img/logo.svg',
-    title: "GoByte Multicurrency Wallet"
+    title: "GoByte Multicurrency Wallet",
+    important: true,
+    topup: 'gobyte'
   };
   out$.links = links = [
     {
@@ -75,7 +79,7 @@
       href: 'https://twitter.com/gobytenetwork'
     }, {
       image: 'https://www.gobyte.network/img/reddit.png',
-      href: 'https://www.reddit.com/r/GoByte'
+      href: 'https://www.reddit.com/r/gobytenetwork/'
     }, {
       image: 'https://www.gobyte.network/img/slack.png',
       href: 'https://gobyte.slack.com/'
