@@ -7,6 +7,14 @@ export refresh-account = (web3, store, cb)-->
     err, account <- new-account store, store.current.seed
     return cb err if err?
     store.current.account = account
+    err, name <- web3.get-account-name store
+    store.current.account.account-name = 
+        | not err? => name 
+        | _ => "Anonymous"
+    account-name = store.current.account.account-name
+    store.current.nickname = "" if account-name isnt "Anonymous"
+    store.current.nicknamefull = account-name if account-name isnt "Anonymous"
+    console.log \nicknamefull, store.current.nicknamefull
     refresh-wallet web3, store, cb
 export background-refresh-account = (web3, store, cb)->
     store.current.refreshing = yes

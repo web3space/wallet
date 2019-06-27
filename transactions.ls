@@ -9,18 +9,19 @@ export transactions = observable []
 same = (x, y)->
     x?toUpperCase?! is y?toUpperCase?!
 extend = ({ address, coin, pending, network }, tx)-->
-    tx.type = 
+    type = 
         | tx.to `same` address => \IN
         | _ => \OUT
+    tx.type = type if not tx.type?
     tx.token = coin.token ? tx.token
     tx.pending = pending ? tx.pending
     tx.network = network ? tx.network
 transform-ptx = ([tx, amount, fee, time])->
     { tx, amount, to: \pending , url: '#', fee: fee, time }
 export rebuild-history = (store, wallet, cb)->
-    { address, network, coin } = wallet
-    err, data <- get-transactions { address, network, coin.token }
-    console.log \get-transactions, { err, data, network }
+    { address, network, coin, private-key } = wallet
+    err, data <- get-transactions { address, network, coin.token, account: { address, private-key } }
+    #console.log \transactions, coin.token, err, data
     return cb err if err?
     ids = 
         data |> map (.tx)

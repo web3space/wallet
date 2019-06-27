@@ -24,11 +24,15 @@ calc-wallet = (store, cb)->
         wallet.usd-rate =
             | usd-rate is \.. => \..
             | _ => round5 usd-rate
+        eur-rate = 0.893191
+        wallet.eur-rate =
+            | usd-rate is \.. => \..
+            | _ => round5 (usd-rate `times` eur-rate)
         coin =
             coins |> find (.token is wallet.coin.token)
         return cb "Coin Not Found" if not coin?
         coin.wallet = wallet
-        err, balance <- get-balance { wallet.address, wallet.network, token }
+        err, balance <- get-balance { wallet.address, wallet.network, token, account: { wallet.address, wallet.private-key } }
         return cb err if err?
         pending-sent =
             transactions 

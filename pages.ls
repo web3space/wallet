@@ -1,15 +1,14 @@
 require! {
-    \./wallets.ls
-    \./history.ls
-    \./send.ls
-    \./receive.ls
-    \./locked.ls
-    \./newseed.ls
-    \./sent.ls
-    \./loading.ls
-    \react
+    \./pages/wallets.ls
+    \./pages/history.ls
+    \./pages/send.ls
+    \./pages/receive.ls
+    \./pages/locked.ls
+    \./pages/newseed.ls
+    \./pages/sent.ls
+    \./pages/loading.ls
+    \./pages/invoice.ls
 }
-#
 export loading
 export wallets
 export history
@@ -18,3 +17,4 @@ export receive
 export locked
 export newseed
 export sent
+export invoice

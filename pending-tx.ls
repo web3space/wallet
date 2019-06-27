@@ -16,7 +16,8 @@ set = (config, arr, cb)->
 #    (local-storage.get-item(key) ? "[]") isnt "[]"
 get-all = (config, cb)->
     name = get-name config
-    data = local-storage.get-item(name) ? "[]"
+    data = local-storage.get-item(name) ? ""
+    return cb null, [] if data is ""
     err, arr <- json-parse data
     return cb err if err?
     cb null, arr

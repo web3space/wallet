@@ -8,10 +8,12 @@ require! {
     \../web3t/providers/eos.ls
     \../web3t/providers/stellar.ls
     \../web3t/providers/tron.ls
+    \../web3t/providers/qiwi.ls
+    \../web3t/providers/rst.ls
     \mobx : { toJS }
     \prelude-ls : { pairs-to-obj, obj-to-pairs }
 }
-providers = { eth, waves, insight , xem, erc20, omni, eos, stellar, tron }
+providers = { eth, waves, insight , xem, erc20, omni, eos, stellar, tron, qiwi, rst }
 action = (func)-> (config, cb)->
     return cb "provider is not defined" if not config?network?api?provider?
     provider = providers[config.network.api.provider] ? insight 

@@ -5,28 +5,32 @@ require! {
     \prelude-ls : { find }
     \./round5.ls
 }
-export calc-crypto = (store, amount-send-usd)->
-    return \0 if not amount-send-usd?
+calc-crypto-generic = (name)-> (store, val)->
+    return \0 if not val?
     { send } = store.current
     { wallet } = send
     { token } = send.coin
-    usd-rate = wallet?usd-rate ? 0
-    round5 (amount-send-usd `div` usd-rate)
-export calc-usd = (store, amount-send)->
+    rate = wallet?[name] ? 0
+    round5 (val `div` rate)
+export calc-crypto-from-usd = calc-crypto-generic \usdRate
+export calc-crypto-from-eur = calc-crypto-generic \eurRate
+calc-fiat = (name)-> (store, amount-send)->
     return \0 if not amount-send?
     { send } = store.current
     { wallet } = send
     { token } = send.coin
-    usd-rate = wallet?usd-rate ? 0
-    amount-send `times` usd-rate
+    rate = wallet?[name] ? 0
+    amount-send `times` rate
+export calc-usd = calc-fiat \usdRate
+export calc-eur = calc-fiat \eurRate
 calc-fee-proxy = (input, cb)->
     fun = ->
         #console.log \fee-calc
         calc-fee input, cb
     calc-fee-proxy.timer = clear-timeout calc-fee-proxy.timer
     calc-fee-proxy.timer = set-timeout fun, 1000
-export change-amount = (store, amount-send)->
-    { send } = store.current
+change-amount-generic = (field)-> (store, amount-send)->
+    send = store.current[field]
     { wallet } = send
     { token } = send.coin
     { wallets } = store.current.account
@@ -47,6 +51,7 @@ export change-amount = (store, amount-send)->
     send.amount-obtain = result-amount-send
     send.amount-obtain-usd = send.amount-obtain `times` usd-rate
     send.amount-send-usd = calc-usd store, amount-send
+    send.amount-send-eur = calc-eur store, amount-send
     err, calced-fee <- calc-fee-proxy { token, send.network, amount: result-amount-send, fee-type, tx-type, account }
     return send.error = "Calc Fee Error: #{err.message ? err}" if err?
     tx-fee = 
@@ -65,3 +70,5 @@ export change-amount = (store, amount-send)->
         | wallet.balance is \... => "Balance is not yet loaded"
         | parse-float(wallet.balance `minus` result-amount-send) < 0 => "Not Enough Funds"
         | _ => ""
+export change-amount = change-amount-generic \send
+export change-amount-invoice = change-amount-generic \invoice

@@ -3,8 +3,12 @@ require! {
     \prelude-ls : { obj-to-pairs, pairs-to-obj, map }
     \mobx : { toJS }
     \./api.ls : { get-keys }
+    \./web3.ls
+    #\./ethnamed.ls
 }
 module.exports = (store, mnemonic="", cb)->
+    #{ whois } = web3 store
+    #naming = ethnamed store
     #master = import-master mnemonic 
     #return null if not rates['USDT-ETH']?
     #final-rates =
@@ -22,7 +26,8 @@ module.exports = (store, mnemonic="", cb)->
     #    round5 rate
     generate-coin-wallet = (coin, cb)->
         network = coin[store.current.network]
-        index = 1
+        return cb null if network.disabled is yes
+        index = store.current.account-index
         err, wallet <- get-keys { index, network, mnemonic, coin.token }
         return cb err if err?
         balance = \...
@@ -32,12 +37,16 @@ module.exports = (store, mnemonic="", cb)->
         cb null, wallet
     generate-coin-wallets = ([coin, ...rest], cb)->
         return cb null, [] if not coin?
-        err, wallet <- generate-coin-wallet coin
+        err, wallet-or-null <- generate-coin-wallet coin
         return cb err if err?
         err, wallets <- generate-coin-wallets rest
         return cb err if err?
-        all = [wallet] ++ wallets
+        current-wallets =
+            | wallet-or-null? => [wallet-or-null]
+            | _ => []
+        all = current-wallets ++ wallets
         cb null, all
     coins = get-coins!
     err, wallets <- generate-coin-wallets coins
-    cb err, { mnemonic, wallets }
+    return cb err if err?
+    cb null, { mnemonic, wallets }
