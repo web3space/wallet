@@ -16,16 +16,14 @@ require! {
     $pad: 20px
     $radius: 15px    
     height: 373px
-    padding: 0 5px
     box-sizing: border-box
-    position: absolute
+    position: relative
     left: 0
     bottom: 5px
     $cards-pad: 5px
     right: 0
     margin: 0 $cards-pad
     z-index: 2
-    border-radius: $radius
     >*
         width: 100%
     >.arrow
@@ -42,9 +40,13 @@ require! {
         &:not(.true)
             >.arrow-d
                 visibility: hidden
+        >.arrow-container
+            display: inline-block
+            width: 100%
+            max-width: 450px
+            position: relative
     padding-top: 40px
     padding-bottom: 40px
-    background: rgba(white, 0.5)
     .add-coin
         position: absolute
         left: 21px
@@ -55,7 +57,8 @@ require! {
         overflow: hidden
         border-radius: $radius
         height: $cards-height
-        width: 100%
+        max-width: 450px
+        display: inline-block
 arrow = \https://res.cloudinary.com/dfbhd7liw/image/upload/v1543595868/wallet/arrow.png
 wallets = ({ store })->
     return null if not store.current.account?
@@ -66,12 +69,14 @@ wallets = ({ store })->
         add-coin-page { store }
         .wallets.pug(key="wallets-body")
             .arrow.arrow-t.pug(on-click=go-up class="#{can-up}" key="arrow-up")
-                img.pug(src="#{arrow}")
+                .arrow-container.pug
+                    img.pug(src="#{arrow}")
             .wallet-container.pug(key="wallets-viewport")
                 wallets |> map wallet store, wallets
             .arrow.arrow-d.pug(on-click=go-down class="#{can-down}" key="arrow-down")
-                img.pug(src="#{arrow}")
-                span.pug.add-coin(on-click=add-coin) +
+                .arrow-container.pug
+                    img.pug(src="#{arrow}")
+                    span.pug.add-coin(on-click=add-coin) +
 wallets.init = (store, cb)->
     delete store.current.send?wallet
     store.current.send?tx-type = \regular

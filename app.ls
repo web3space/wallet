@@ -14,12 +14,15 @@ require! {
     overflow-y: auto
     @import scheme
     background: $primary
-    height: 600px
+    height: 100vh
     position: relative
     color: white
     text-align: center
-    max-width: 400px
-    min-width: 300px
+    width: 100vw
+    .content
+        max-width: 450px
+        display: inline-block
+        width: 100%
 { get-container } = whitebox
 module.exports = ({ store, reload })->
     return null if not store?

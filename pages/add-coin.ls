@@ -27,8 +27,8 @@ require! {
         animation-name: bounceIn
         background: white
         width: 100%
-        height: 95%
-        margin-top: 5%
+        height: 90vh
+        margin-top: 5vh
         border-radius: 10px
         >.title
             color: gray
@@ -79,13 +79,14 @@ require! {
                     button
                         width: 40px
                         height: 40px
-                        border-radius: 100px
+                        border-radius: 40px
                         box-sizing: border-box
                         padding: 0
                         margin: 0
                         cursor: pointer
-                        color: #7083e8
-                        border-color: #7083e8
+                        color: black
+                        background: white
+                        border-color: black
                         outline: none
                         &:hover
                             background: #7083e8
