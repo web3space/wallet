@@ -43,6 +43,7 @@ store =
         account-index: 1
         manage-account: no
         filter-plugins: ""
+        confirmation: null
         demo: location.href.index-of('web3.space/wallet') > -1 
         network: \mainnet
         pin: ""

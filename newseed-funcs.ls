@@ -3,6 +3,7 @@ require! {
     \./web3.ls
     \./seed.ls : { set }
     \bip39 : { generate-mnemonic }
+    \./pages/confirmation.ls : { confirm }
 }
 module.exports = (store)->
     generate-seed = ->
@@ -12,7 +13,8 @@ module.exports = (store)->
     save = ->
         return alert "Secret key cannot be empty" if store.current.seed.length is 0
         return alert "Secret key is so weak" if store.current.seed.length < 20
-        return if not confirm "Please confirm that you stored this phrase in safe place?"
+        confirmed <- confirm store, "Please confirm that you stored this phrase in safe place?"
+        return if confirmed isnt yes
         store.current.saved-seed = yes
         set store.current.seed
         navigate store, \:init 

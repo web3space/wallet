@@ -9,6 +9,7 @@ require! {
     \./copy-message.ls
     \./modal.ls : { modal-control }
     \./get-primary-info.ls
+    \./pages/confirmation.ls : { confirmation-modal }
 }
 .app
     overflow-y: auto
@@ -35,5 +36,6 @@ module.exports = ({ store, reload })->
         description store
         .app.pug(key="content" style=style)
             modal-control store
+            confirmation-modal store
             copy-message store
             current-page { store }

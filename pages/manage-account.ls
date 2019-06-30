@@ -20,15 +20,16 @@ require! {
     padding-top: 5%
     box-sizing: border-box
     padding: 10px
-    background: rgba(black, 0.3)
+    background: rgba(black, 0.8)
     >.account-body
+        max-width: 600px
+        display: inline-block
         overflow-y: scroll
         animation-duration: 0.5s
         animation-name: bounceIn
         background: white
         width: 100%
-        height: 95%
-        margin-top: 5%
+        margin-top: 5vh
         border-radius: 10px
         >.title
             color: gray

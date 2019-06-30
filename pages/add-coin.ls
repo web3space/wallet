@@ -21,13 +21,16 @@ require! {
     padding-top: 5%
     box-sizing: border-box
     padding: 10px
-    background: rgba(black, 0.3)
+    background: rgba(black, 0.8)
     >.account-body
+        max-width: 600px
+        min-height: 400px
+        display: inline-block
         animation-duration: 0.5s
         animation-name: bounceIn
         background: white
         width: 100%
-        height: 90vh
+        max-height: 90vh
         margin-top: 5vh
         border-radius: 10px
         >.title
@@ -57,7 +60,7 @@ require! {
             .list
                 height: 80%
                 overflow-y: scroll
-                padding-top: 10px
+                padding: 10px
                 .item
                     width: 100%
                     padding: 5px 6px
@@ -80,13 +83,13 @@ require! {
                         width: 40px
                         height: 40px
                         border-radius: 40px
+                        border: 1px solid gray
                         box-sizing: border-box
                         padding: 0
                         margin: 0
                         cursor: pointer
                         color: black
                         background: white
-                        border-color: black
                         outline: none
                         &:hover
                             background: #7083e8
