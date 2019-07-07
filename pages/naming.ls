@@ -4,6 +4,8 @@ require! {
     \../get-record.ls
     \../get-name-mask.ls
     \../web3.ls
+    \../get-primary-info.ls
+    \../get-lang.ls
 }
 .naming
     @import scheme
@@ -17,6 +19,7 @@ require! {
             width: 100%
             text-align: left
             width: 70%
+            border: 0
         position: relative
         width: 100%
         height: 31px
@@ -120,20 +123,28 @@ module.exports = ({ store })->
     change-to-ethnamed = ->
         store.current.custom-domain = no
     console.log \nicknamefull, store.current.nicknamefull
+    style = get-primary-info store
+    input-style = 
+        color: style.app.text
+        background: style.app.input
+    input2-style =
+        color: style.app.text 
+        background: "rgba(0,0,0,0.2)"
+    lang = get-lang store
     .pug.box-container.naming
         .pug.box
             .pug.custom-domain
                 .part.hidden.pug
-                    input.pug(value="#{store.current.nicknamefull}")
+                    input.pug(value="#{store.current.nicknamefull}" style=input-style)
                 .part.visible.pug
-                    input.pug(value="#{store.current.nickname}" on-change=enter-nick)
+                    input.pug(value="#{store.current.nickname}" style=input2-style on-change=enter-nick)
             if (store.current.message ? "").length > 0
                 .pug.message(title="#{store.current.message}") #{store.current.message}
             .pug
                 switch store.current.status
                     case \verify
-                        .pug Nickname Verification...
+                        .pug #{lang.verify-nickname ? 'Nickname Verification...'}
                     case \buy-nickname
-                        .pug Buy Nickname.
+                        .pug #{lang.get-nickname ? 'Get Nickname'}
                     else
-                        button.pug(on-click=buy-nickname-click) Register
+                        button.pug(on-click=buy-nickname-click) #{lang.register ? 'Register'}

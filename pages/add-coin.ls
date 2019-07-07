@@ -3,6 +3,8 @@ require! {
     \prelude-ls : { map, filter }
     \./loading.ls
     \../web3.ls
+    \../get-primary-info.ls
+    \../get-lang.ls
 }
 .manage-account
     @import scheme
@@ -17,22 +19,21 @@ require! {
     width: 100%
     top: 0
     z-index: 999
-    height: 100%
     padding-top: 5%
     box-sizing: border-box
     padding: 10px
     background: rgba(black, 0.8)
+    height: 100vh
     >.account-body
         max-width: 600px
-        min-height: 400px
         display: inline-block
         animation-duration: 0.5s
         animation-name: bounceIn
         background: white
         width: 100%
-        max-height: 90vh
         margin-top: 5vh
-        border-radius: 10px
+        margin-bottom: 25vh
+        border-radius: 5px
         >.title
             color: gray
             font-size: 22px
@@ -49,14 +50,17 @@ require! {
                     color: #CCC
         >.settings
         .section
+            position: relative
+            min-height: 200px
             .search
                 border: 1px solid #CCC
                 padding: 9px
-                border-radius: 14px
+                border-radius: 6px
                 width: 97%
                 box-sizing: border-box
                 font-size: 13px
                 outline: none
+                background: #213040
             .list
                 height: 80%
                 overflow-y: scroll
@@ -112,15 +116,19 @@ module.exports = ({ store } )->
         store.current.add-coin = no
     filter-registery = (event)->
         store.current.filter-plugins = event.target.value
+    style = get-primary-info store
+    account-body-style = 
+        background: style.app.background
+    lang = get-lang store
     .pug.manage-account
-        .account-body.pug
+        .account-body.pug(style=account-body-style)
             .pug.title 
-                .pug Plugin Registry
+                .pug #{lang.plugin-registry}
                 .pug.close(on-click=close) ×
             .pug.settings
                 .pug.section
                     .pug
-                        input.search.pug(placeholder="Search" on-change=filter-registery)
+                        input.search.pug(placeholder="#{lang.search}" on-change=filter-registery)
                     .list.pug
                         if store.registry.length > 0
                             store.registry 

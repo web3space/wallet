@@ -20,9 +20,12 @@ require! {
     \./address-link.ls : { get-address-link, get-address-title }
     \./web3.ls
     \./api.ls : { calc-fee }
+    \./pages/confirmation.ls : { confirm }
+    \./get-lang.ls
 }
 module.exports = (store)->
     return null if not store?
+    lang = get-lang store
     { send-to } = web3(store).naming
     { send } = store.current
     { wallet } = send
@@ -46,7 +49,7 @@ module.exports = (store)->
         err, data <- create-transaction tx
         #console.log 'after create tx', err
         return cb err if err?
-        agree = confirm "Are you sure to send #{tx.amount} #{send.coin.token} to #{send.to}"
+        agree <- confirm store, "Are you sure to send #{tx.amount} #{send.coin.token} to #{send.to}"
         #console.log 'after confirm', agree
         return cb "You are not agree" if not agree
         err, tx <- push-tx { token, tx-type, network, ...data }
@@ -95,7 +98,7 @@ module.exports = (store)->
         send-money!
     send-title = 
         | send.propose-escrow then 'SEND (Escrow)'
-        | _ => \Send
+        | _ => lang.send
     cancel = (event)->
         navigate store, \wallets
         notify-form-result send.id, "Cancelled by user"
@@ -149,9 +152,11 @@ module.exports = (store)->
         cb null
     history = ->
         #<- debug
+        store.current.send-menu-open = no
         store.current.filter = [\IN, \OUT, send.coin.token]
         navigate store, \history
     topup = ->
+        store.current.send-menu-open = no
         { token } = send.coin
         { network } = store.current
         { address } = wallet
@@ -168,6 +173,7 @@ module.exports = (store)->
     receive = ->
         navigate store, \receive
     invoice = ->
+        store.current.send-menu-open = no
         { coin, network, wallet } = store.current.send
         store.current.invoice <<<< { coin, wallet, network }
         navigate store, \invoice

@@ -4,10 +4,12 @@ require! {
     \./project-links.ls
     \../menu-funcs.ls
     \./your-account.ls
+    \../get-primary-info.ls
+    \../get-lang.ls
 }
 .menu
     padding: 5px
-    height: 30vh
+    height: 28vh
     line-height: 30vh
     >.menu-body
         display: inline-block
@@ -16,7 +18,6 @@ require! {
         >.balance
             text-align: center
             >.currency
-                color: rgba(255, 255, 255, 0.69)
             >.amount
                 font-size: 40px
                 >*
@@ -24,10 +25,14 @@ require! {
 module.exports = ({ store })->
     return null if not store?
     { current, wallet-style, info, activate-s1, activate-s2, activate-s3, switch-network, refresh, lock } = menu-funcs store
-    .menu.pug
+    style = get-primary-info store
+    menu-style=
+        color: style.app.text
+    lang = get-lang store
+    .menu.pug(style=menu-style)
         .menu-body.pug
             .balance.pug
-                .currency.pug Total Balance
+                .currency.pug #{lang.total-balance ? 'Total Balance'}
                 .amount.pug
                     .symbol.pug $
                     .number.pug #{money current.balance-usd}

@@ -1,6 +1,5 @@
 require! {
     \./navigate.ls
-    \./web3.ls
     \./seed.ls : { set }
     \bip39 : { generate-mnemonic }
     \./pages/confirmation.ls : { confirm }
@@ -17,6 +16,5 @@ module.exports = (store)->
         return if confirmed isnt yes
         store.current.saved-seed = yes
         set store.current.seed
-        navigate store, \:init 
-        <- web3(store).refresh
+        navigate store, \:init
     { save, change-seed, generate-seed }

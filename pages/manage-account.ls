@@ -2,6 +2,8 @@ require! {
     \react
     \../menu-funcs.ls 
     \./naming.ls
+    \../get-primary-info.ls
+    \../get-lang.ls
 }
 .manage-account
     @import scheme
@@ -17,6 +19,7 @@ require! {
     top: 0
     z-index: 999
     height: 100%
+    min-height: 100vh
     padding-top: 5%
     box-sizing: border-box
     padding: 10px
@@ -30,7 +33,8 @@ require! {
         background: white
         width: 100%
         margin-top: 5vh
-        border-radius: 10px
+        margin-bottom: 25vh
+        border-radius: 5px
         >.title
             color: gray
             font-size: 22px
@@ -52,19 +56,19 @@ require! {
                 a
                     color: #ee8791
             input
-                border-radius: 25px
+                border-radius: 5px
             textarea
-                border-radius: 7px
+                border-radius: 5px
             input, textarea
                 outline: none
                 margin-bottom: 3px
-                border: 1px solid #dedcdc
+                border: 0px
                 padding: 3px 10px
                 box-sizing: border-box
             button
                 background-color: $primary
                 border: 1px solid $primary
-                border-radius: 50px
+                border-radius: 5px
                 color: white
                 padding: 5px 24px
                 cursor: pointer
@@ -89,7 +93,7 @@ require! {
                     height: 16px
                     display: inline-block
                     color: white
-                    border-radius: 16px
+                    border-radius: 5px
                     margin: 0 5px
                     cursor: pointer
                     &:hover
@@ -97,8 +101,10 @@ require! {
         .bold
             color: #f0c16b
         .section
-            border-bottom: 1px solid #f0eded
-            padding: 10px 0
+            border-bottom: 1px solid rgba(240, 237, 237, 0.16)
+            &.last
+                border-bottom: 0
+            padding: 10px
             .title
                 padding: 2px
             .description
@@ -112,61 +118,74 @@ require! {
             text-align: center
 switch-account = (store)->
     {  account-left, account-right, change-account-index } = menu-funcs store
+    style = get-primary-info store
+    input-style =
+        background: style.app.input
+        color: style.app.text
     .pug.switch-account
         span.pug Account Index:
         span.pug.button(on-click=account-left) <
         span.pug.bold
-            input.pug.change-index(value="#{store.current.account-index}" on-change=change-account-index)
+            input.pug.change-index(value="#{store.current.account-index}" style=input-style on-change=change-account-index)
         span.pug.button(on-click=account-right) >
 manage-account = (store)->
     { current, generate, enter-pin, cancel-try, edit-seed, save-seed, change-seed, export-private-key } = menu-funcs store
+    style = get-primary-info store
+    lang = get-lang store
+    input-style =
+        background: style.app.input
+        color: style.app.text
     .pug
         .pug.section
-            .pug.title Secret Phrase
-            .pug.description You are responsible for keeping this phrase safe. In case of loss of this phrase, we will not be able to help you restore it.
+            .pug.title #{lang.secret-phrase ? 'Secret Phrase'}
+            .pug.description #{lang.secret-phrase-warning ? 'You are responsible for keeping this phrase safe. In case of loss of this phrase, we will not be able to help you restore it.'}
             .pug.content
                 switch
                     case current.try-edit-seed is yes
                         .pug.box
                             .pug
-                                input.pug(on-change=enter-pin value="#{current.pin}" placeholder="Enter PIN")
+                                input.pug(on-change=enter-pin value="#{current.pin}" style=input-style placeholder="#{lang.enter-pin ? 'Enter PIN'}")
                             .pug    
-                                button.pug(on-click=cancel-try) Cancel
+                                button.pug(on-click=cancel-try) #{lang.cancel}
                     case current.saved-seed is no
                         .pug.box
                             .pug.title 
-                                span.pug Secret Text
+                                span.pug #{lang.secret-phrase ? 'Secret Phrase'}
                                 a.pug.generate(on-click=generate) (generate)
-                            textarea.pug(on-change=change-seed value="#{current.seed}" placeholder="Secret words")
+                            textarea.pug(on-change=change-seed value="#{current.seed}" placeholder="#{lang.secret-phrase ? 'Secret Phrase'}")
                             .pug
-                                button.pug(on-click=save-seed) Save
+                                button.pug(on-click=save-seed) #{lang.save}
                     case current.saved-seed is yes
                         .pug
-                            button.pug(on-click=edit-seed) Edit Secret
+                            button.pug(on-click=edit-seed) #{lang.edit-secret ? 'Edit Secret'}
         .pug.section
-            .pug.title Your Nickname
-            .pug.description You are able to attach nickname, email or phone number to your account and share it with friends. They will use your nick to resolve your crypto-address
+            .pug.title #{lang.your-nickname ? 'Your Nickname'}
+            .pug.description #{lang.your-nickname-info ? 'You are able to attach nickname, email or phone number to your account and share it with friends. They will use your nick to resolve your crypto-address'}
             .pug.content
                 naming { store }
         .pug.section
-            .pug.title Switch Account Index
+            .pug.title #{lang.switch-account-index ? 'Switch Account Index'}
             .pug.description 
-                span.pug.bold For advanced users only.
-                span.pug You could have a lot of unique addresses by switching account index. By default, you are given an index of 1, but you can change it in range 0 - 2,147,483,647
+                span.pug.bold #{lang.for-advanced-users ? 'For advanced users only'}.
+                span.pug #{lang.switch-account-info ? 'You could have a lot of unique addresses by switching account index. By default, you are given an index of 1, but you can change it in range 0 - 2,147,483,647'}
             .pug.content
                 switch-account store
-        .pug.section
-            .pug.title Export PRIVATE KEY
+        .pug.section.last
+            .pug.title #{lang.export-private-key ? 'Export PRIVATE KEY'}
             .pug.description
-                span.pug.bold For advanced users only.
-                span.pug Please never do it in case when you do not understand exact reason of this action and do not accept risks.
+                span.pug.bold #{lang.for-advanced-users ? 'For advanced users only'}
+                span.pug #{lang.export-private-key-warning ? 'Please never do it in case when you do not understand exact reason of this action and do not accept risks'}.
             .pug.content
-                button.pug(on-click=export-private-key) Show Secret
+                button.pug(on-click=export-private-key) #{lang.show-secret ? 'Show Secret'}
 module.exports = ({ store } )->
     return null if store.current.manage-account isnt yes
     { close-account } = menu-funcs store
+    style = get-primary-info store
+    account-body-style = 
+        background: style.app.background
+    lang = get-lang store
     .pug.manage-account
-        .account-body.pug
+        .account-body.pug(style=account-body-style)
             .pug.title 
                 .pug Manage Account
                 .pug.close(on-click=close-account) ×

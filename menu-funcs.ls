@@ -9,6 +9,7 @@ require! {
     \./navigate.ls
     \./get-primary-info.ls
     \copy-to-clipboard
+    \./pages/confirmation.ls : { confirm, prompt }
 }
 { get-container, generate-wallet } = whitebox
 state =
@@ -55,7 +56,8 @@ module.exports = (store)->
         seed.set current.seed
         current.saved-seed = yes
     edit-seed = ->
-        return if not confirm "If you edit this, your old wallet is gone and all your coins are lost"
+        agree <- confirm store, "If you edit this, your old wallet is gone and all your coins are lost"
+        return if not agree?
         store.current.pin = ""
         current.try-edit-seed = yes
         #current.saved-seed = no
@@ -67,7 +69,8 @@ module.exports = (store)->
         cancel-try!
         current.saved-seed = no
     generate = ->
-        return if not confirm "Are you sure you want to override the current seed?"
+        agree <- confirm store, "Are you sure you want to override the current seed?"
+        return if not agree?
         current.seed = generate-wallet!.mnemonic
         create-account!
     switch-network = ->
@@ -106,10 +109,13 @@ module.exports = (store)->
         change-account-index.timer = clear-timeout change-account-index.timer
         change-account-index.timer = set-timeout refresh, 2000
     export-private-key = ->
-        pin = prompt("Please enter your PIN code")
-        return alert "The entered PIN is wrong" if not check pin
+        pin <- prompt store, "Please enter your PIN code"
+        console.log { pin }
+        return if not check pin
         index = store.current.account-index
-        token = (prompt("Enter the coin. Example: BTC, ETH, GBX") ? "").to-lower-case!
+        token-input <- prompt store, "Enter the coin. Example: BTC, ETH, GBX"
+        return if not token?
+        token = (token-input ? "").to-lower-case!
         wallets = current.account?wallets ? []
         wallet =
             wallets |> find (.coin?token is token)

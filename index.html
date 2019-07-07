@@ -2,7 +2,6 @@
 <html lang="en-us">
   <head>
     <meta charset="utf-8">
-    
     <title>Web3 Wallet</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
@@ -16,8 +15,65 @@
   <body>
     <div id="app"></div>
     <dynamicHTML/>
+    
     <script type="text/javascript">
-      window.onload = function() { window.bootstrap(document.getElementById("app")); }
-    </script>
+          window.onload = function() { window.bootstrap(document.getElementById("app")); }
+    
+  	      function log(message, data) {
+        			console.log(message, data)
+  	      }
+  	
+        	window.onerror = function(err) {
+        		log('window.onerror: ' + err)
+        	}
+        
+          function setupWebViewJavascriptBridge(callback) {
+                if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+                if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+                window.WVJBCallbacks = [callback];
+                var WVJBIframe = document.createElement('iframe');
+                WVJBIframe.style.display = 'none';
+                WVJBIframe.src = 'https://__bridge_loaded__';
+                document.documentElement.appendChild(WVJBIframe);
+                setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+          }
+        
+          function walletRPC(data, cb) {
+            
+              if (window.web3t == null)
+        		      return cb("Wallet's API is not available or not ready yet")
+        		  
+        		  if (window.web3t[data.token] == null)
+        		      return cb("Token " + data.token + " not found")
+        		  
+        		  if (window.web3t[data.token][data.method] == null)
+        		      return cb("Method " + data.method + " not found")
+        		  
+        		  method = window.web3t[data.token][data.method]
+        		  
+        		  const localCallback = function (err, data)  {
+        		      if (err) return cb({ err: err });
+        		      cb(data)
+        		  }
+        		  
+        		  data.args.push(localCallback)
+        		  
+        		  method.apply(method, data.args)
+            
+          }
+
+          setupWebViewJavascriptBridge(function(bridge) {
+        		
+        		bridge.registerHandler('walletRPC', walletRPC)
+        
+        		//const callHandler = function() {
+        		//	log('JS calling handler "testObjcCallback"')
+        		//	bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+        		//		log('JS got response', response)
+        		//	})
+        		//}
+          })
+	</script>
+    
   </body>
 </html>

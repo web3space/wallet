@@ -4,6 +4,7 @@ require! {
     \../pin.ls : { set, check, exists } 
     \../navigate.ls
     \../get-primary-info.ls
+    \../get-lang.ls
 }
 .locked
     @import scheme
@@ -19,15 +20,12 @@ require! {
         -moz-appearance: textfield
     >.logo 
         padding: 20px
-        background: rgba(#ffffff, 0.12)
         margin: 20px 0
         >img
             height: 50px
         >.title
-            color: white
     >.title
         font-size: 35px
-        color: white
         margin-bottom: 20px
     >.inputs
         input
@@ -36,8 +34,8 @@ require! {
             display: inline-block
             width: 40px
             height: 40px
-            background: white
-            border: 1px solid #f4f4f5
+            background: transparent
+            border: 1px solid #549D90
             border-radius: 3px
             margin: 5px
             outline: none
@@ -54,7 +52,6 @@ require! {
         height: 30px
         border-radius: 3px
         border: 0px
-        background: #248295
         &:hover
             background: #248295 - 20
         color: white
@@ -110,30 +107,39 @@ setup-val = (store)-> (number)->
 input = (store)-> (number)->
     keydown = setup-keydown store
     val = setup-val store
+    info = get-primary-info store
+    locked-style=
+        color: info.app.text
     #type = 
     #    | not exists! => \input
     #    | _ => \input
-    input.pug.password(key="pin-#{number}" type="number" value="#{val number}" placeholder="0" on-key-down=keydown(number) on-change=keydown(number) tab-index="#{number + 1}" pattern="[0-9]*" inputmode="numeric" step="1" auto-complete="off")
+    input.pug.password(key="pin-#{number}" style=locked-style type="number" value="#{val number}" placeholder="0" on-key-down=keydown(number) on-change=keydown(number) tab-index="#{number + 1}" pattern="[0-9]*" input-mode="numeric" step="1" auto-complete="off")
 wrong-trials = (store)->
     return null if store.current.pin-trial is 0
-    .pug.wrong(key="wrong-trial") Wrong PIN. Trials: #{store.current.pin-trial}
+    lang = get-lang store
+    wrong-pin-text = "#{lang.wrong-pin-trials ? 'Wrong PIN. Trials'}: #{store.current.pin-trial}"
+    .pug.wrong(key="wrong-trial") #{wrong-pin-text}
 setup-button = (store)->
+    lang = get-lang store
     setup = ->
-        return alert('PIN should be 4 digits') if not store.current.pin.match(/^[0-9]{4}$/)?
+        return alert(lang.wrong-pin-should ? 'PIN should be 4 digits') if not store.current.pin.match(/^[0-9]{4}$/)?
         set store.current.pin
         check-pin store
     .pug(key="setup-button")
-        button.setup.pug(on-click=setup) Setup
-        .hint.pug Please memorize this PIN and do not provide it to third party.
+        button.setup.pug(on-click=setup) #{lang.setup ? 'Setup'}
+        .hint.pug #{lang.pin-info ? 'Please memorize this PIN and do not provide it to third party.'}
 locked = ({ store })->
+    lang = get-lang store
     title = 
-        | not exists! => "Setup PIN"
-        | _ => "Enter PIN"
+        | not exists! => lang.setup-pin ? "Setup PIN"
+        | _ => lang.enter-pin ? "Enter PIN"
     footer =
         | not exists! => setup-button
         | _ => wrong-trials
     info = get-primary-info store
-    .pug.locked(key="locked")
+    locked-style=
+        color: info.app.text
+    .pug.locked(key="locked" style=locked-style)
         .pug.logo
             img.pug(src="#{info.branding.logo}")
             .title.pug #{info.branding.title}

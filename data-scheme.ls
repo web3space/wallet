@@ -3,6 +3,8 @@ require! {
     \prelude-ls : { map, pairs-to-obj }
     \./seed.ls : { saved }
     \./browser/location.ls
+    \./langs/en.ls
+    \./langs/ru.ls
 }
 saved-seed = saved!
 create-send =->
@@ -27,7 +29,11 @@ create-send =->
     error: ''
 store =
     root: null
+    theme: \dark
+    lang: \en
+    langs: { en, ru }
     registry: []
+    terms: "Loading..."
     menu:
         active: 's2'
     ask: 
@@ -38,6 +44,9 @@ store =
         type: ''
     current:
         list: 0
+        prompt-answer: ""
+        prompt: no
+        send-menu-open: no
         add-coin: no
         wallet-index: 0
         account-index: 1

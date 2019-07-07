@@ -9,7 +9,7 @@ require! {
     \./copy-message.ls
     \./modal.ls : { modal-control }
     \./get-primary-info.ls
-    \./pages/confirmation.ls : { confirmation-modal }
+    \./pages/confirmation.ls : { confirmation-control }
 }
 .app
     overflow-y: auto
@@ -30,12 +30,14 @@ module.exports = ({ store, reload })->
     window <<<< { store }
     current-page =
         pages[store.current.page]
+    theme = get-primary-info(store)
+    console.log theme
     style =
-        background-color: get-primary-info(store).color
+        background-color: theme.app.background
     .pug
         description store
         .app.pug(key="content" style=style)
             modal-control store
-            confirmation-modal store
+            confirmation-control store
             copy-message store
             current-page { store }

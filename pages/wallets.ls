@@ -8,6 +8,7 @@ require! {
     \../wallets-funcs.ls
     \./manage-account.ls
     \./add-coin.ls : add-coin-page
+    \../get-lang.ls
 }
 .wallets
     @import scheme
@@ -15,7 +16,7 @@ require! {
     $cards-height: 296px
     $pad: 20px
     $radius: 15px    
-    height: 373px
+    height: 395px
     box-sizing: border-box
     position: relative
     left: 0
@@ -55,9 +56,9 @@ require! {
         line-height: 22px
     >.wallet-container
         overflow: hidden
-        border-radius: $radius
-        height: $cards-height
+        height: 315px
         max-width: 450px
+        border-top: 1px solid #213040
         display: inline-block
 arrow = \https://res.cloudinary.com/dfbhd7liw/image/upload/v1543595868/wallet/arrow.png
 wallets = ({ store })->

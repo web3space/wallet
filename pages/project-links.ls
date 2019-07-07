@@ -2,6 +2,7 @@ require! {
     \../get-primary-info.ls
     \react
     \prelude-ls : { map }
+    \../get-lang.ls
 }
 .links
     text-align: center

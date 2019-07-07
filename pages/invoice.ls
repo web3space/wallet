@@ -4,11 +4,13 @@ require! {
     \prelude-ls : { map }
     \./receive.ls
     \react-google-recaptcha : { default: ReCAPTCHA }
+    \../get-primary-info.ls
+    \../get-lang.ls
 }
 .content
     position: relative
     @import scheme
-    $border-radius: 20px
+    $border-radius: 5px
     $label-padding: 12px
     $label-font: 12px
     .pending
@@ -20,39 +22,11 @@ require! {
         box-sizing: border-box
         border-radius: $border-radius
         left: 11px
-    >.more-buttons
-        background: rgba(255, 255, 255, 0.24)
-        top: 545px
-        color: white
-        padding: 5px
-        border-radius: 20px
-        >.more
-            color: white
-            width: 33.333%
-            box-sizing: border-box
-            display: inline-block
-            text-align: center
-            height: 32px
-            line-height: 32px
-            cursor: pointer
-            border-left: 1px solid #e6e4e4
-            &:first-child
-                border-left: 0    
-            &:hover
-                color: white - 20
-    >.decoration
-        top: 8px
-        left: 28px
-        width: 86%
-        background: rgba(255, 255, 255, 0.24)
-        height: 23px
-        border-radius: 15px
     >.content-body
         top: 15px
         padding: 12px 12px 0px 12px
         height: 330px
         @import scheme
-        background: white
         color: gray
         a
             color: gray
@@ -86,12 +60,10 @@ require! {
                     padding: 5px 10px
                     overflow: hidden
                     text-overflow: ellipsis
-                    background: #dcdada
                     border-radius: $border-radius
                     font-size: 13px
                     overflow: hidden
                     text-overflow: ellipsis
-                    background: #E6F0FF
                     color: #677897
                 input
                     outline: none
@@ -212,11 +184,10 @@ require! {
             .buttons
                 margin-top: 10px
                 text-align: left
-                border-radius: 100px
+                border-radius: 5px
                 width: 68%
                 display: inline-block
                 overflow: hidden
-                box-shadow: 0px 0px 9px #bbbbbb
                 .btn
                     width: 50%
                     height: 40px
@@ -234,9 +205,9 @@ require! {
                     &:hover
                         background: rgba(#6CA7ED, 0.2)
                         color: #6CA7ED
-form-group = (title, content)->
+form-group = (title, icon-style, content)->
     .pug.form-group
-        label.pug.control-label #{title}
+        label.pug.control-label(style=icon-style) #{title}
         content!
 recaptchaRef = react.createRef!
 send = ({ store })->
@@ -245,41 +216,53 @@ send = ({ store })->
         send-anyway response
     send = ->
         recaptchaRef.current.execute!
+    style = get-primary-info store
+    input-style=
+        background: style.app.input
+        color: style.app.text
+        border: "1px solid #{style.app.border}"
+        text: style.app.text
+    icon-style =
+        color: style.app.icon
+    href-style=
+        border: "1px solid #{style.app.border}"
+    lang = get-lang store
     .pug.content
         receive { store }
         .pug.content-body
             .pug.header
-                span.pug.head SEND INVOICE BY EMAIL
+                span.pug.head #{lang.invoice-header ? 'SEND INVOICE BY EMAIL'}
                 span.head.pug.right
                     img.pug(src="https://cdn3.iconfinder.com/data/icons/message-and-communication-sets/50/Icon_Email_Message-256.png")
             form.pug
-                form-group 'Funding Address', ->
-                    .address.pug
+                form-group lang.funding-address, icon-style, ->
+                    .address.pug(style=href-style)
                         a.pug(href="#{get-address-link wallet}") #{get-address-title wallet}
-                form-group 'Recipient Email', ->
+                form-group lang.recipient-email, icon-style, ->
                     .pug
                         .pug.amount-field
                             .input-wrapper.pug
                                 .label.crypto.pug @
-                                input.pug.amount(type='text' on-change=recipient-change value="#{invoice.to}" placeholder="email@address.com")
+                                input.pug.amount(type='text' style=input-style on-change=recipient-change value="#{invoice.to}" placeholder="email@address.com")
                             .input-wrapper.pug
                                 .label.lusd.pug 
-                                input.pug.amount-usd(type='text' on-change=description-change value="#{invoice.data}" placeholder="Description")
+                                input.pug.amount-usd(type='text' style=input-style on-change=description-change value="#{invoice.data}" placeholder="Description")
                         ReCAPTCHA.pug(ref=recaptchaRef size="invisible" sitekey="6LeZ66AUAAAAAPqgD720Met5Prsq5B3AXl05G0vJ" on-change=change)
-                form-group 'Amount', ->
+                form-group lang.amount, icon-style, ->
                     .pug
                         .pug.amount-field
                             .input-wrapper.pug
                                 .label.crypto.pug #{token}
-                                input.pug.amount(type='text' on-change=amount-change placeholder="0" title="#{invoice.amount-send}" value="#{round5edit invoice.amount-send}")
+                                input.pug.amount(type='text' style=input-style on-change=amount-change placeholder="0" title="#{invoice.amount-send}" value="#{round5edit invoice.amount-send}")
                             .input-wrapper.pug
                                 .label.lusd.pug $
-                                input.pug.amount-usd(type='text' on-change=amount-usd-change placeholder="0" title="#{invoice.amount-send-usd}" value="#{round5edit invoice.amount-send-usd}")
+                                input.pug.amount-usd(type='text' style=input-style on-change=amount-usd-change placeholder="0" title="#{invoice.amount-send-usd}" value="#{round5edit invoice.amount-send-usd}")
+            .pug.escrow
             .pug.button-container
                 .pug.buttons
                     a.pug.btn.btn-primary(on-click=send style=primary-button-style)
-                        span.pug Send Email
+                        span.pug #{land.send-email ? 'Send Email'}
                         if send.sending
                             span.pug ...
-                    a.pug.btn.btn-default(on-click=cancel style=default-button-style) CANCEL
+                    a.pug.btn.btn-default(on-click=cancel style=default-button-style) #{land.cancel}
 module.exports = send

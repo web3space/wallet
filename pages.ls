@@ -8,6 +8,7 @@ require! {
     \./pages/sent.ls
     \./pages/loading.ls
     \./pages/invoice.ls
+    \./pages/terms.ls
 }
 export loading
 export wallets
@@ -18,3 +19,4 @@ export locked
 export newseed
 export sent
 export invoice
+export terms

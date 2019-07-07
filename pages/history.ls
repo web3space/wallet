@@ -2,10 +2,11 @@ require! {
     \react
     \prelude-ls : { sort-by, reverse, filter, map, find }
     \../history-funcs.ls
+    \../get-primary-info.ls
+    \../get-lang.ls
 }
 .history
     width: 100%
-    color: black
     position: relative
     padding-bottom: 20px
     display: inline-block
@@ -14,16 +15,14 @@ require! {
         padding-top: 50px
         text-align: center
     .header
+        text-align: center
         height: 50px
         box-sizing: border-box
-        text-align: left
         padding: 10px
         position: fixed
-        background: rgba(white, 0.95)
         left: 0
         top: 0
         width: 100%
-        max-width: 400px
         .separator
             min-width: 2px
             display: inline-block
@@ -41,7 +40,6 @@ require! {
             &.active
                 border-color: #75cee1
                 background: rgba(#75cee1, 0.3)
-                background: white
             line-height: 12px
             height: 25px
             width: 25px
@@ -73,7 +71,6 @@ require! {
             &.record
                 border-radius: 3px
                 margin: 10px
-                background: white
                 margin-bottom: 1px
             .cell
                 padding: 2px 5px
@@ -113,12 +110,18 @@ require! {
         height: 15px
 module.exports = ({ store })->
     { go-back, switch-type-in, switch-type-out, coins, is-active, switch-filter, applied-transactions, cut-tx, arrow, delete-pending-tx, amount-beautify, ago } = history-funcs store
+    style = get-primary-info store
+    header-style =
+        border-bottom: "1px solid #{style.app.border}"
+        color: style.app.text
+    button-style=
+        color: style.app.text
     .pug.normalheader.history
-        .header.pug
-            button.pug(on-click=go-back) <
+        .header.pug(style=header-style)
+            button.pug(on-click=go-back style=button-style) <
             span.pug.separator
-            button.pug(class="#{is-active('IN')}" on-click=switch-type-in) IN
-            button.pug(class="#{is-active('OUT')}" on-click=switch-type-out) OUT
+            button.pug(class="#{is-active('IN')}" style=button-style on-click=switch-type-in) IN
+            button.pug(class="#{is-active('OUT')}" style=button-style on-click=switch-type-out) OUT
             span.pug.separator
             for coin in coins
                 button.pug(key="#{coin.token}" class="#{is-active(coin.token)}" on-click=switch-filter(coin.token))

@@ -1,6 +1,7 @@
 require! {
     \react
     \../newseed-funcs.ls
+    \../get-lang.ls
 }
 .newseed
     @import scheme
@@ -42,14 +43,15 @@ require! {
         color: #f2eeee
         padding: 20px 38px
 newseed = ({ store })->
+    lang = get-lang store
     { generate-seed, change-seed, save } = newseed-funcs store
     .newseed.pug
-        .title.pug New Seed Phrase
-        textarea.pug(value="#{store.current.seed}" on-change=change-seed placeholder="Click Generate or Put Your Seed Phrase here")
+        .title.pug #{lang.new-seed-phrase ? 'New Seed Phrase'}
+        textarea.pug(value="#{store.current.seed}" on-change=change-seed placeholder="#{lang.new-seed-placeholder ? 'Click Generate or Put Your Seed Phrase here'}")
         .pug
-            button.pug.left(on-click=generate-seed) Generate
-            button.pug.right(on-click=save) Save
-        .pug.hint The phrase is stored securely on your computer. Do not transfer it to a third party and keep the duplicate in a safe place.
+            button.pug.left(on-click=generate-seed) #{lang.generate ? 'Generate' }
+            button.pug.right(on-click=save) #{lang.save ? 'Save' }
+        .pug.hint #{lang.new-seed-warning ? 'The phrase is stored securely on your computer. Do not transfer it to a third party and keep the duplicate in a safe place.'}
 focus = (store, cb)->
     <- set-timeout _, 1000
     textarea = store.root.query-selector '.newseed textarea'

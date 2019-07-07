@@ -1,5 +1,6 @@
 require! {
     \react
+    \../get-lang.ls
 }
 .loading-page
     @import scheme

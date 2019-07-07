@@ -130,7 +130,15 @@ module.exports = (store, config)->
     refresh = (cb)->
         refresh-apis cweb3, store
         refresh-balances cb
+    set-theme = (it, cb)->
+        return cb "support only dark an light" if it not in <[ dark light ]>
+        store.theme = it
+        cb null
+    set-lang = (it, cb)->
+        return cb "support only en, ru" if it not in <[ en ru ]>
+        store.lang = it
+        cb null
     refresh-apis cweb3, store
     web3 = new Web3!
-    cweb3 <<<< { web3.utils, use, refresh, install, install-by-name, naming, get-account-name }
+    cweb3 <<<< { web3.utils, use, refresh, install, install-by-name, naming, get-account-name, set-theme, set-lang }
     cweb3

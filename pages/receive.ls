@@ -3,6 +3,7 @@ require! {
     \qrcode.react : QRCode
     \../navigate.ls
     \../get-primary-info.ls
+    \../get-lang.ls
 }
 .receive
     text-align: center

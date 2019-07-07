@@ -6,9 +6,11 @@ require! {
     \mobx : { transaction }
     \./scroll-top.ls
 }
-get-page = (store, page)->
+get-page = (store, page, prev)->
+    #console.log \navigate, page, store.current.page
     return page if page isnt \:init
-    stage2 = store.current.page is \locked or not saved!
+    return \terms if prev is \newseed
+    stage2 = not saved!
     store.current.seed = oldseed! if stage2
     return \newseed if stage2
     \wallets
@@ -24,8 +26,9 @@ focus-control = (store, name, cb)->
     control.focus store, cb
 module.exports = (store, page)->
     scroll-top!
+    prev = store.current.page
     store.current.page = \loading
-    name = get-page store, page
+    name = get-page store, page, prev
     <- init-control store, name
     store.current.page = name
     <- focus-control store, name
