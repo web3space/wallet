@@ -3,6 +3,7 @@ require! {
     \./web3.ls
     \./round5.ls
     \./get-primary-info.ls
+    \./send-funcs.ls
 }
 module.exports = (store, wallets, wallet)->
     index = wallets.index-of wallet
@@ -19,7 +20,14 @@ module.exports = (store, wallets, wallet)->
         value = 0
         err <- send-transaction { to, value }
         console.log err if err?
+    receive = (wallet, event)-->
+        send wallet, event
+        { invoice } = send-funcs store
+        invoice!
     usd-rate = wallet?usd-rate ? 0
+    uninstall = ->
+        return if store.current.refreshing
+        <- lweb3.uninstall wallet.coin.token
     expand = ->
         store.current.wallet-index = index
     active = if index is store.current.wallet-index then \active else ''
@@ -34,4 +42,4 @@ module.exports = (store, wallets, wallet)->
     last = 
         | wallets.length < 4 and index + 1 is wallets.length => \last
         | _ => ""
-    { button-style, wallet, active, big, balance, pending, send, expand, usd-rate, last }
+    { button-style, wallet, active, big, balance, pending, send, expand, usd-rate, last, receive, uninstall }

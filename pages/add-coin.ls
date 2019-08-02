@@ -5,6 +5,7 @@ require! {
     \../web3.ls
     \../get-primary-info.ls
     \../get-lang.ls
+    \./icon.ls
 }
 .manage-account
     @import scheme
@@ -34,12 +35,20 @@ require! {
         margin-top: 5vh
         margin-bottom: 25vh
         border-radius: 5px
+        position: relative
+        height: 65vh
+        overflow: hidden
         >.title
+            position: absolute
+            z-index: 999
+            top: 0
+            box-sizing: border-box
+            width: 100%
+            height: 100px
             color: gray
             font-size: 22px
             padding: 10px
-            position: relative
-            >.close
+            .close
                 position: absolute
                 padding: 5px 10px
                 font-size: 30px
@@ -48,11 +57,8 @@ require! {
                 cursor: pointer
                 &:hover
                     color: #CCC
-        >.settings
-        .section
-            position: relative
-            min-height: 200px
             .search
+                margin-top: 10px
                 border: 1px solid #CCC
                 padding: 9px
                 border-radius: 6px
@@ -60,53 +66,68 @@ require! {
                 box-sizing: border-box
                 font-size: 13px
                 outline: none
-                background: #213040
-            .list
-                height: 80%
-                overflow-y: scroll
-                padding: 10px
-                .item
-                    width: 100%
-                    padding: 5px 6px
-                    text-align: left
-                    box-sizing: border-box
-                    >*
-                        display: inline-block
-                        vertical-align: middle
-                        height: 40px
-                        line-height: 40px
+        >.settings
+            padding-top: 90px
+            padding-bottom: 90px
+            overflow-y: scroll
+            height: calc(65vh - 180px)
+            .section
+                position: relative
+                min-height: 200px
+                .list
+                    height: 80%
+                    overflow-y: scroll
+                    padding: 10px
+                    .item
+                        width: 100%
+                        padding: 5px 6px
+                        text-align: left
                         box-sizing: border-box
-                    img
-                        width: 40px
-                        border-radius: 100px
-                    .title
-                        margin-left: 10px
-                        color: gray
-                        width: calc(100% - 90px)
-                    button
-                        width: 40px
-                        height: 40px
-                        border-radius: 40px
-                        border: 1px solid gray
-                        box-sizing: border-box
-                        padding: 0
-                        margin: 0
-                        cursor: pointer
-                        color: black
-                        background: white
-                        outline: none
-                        &:hover
-                            background: #7083e8
-                            color: white
+                        >*
+                            display: inline-block
+                            vertical-align: middle
+                            height: 40px
+                            line-height: 40px
+                            box-sizing: border-box
+                        img
+                            width: 40px
+                            border-radius: 100px
+                        .title
+                            margin-left: 10px
+                            color: gray
+                            width: calc(100% - 90px)
+                        button
+                            width: 40px
+                            height: 40px
+                            line-height: 45px
+                            border-radius: 40px
+                            border: 1px solid gray
+                            box-sizing: border-box
+                            padding: 0
+                            margin: 0
+                            cursor: pointer
+                            color: black
+                            background: transparent
+                            outline: none
+                            &:hover
+                                background: #7083e8
+                                color: white
+                            >*
+                                vertical-align: middle
 create-item = (store, item)-->
     add = ->
         store.current.add-coin = no
         <- web3(store).install item
     title = "#{item.token} #{item.type}"
+    style = get-primary-info store
+    button-style =
+        border: "1px solid #{style.app.text}"
+        color: style.app.text
     .item.pug
         img.pug(src="#{item.image}")
         span.pug.title #{title}
-        button.pug(on-click=add) Add
+        button.pug(on-click=add style=button-style)
+            icon \Plus, 20
 filter-item = (store)-> (item)->
     return yes if (store.current.filter-plugins ? "").length is 0
     (item.token ? "").index-of(store.current.filter-plugins) > -1
@@ -119,16 +140,20 @@ module.exports = ({ store } )->
     style = get-primary-info store
     account-body-style = 
         background: style.app.background
+        border-bottom: "1px solid #{style.app.border}"
     lang = get-lang store
+    input-style=
+        background: style.app.input
     .pug.manage-account
         .account-body.pug(style=account-body-style)
-            .pug.title 
-                .pug #{lang.plugin-registry}
-                .pug.close(on-click=close) ×
+            .pug.title(style=account-body-style)
+                .pug
+                    .pug #{lang.plugin-registry}
+                    .pug.close(on-click=close) ×
+                .pug
+                    input.search.pug(placeholder="#{lang.search}" on-change=filter-registery style=input-style)
             .pug.settings
                 .pug.section
-                    .pug
-                        input.search.pug(placeholder="#{lang.search}" on-change=filter-registery)
                     .list.pug
                         if store.registry.length > 0
                             store.registry 

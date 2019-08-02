@@ -14,7 +14,7 @@ require! {
         to
             opacity: 1
             transform: scale3d(1, 1, 1)
-    position: absolute
+    position: fixed
     width: 100%
     top: 0
     z-index: 999
@@ -27,19 +27,29 @@ require! {
     >.account-body
         max-width: 600px
         display: inline-block
-        overflow-y: scroll
+        overflow: hidden
         animation-duration: 0.5s
         animation-name: bounceIn
         background: white
         width: 100%
         margin-top: 5vh
         margin-bottom: 25vh
+        padding-bottom: 50px
         border-radius: 5px
+        position: relative
+        max-height: 65vh
+        box-sizing: border-box
         >.title
+            position: absolute
+            z-index: 999
+            box-sizing: border-box
+            top: 0
+            width: 100%
             color: gray
             font-size: 22px
             padding: 10px
-            position: relative
+            height: 60px
+            background: black
             >.close
                 position: absolute
                 padding: 5px 10px
@@ -50,6 +60,9 @@ require! {
                 &:hover
                     color: #CCC
         >.settings
+            padding-top: 60px
+            overflow-y: auto
+            height: calc(65vh - 60px)
             .title
                 color: $primary
                 font-size: 12px
@@ -122,6 +135,7 @@ switch-account = (store)->
     input-style =
         background: style.app.input
         color: style.app.text
+        border: "1px solid #{style.app.border}"
     .pug.switch-account
         span.pug Account Index:
         span.pug.button(on-click=account-left) <
@@ -183,10 +197,11 @@ module.exports = ({ store } )->
     style = get-primary-info store
     account-body-style = 
         background: style.app.background
+        border-bottom: "1px solid #{style.app.border}"
     lang = get-lang store
     .pug.manage-account
         .account-body.pug(style=account-body-style)
-            .pug.title 
+            .pug.title(style=account-body-style)
                 .pug Manage Account
                 .pug.close(on-click=close-account) ×
             .pug.settings

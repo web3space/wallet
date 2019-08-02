@@ -3,6 +3,8 @@ require! {
     \../menu-funcs.ls
     \../get-primary-info.ls
     \../get-lang.ls
+    \../add-coin.ls
+    \../topup.ls
 }
 .your-account
     position: relative
@@ -25,13 +27,16 @@ require! {
             margin-bottom: 2px
     >.buttons
         >.button
+            text-transform: uppercase
+            overflow: hidden
+            text-overflow: ellipsis
             cursor: pointer
             font-size: 11px
             color: black
             margin: 5px
-            padding: 2px 10px
-            height: 16px
-            line-height: 16px
+            padding: 5px 15px
+            height: 20px
+            line-height: 20px
             border-radius: 10px
             display: inline-block
             width: 80px
@@ -58,5 +63,5 @@ module.exports = (store)->
             .pug.nick #{current.account.account-name}
             .pug.index #{account-index}
         .pug.buttons
-            .pug.button.edit(on-click=open-account style=button-style) #{lang.settings ? 'settings'}
-            .pug.button.lock(on-click=lock style=button-style) #{lang.lock ? 'lock'}
+            .pug.button.edit(on-click=topup(store) style=button-style) #{lang.topup}
+            .pug.button.lock(on-click=add-coin(store) style=button-style) #{lang.add-coin}

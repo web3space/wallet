@@ -9,6 +9,8 @@ require! {
     \../wallet-funcs.ls
     \../send-funcs.ls
     \../get-lang.ls
+    \./icon.ls
+    \../get-primary-info.ls
 }
 #
 .wallet
@@ -25,8 +27,7 @@ require! {
     box-sizing: border-box
     overflow: hidden
     transition: height .5s
-    border: 1px solid #213040
-    border-top: 0px
+    border: 0px
     &:first-child
         margin-top: 0
         box-shadow: none
@@ -40,23 +41,25 @@ require! {
         >.wallet-middle
             display: inline-block
     >.wallet-top
+        padding: 0 21px
+        box-sizing: border-box
         $card-top-height: 50px
         width: 100%
         color: #677897
         font-size: 14px
         text-align: center
+        overflow: hidden
         >*
             display: inline-block
             box-sizing: border-box
             vertical-align: top
-            padding-top: 10px
+            padding-top: 9px
             height: $card-top-height
         >.top-left
-            width: 32%
+            width: 25%
             text-align: left
-            @media screen and (max-width: 390px)
-                width: 20%
-            padding-left: 21px
+            overflow: hidden
+            text-overflow: ellipsis
             >*
                 display: inline-block
             >.img
@@ -72,6 +75,9 @@ require! {
             >.info
                 text-align: left
                 margin-left: 0px
+                text-overflow: ellipsis
+                overflow: hidden
+                width: 65px
                 @media screen and (max-width: 390px)
                     display: none
                 >.name
@@ -83,9 +89,7 @@ require! {
                     overflow: hidden
                     text-overflow: ellipsis
         >.top-middle
-            width: 36%
-            @media screen and (max-width: 390px)
-                width: 45%
+            width: 50%
             text-align: center
             >.balance
                 &:last-child
@@ -95,19 +99,19 @@ require! {
                     @media screen and (max-width: 220px)
                         display: none
         >.top-right
-            width: 32%
+            width: 25%
             text-align: right
-            padding-right: 21px
-            @media screen and (max-width: 390px)
-                padding-right: 10px
             >button
                 outline: none
-                margin-top: 5px
+                margin-bottom: 5px
+                margin-left: 5px
                 cursor: pointer
                 border: 1px solid
-                border-radius: 5px
-                width: 75px
-                height: 30px
+                $round: 36px
+                border-radius: $round
+                width: $round
+                height: $round
+                line-height: $round
                 color: #6CA7ED
                 text-transform: uppercase
                 font-weight: bold
@@ -124,6 +128,11 @@ require! {
         margin-top: 10px
         text-align: center
         position: relative
+        >.uninstall
+            padding-left: 23px
+            text-align: left
+            font-size: 10px
+            padding-top: 10px
         >img
             position: absolute
             right: 20px
@@ -147,9 +156,15 @@ require! {
             text-overflow: ellipsis
             overflow: hidden
 module.exports = (store, wallets, wallet)-->
-    { button-style, wallet, active, big, balance, pending, send, expand, usd-rate, last } = wallet-funcs store, wallets, wallet
+    { button-style, uninstall, wallet, active, big, balance, pending, send, receive, expand, usd-rate, last } = wallet-funcs store, wallets, wallet
     lang = get-lang store
-    .wallet.pug(on-click=expand class="#{last + ' ' + active + ' ' + big}" key="#{wallet.coin.token}")
+    style = get-primary-info store
+    label-uninstall =
+        | store.current.refreshing => \...
+        | _ => \HIDE
+    border-style =
+        border-bottom: "1px solid #{style.app.border}"
+    .wallet.pug(on-click=expand class="#{last + ' ' + active + ' ' + big}" key="#{wallet.coin.token}" style=border-style)
         .wallet-top.pug
             .top-left.pug
                 .img.pug
@@ -166,8 +181,13 @@ module.exports = (store, wallets, wallet)-->
                         .pug.pending 
                             span.pug -#{pending}
             .top-right.pug
-                button.pug(on-click=send(wallet) style=button-style) #{lang.open ? 'Open'}
+                button.pug(on-click=send(wallet) style=button-style)
+                    icon "ArrowUp", 20
+                button.pug(on-click=receive(wallet) style=button-style)
+                    icon "ArrowDown", 20
         .wallet-middle.pug
             a.pug(target="_blank" href="#{get-address-link wallet}") #{get-address-title wallet}
             CopyToClipboard.pug(text="#{get-address-title wallet}" on-copy=copied-inform(store))
                 copy store
+            if wallet.coin.token isnt \btc
+                .pug.uninstall(on-click=uninstall) #{label-uninstall}

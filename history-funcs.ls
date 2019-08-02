@@ -1,5 +1,4 @@
 require! {
-    \whitebox
     \./transactions.ls : { transactions }
     \prelude-ls : { sort-by, reverse, filter, map, find }
     \moment

@@ -52,6 +52,7 @@ require! {
         height: 30px
         border-radius: 3px
         border: 0px
+        background: transparent
         &:hover
             background: #248295 - 20
         color: white
@@ -121,13 +122,19 @@ wrong-trials = (store)->
     .pug.wrong(key="wrong-trial") #{wrong-pin-text}
 setup-button = (store)->
     lang = get-lang store
+    style = get-primary-info store
     setup = ->
         return alert(lang.wrong-pin-should ? 'PIN should be 4 digits') if not store.current.pin.match(/^[0-9]{4}$/)?
         set store.current.pin
         check-pin store
+    text-color=
+        color: style.app.text
+    button-style =
+        color: style.app.text
+        border: "1px solid #{style.app.border}"
     .pug(key="setup-button")
-        button.setup.pug(on-click=setup) #{lang.setup ? 'Setup'}
-        .hint.pug #{lang.pin-info ? 'Please memorize this PIN and do not provide it to third party.'}
+        button.setup.pug(on-click=setup style=button-style) #{lang.setup ? 'Setup'}
+        .hint.pug(style=text-color) #{lang.pin-info ? 'Please memorize this PIN and do not provide it to third party.'}
 locked = ({ store })->
     lang = get-lang store
     title = 

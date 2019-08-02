@@ -5,6 +5,7 @@ require! {
     \./browser/location.ls
     \./langs/en.ls
     \./langs/ru.ls
+    \./langs/ua.ls
 }
 saved-seed = saved!
 create-send =->
@@ -29,9 +30,9 @@ create-send =->
     error: ''
 store =
     root: null
-    theme: \dark
+    theme: \light
     lang: \en
-    langs: { en, ru }
+    langs: { en, ru, ua }
     registry: []
     terms: "Loading..."
     menu:
@@ -71,6 +72,7 @@ store =
         can-buy: no
         checking-name: no
         seed: ""
+        seed-temp: ""
         saved-seed: saved-seed
         balance-usd: \...
         filter: <[ IN OUT ]>

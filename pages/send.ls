@@ -138,6 +138,7 @@ require! {
         >.header
             margin: 0
             padding: 10px
+            min-height: 40px
             text-align: left
             padding: 0
             >.head
@@ -264,7 +265,7 @@ form-group = (title, style, content)->
         label.pug.control-label(style=style) #{title}
         content!
 send = ({ store })->
-    { token, fee-token, network, send, wallet, pending, primary-button-style, recipient-change, amount-change, amount-usd-change, amount-eur-change, use-max-amount, show-data, show-label, topup, history, receive, cancel, send-anyway, choose-auto, choose-cheap, chosen-auto, chosen-cheap, get-address-link, get-address-title, default-button-style, round5edit, round5, send-options, send-title, is-data, encode-decode, change-amount, invoice } = send-funcs store
+    { token, fee-token, network, send, wallet, pending, primary-button-style, recipient-change, amount-change, amount-usd-change, amount-eur-change, use-max-amount, show-data, show-label, topup, history, cancel, send-anyway, choose-auto, choose-cheap, chosen-auto, chosen-cheap, get-address-link, get-address-title, default-button-style, round5edit, round5, send-options, send-title, is-data, encode-decode, change-amount, invoice } = send-funcs store
     round-money = (val)->
         +val |> (-> it * 100) |> Math.round |> (-> it / 100)
     style = get-primary-info store

@@ -8,6 +8,7 @@ require! {
     \./browser/window.ls
     \./navigate.ls
     \./web3.ls
+    \./autodetect-lang.ls
 }
 store = observable data-scheme
 Main = observer ({store})->
@@ -21,3 +22,4 @@ export bootstrap = (root)->
     #navigate store, \sent
     #navigate store, store.current.page
 window <<<< out$
+autodetect-lang store

@@ -30,7 +30,8 @@ support = ({ token, network }, { topup-coins-by-mask, networks })-->
     return no
 replace = (params)-> (str, key)->
     mask = "{" + key + "}"
-    str.replace mask, params[key]
+    val = params[key] ? ""
+    str.replace mask, val
 put = (params, address)-->
     keys = Object.keys params
     return address if keys.length is 0

@@ -21,7 +21,7 @@ require! {
             font-weight: bold
             margin-bottom: 10px
         >.text
-            padding: 10px 0
+            padding: 10px
             input
                 border-radius: 5px
         >.buttons
@@ -47,14 +47,17 @@ confirmation-modal = (store)->
     style = get-primary-info store
     confirmation-style =
         background: style.app.background
-        color: style.app.color
+        color: style.app.text
+    button-style=
+        color: style.app.text
+    lang = get-lang store
     .pug.confirmation
-        .pug.confirmation-body(style=confirmation-style)
-            .pug.header Confirmation
-            .pug.text #{store.current.confirmation}
+        .pug.confirmation-body
+            .pug.header(style=confirmation-style) #{lang.confirmation}
+            .pug.text(style=confirmation-style) #{store.current.confirmation}
             .pug.buttons
-                .pug.button(on-click=confirm) Confirm
-                .pug.button(on-click=cancel) Cancel
+                .pug.button(on-click=confirm style=button-style) Confirm
+                .pug.button(on-click=cancel style=button-style) Cancel
 prompt-modal = (store)->
     return null if typeof! store.current.prompt isnt \String
     confirm = ->
@@ -72,20 +75,22 @@ prompt-modal = (store)->
     style = get-primary-info store
     confirmation-style =
         background: style.app.background
-        color: style.app.color
+        color: style.app.text
     input-style =
         background: style.app.input
-        color: style.app.color
+        color: style.app.text
+    button-style=
+        color: style.app.text
     lang = get-lang store
     .pug.confirmation
-        .pug.confirmation-body(style=confirmation-style)
-            .pug.header #{lang.confirmation}
-            .pug.text #{store.current.prompt}
+        .pug.confirmation-body
+            .pug.header(style=style=confirmation-style) #{lang.confirmation}
+            .pug.text(style=style=confirmation-style) #{store.current.prompt}
             .pug
                 input.pug(on-change=change-input value="#{store.current.prompt-answer}" style=input-style)
             .pug.buttons
-                .pug.button(on-click=confirm) #{lang.confirm}
-                .pug.button(on-click=cancel) #{lang.cancel}
+                .pug.button(on-click=confirm style=button-style) #{lang.confirm}
+                .pug.button(on-click=cancel style=button-style) #{lang.cancel}
 export confirmation-control = (store)->
     .pug
         confirmation-modal store

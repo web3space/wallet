@@ -261,8 +261,8 @@ send = ({ store })->
             .pug.button-container
                 .pug.buttons
                     a.pug.btn.btn-primary(on-click=send style=primary-button-style)
-                        span.pug #{land.send-email ? 'Send Email'}
+                        span.pug #{lang.send ? 'Send Email'}
                         if send.sending
                             span.pug ...
-                    a.pug.btn.btn-default(on-click=cancel style=default-button-style) #{land.cancel}
+                    a.pug.btn.btn-default(on-click=cancel style=default-button-style) #{lang.cancel}
 module.exports = send

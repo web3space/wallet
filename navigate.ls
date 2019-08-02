@@ -26,6 +26,7 @@ focus-control = (store, name, cb)->
     control.focus store, cb
 module.exports = (store, page)->
     scroll-top!
+    <- set-timeout _, 1
     prev = store.current.page
     store.current.page = \loading
     name = get-page store, page, prev

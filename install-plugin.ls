@@ -1,10 +1,11 @@
 require! {
     \localStorage
-    \prelude-ls : { any, map }
+    \prelude-ls : { any, map, filter }
     #react controls
     \./modal.ls : { install, replace }
     \superagent : { get }
     \./json-parse.ls
+    \./providers.ls
 }
 required-fields = <[ type token enabled ]>
 not-in = (arr, arr2)-> 
@@ -47,12 +48,13 @@ install-plugin = (plugin, cb)->
     local-storage.set-item name, body
     add-to-registry name
     cb null
-uninstall-plugin = (token, cb)->
-    return cb "expected string argument" if typeof! name isnt \String
+uninstall-plugin = (cweb3, token, cb)->
+    return cb "expected string argument" if typeof! token isnt \String
     name = build-name token
+    console.log name, token
     local-storage.set-item name, ""
     remove-from-registry name
-    cb null
+    cweb3.refresh cb
 ask-user = (cweb3, store, plugin, cb)->
     registry = get-registry!
     return cb "pluing is required" if typeof! plugin isnt \Object
@@ -69,7 +71,7 @@ export build-install = (cweb3, store)-> (plugin, cb)->
     return cb err if err?
     cweb3.refresh cb
 export build-uninstall = (cweb3, store)-> (name, cb)->
-    uninstall-plugin name, cb
+    uninstall-plugin cweb3, name, cb
 export build-install-by-name = (cweb3, store)-> (name, cb)->
     err, resp <- get "https://raw.githubusercontent.com/web3space/plugin-registry/master/plugins/#{name}.json"
     return cb err if err?

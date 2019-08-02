@@ -1,6 +1,5 @@
 require! {
     \prelude-ls : { filter, find }
-    \whitebox
     \./tools.ls : { cut, money }
     \./seed.ls
     \./use-network.ls
@@ -10,8 +9,11 @@ require! {
     \./get-primary-info.ls
     \copy-to-clipboard
     \./pages/confirmation.ls : { confirm, prompt }
+    \./get-lang.ls
+    \bip39
 }
-{ get-container, generate-wallet } = whitebox
+export generate-wallet = ->
+    bip39.generate-mnemonic!
 state =
     timeout: null
 adjust-color = (col, amt) ->
@@ -55,8 +57,9 @@ module.exports = (store)->
     save-seed = ->
         seed.set current.seed
         current.saved-seed = yes
+    lang = get-lang store
     edit-seed = ->
-        agree <- confirm store, "If you edit this, your old wallet is gone and all your coins are lost"
+        agree <- confirm store, lang.secret-phrase-change
         return if not agree?
         store.current.pin = ""
         current.try-edit-seed = yes
@@ -71,7 +74,7 @@ module.exports = (store)->
     generate = ->
         agree <- confirm store, "Are you sure you want to override the current seed?"
         return if not agree?
-        current.seed = generate-wallet!.mnemonic
+        current.seed = generate-wallet!
         create-account!
     switch-network = ->
         network = 

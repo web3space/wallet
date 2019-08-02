@@ -3,7 +3,6 @@ require! {
     \mobx : { observable }
     \react
     \./pages.ls
-    \whitebox
     \./description.ls
     \./browser/window.ls
     \./copy-message.ls
@@ -12,7 +11,7 @@ require! {
     \./pages/confirmation.ls : { confirmation-control }
 }
 .app
-    overflow-y: auto
+    overflow: hidden
     @import scheme
     background: $primary
     height: 100vh
@@ -24,7 +23,6 @@ require! {
         max-width: 450px
         display: inline-block
         width: 100%
-{ get-container } = whitebox
 module.exports = ({ store, reload })->
     return null if not store?
     window <<<< { store }

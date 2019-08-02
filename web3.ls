@@ -10,7 +10,7 @@ require! {
     \./navigate.ls
     \./use-network.ls
     \./api.ls : { get-balance }
-    \./install-plugin.ls : { build-install, build-install-by-name }
+    \./install-plugin.ls : { build-install, build-uninstall, build-install-by-name }
     \./refresh-account.ls : { background-refresh-account }
     \web3 : \Web3
     \../api/ethnamed.ls
@@ -110,7 +110,6 @@ setup-refresh-timer = ({ refresh-timer, refresh-balances })->
     setup-refresh-timer.timer = set-timeout refresh-balances, refresh-timer
 build-get-account-name = (cweb3, naming)-> (store, cb)->
     record = get-record store
-    console.log { naming }
     err, data <- naming.whois record
     return cb err if err?
     cb null, data
@@ -119,6 +118,7 @@ module.exports = (store, config)->
     cweb3 = {}
     use = build-use cweb3, store
     install = build-install cweb3, store
+    uninstall = build-uninstall cweb3, store
     install-by-name = build-install-by-name cweb3, store
     naming = ethnamed cweb3
     get-account-name = build-get-account-name cweb3, naming
@@ -135,10 +135,10 @@ module.exports = (store, config)->
         store.theme = it
         cb null
     set-lang = (it, cb)->
-        return cb "support only en, ru" if it not in <[ en ru ]>
+        return cb "support only en, ru" if it not in <[ en ru ua ]>
         store.lang = it
         cb null
     refresh-apis cweb3, store
     web3 = new Web3!
-    cweb3 <<<< { web3.utils, use, refresh, install, install-by-name, naming, get-account-name, set-theme, set-lang }
+    cweb3 <<<< { web3.utils, use, refresh, install, uninstall, install-by-name, naming, get-account-name, set-theme, set-lang }
     cweb3

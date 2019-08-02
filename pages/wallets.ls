@@ -9,6 +9,7 @@ require! {
     \./manage-account.ls
     \./add-coin.ls : add-coin-page
     \../get-lang.ls
+    \../get-primary-info.ls
 }
 .wallets
     @import scheme
@@ -46,16 +47,11 @@ require! {
             width: 100%
             max-width: 450px
             position: relative
-    padding-top: 40px
-    padding-bottom: 40px
-    .add-coin
-        position: absolute
-        left: 21px
-        font-size: 29px
-        display: inline-block
-        line-height: 22px
+    padding-top: 10px
     >.wallet-container
         overflow: hidden
+        overflow-y: auto
+        border-radius: 5px
         height: 315px
         max-width: 450px
         border-top: 1px solid #213040
@@ -63,21 +59,17 @@ require! {
 arrow = \https://res.cloudinary.com/dfbhd7liw/image/upload/v1543595868/wallet/arrow.png
 wallets = ({ store })->
     return null if not store.current.account?
-    { wallets, go-up, can-up, go-down, can-down, add-coin } = wallets-funcs store
+    { wallets, go-up, can-up, go-down, can-down } = wallets-funcs store
+    style = get-primary-info store
+    border-style =
+        border: "1px solid #{style.app.border}"
     .pug(key="wallets")
         menu { store }
         manage-account { store }
         add-coin-page { store }
         .wallets.pug(key="wallets-body")
-            .arrow.arrow-t.pug(on-click=go-up class="#{can-up}" key="arrow-up")
-                .arrow-container.pug
-                    img.pug(src="#{arrow}")
-            .wallet-container.pug(key="wallets-viewport")
+            .wallet-container.pug(key="wallets-viewport" style=border-style)
                 wallets |> map wallet store, wallets
-            .arrow.arrow-d.pug(on-click=go-down class="#{can-down}" key="arrow-down")
-                .arrow-container.pug
-                    img.pug(src="#{arrow}")
-                    span.pug.add-coin(on-click=add-coin) +
 wallets.init = (store, cb)->
     delete store.current.send?wallet
     store.current.send?tx-type = \regular

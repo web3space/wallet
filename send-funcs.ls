@@ -12,7 +12,7 @@ require! {
     \./round.ls
     \./round5.ls
     \./round5edit.ls
-    \./topup-loader.ls : { get-topup-address }
+    \./topup.ls
     \./get-primary-info.ls
     \./pending-tx.ls : { create-pending-tx }
     \./transactions.ls : { rebuild-history }
@@ -155,23 +155,9 @@ module.exports = (store)->
         store.current.send-menu-open = no
         store.current.filter = [\IN, \OUT, send.coin.token]
         navigate store, \history
-    topup = ->
-        store.current.send-menu-open = no
-        { token } = send.coin
-        { network } = store.current
-        { address } = wallet
-        address = get-topup-address store, { token, network, address }
-        if address?
-            window.open address
-        else if wallet.network.topup
-            window.open wallet.network.topup
-        else
-            alert "Topup Service is not installed"
     network = 
         | store.current.network is \testnet => " (TESTNET) "
         | _ => ""
-    receive = ->
-        navigate store, \receive
     invoice = ->
         store.current.send-menu-open = no
         { coin, network, wallet } = store.current.send
@@ -224,4 +210,4 @@ module.exports = (store)->
     use-max-amount = ->
         err <- use-max-try-catch
         alert "#{err}" if err?
-    { invoice, token, network, send, wallet, pending, fee-token, primary-button-style, recipient-change, amount-change, amount-usd-change, amount-eur-change, use-max-amount, show-data, show-label, topup, history, receive, cancel, send-anyway, choose-auto, choose-cheap, chosen-auto, chosen-cheap, get-address-link, get-address-title, default-button-style, round5edit, round5, send-options, send-title, is-data, encode-decode, change-amount }
+    { invoice, token, network, send, wallet, pending, fee-token, primary-button-style, recipient-change, amount-change, amount-usd-change, amount-eur-change, use-max-amount, show-data, show-label, topup: topup(store), history, cancel, send-anyway, choose-auto, choose-cheap, chosen-auto, chosen-cheap, get-address-link, get-address-title, default-button-style, round5edit, round5, send-options, send-title, is-data, encode-decode, change-amount }
