@@ -49,9 +49,9 @@ require! {
                 font-size: 40px
                 >*
                     display: inline-block
-module.exports = ({ store })->
+module.exports = ({ store, web3t })->
     return null if not store?
-    { current, open-account, lock, wallet-style, info, activate-s1, activate-s2, activate-s3, switch-network, refresh, lock } = menu-funcs store
+    { current, open-account, lock, wallet-style, info, activate-s1, activate-s2, activate-s3, switch-network, refresh, lock } = menu-funcs store, web3t
     style = get-primary-info store
     menu-style=
         color: style.app.text
@@ -65,15 +65,18 @@ module.exports = ({ store })->
         .menu-body.pug
             .balance.pug
                 .menu.pug
-                    .menu-item.pug(on-click=refresh style=icon-style class="#{syncing}")
-                        icon \Sync , 20
-                    .menu-item.pug(on-click=open-account style=icon-style)
-                        icon \Gear , 20
-                    .menu-item.pug(on-click=lock style=icon-style)
-                        icon \Lock , 20
+                    if store.preference.refresh-visible is yes
+                        .menu-item.pug(on-click=refresh style=icon-style class="#{syncing}")
+                            icon \Sync , 20
+                    if store.preference.settings-visible is yes
+                        .menu-item.pug(on-click=open-account style=icon-style)
+                            icon \Gear , 20
+                    if store.preference.lock-visible is yes
+                        .menu-item.pug(on-click=lock style=icon-style)
+                            icon \Lock , 20
                 .currency.pug #{lang.total-balance ? 'Total Balance'}
                 .amount.pug
                     .symbol.pug $
                     .number.pug #{money current.balance-usd}
-            your-account store
-            project-links { store }
+            your-account store, web3t
+            project-links { store, web3t }

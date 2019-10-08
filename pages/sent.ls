@@ -57,14 +57,14 @@ success-icon = (store)->
         g.pug
         g.pug
         g.pug
-module.exports = ({ store })->
+module.exports = ({ store, web3t })->
     style = get-primary-info store
     text-style=
         color: style.app.icon
     button-style=
         background: style.app.icon
     go-home = ->
-        navigate store, \wallets
+        navigate store, web3t, \wallets
     lang = get-lang store
     .pug.sent
         .pug.icon
@@ -74,4 +74,4 @@ module.exports = ({ store })->
             a.pug(href="#{store.current.last-tx-url}" target="_blank") #{lang.transaction ? 'transaction'}
             span.pug  #{lang.has-been-sent ? 'has been sent'}
         a.button.pug(on-click=go-home style=button-style) #{lang.home ? 'Home'}
-        history { store }
+        history { store, web3t }

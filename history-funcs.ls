@@ -2,13 +2,13 @@ require! {
     \./transactions.ls : { transactions }
     \prelude-ls : { sort-by, reverse, filter, map, find }
     \moment
-    \./plugin-loader.ls : { get-coins }
     \./navigate.ls
     \react
     \./pending-tx.ls : { remove-tx }
     \./web3.ls
 }
-module.exports = (store)->
+module.exports = (store, web3t)->
+    return null if not store? or not web3t?
     cut-tx = (tx)->
         return \none if not tx?
         t = tx.to-string!
@@ -31,7 +31,7 @@ module.exports = (store)->
         | type is \IN => \INC
         | _ => \OUT
     go-back = ->
-        navigate store, \wallets
+        navigate store, web3t, \wallets
     extended = (str)->
         | str.index-of('.') > -1 => "#{str}0"
         | _ => "#{str}.0"
@@ -62,10 +62,9 @@ module.exports = (store)->
             filt.splice(filt.index-of(value), 1)
     switch-type-in = switch-filter \IN
     switch-type-out = switch-filter \OUT
-    coins = get-coins!
     delete-pending-tx = (tx)-> (event)->
         return if not confirm "Would you like to remove pending transaction? Your balance will be increased till confirmed transaction"
         err <- remove-tx { store, ...tx }
         return alert "Cannot Remove Tx. Looks like it is already in blockchain" if err?
-        <- web3(store).refresh
-    { go-back, switch-type-in, switch-type-out, coins, is-active, switch-filter, applied-transactions, cut-tx, arrow, delete-pending-tx, amount-beautify, ago }
+        <- web3t.refresh
+    { go-back, switch-type-in, switch-type-out, store.coins, is-active, switch-filter, applied-transactions, cut-tx, arrow, delete-pending-tx, amount-beautify, ago }

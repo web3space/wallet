@@ -11,10 +11,10 @@ is-valid = (coin, network)-> (address)->
 verify = (verify-record, coin, network, to, cb)->
     return cb null, to if is-valid(coin, network) to
     verify-record to, cb
-module.exports = (to, coin, network, cb)->
+module.exports = (web3t, to, coin, network, cb)->
     is-name = to.index-of(\.) isnt -1 or to.index-of(\@) isnt -1
     return cb null, to if not is-name
-    { verify-record } = web3(store).naming
+    { verify-record } = web3t.naming
     err, data <- verify verify-record, coin, network, to
     return cb err if err?
     return cb "Address not found" if data is ""

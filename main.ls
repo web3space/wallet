@@ -6,20 +6,18 @@ require! {
     \./app.ls
     \./data-scheme.ls
     \./browser/window.ls
-    \./navigate.ls
     \./web3.ls
     \./autodetect-lang.ls
 }
 store = observable data-scheme
-Main = observer ({store})->
-    app { store }
 export web3t = web3 store
-export bootstrap = (root)->
+Main = observer ({store})->
+    app { store, web3t }
+export bootstrap = (root, options)->
     store.root = root
     render do
-        Main.pug( store=store )
+        Main.pug( store=store)
         root
-    #navigate store, \sent
-    #navigate store, store.current.page
+    autodetect-lang store if options?auto-lang isnt no
+    web3t.set-preference options if typeof! options is \Object
 window <<<< out$
-autodetect-lang store

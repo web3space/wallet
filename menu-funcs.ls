@@ -3,7 +3,6 @@ require! {
     \./tools.ls : { cut, money }
     \./seed.ls
     \./use-network.ls
-    \./web3.ls
     \./pin.ls : { check }
     \./navigate.ls
     \./get-primary-info.ls
@@ -33,12 +32,13 @@ build-schema = (first-color)->
     second-color = adjust-color first-color, 50
     third-color = adjust-color first-color, 100
     background-image: "linear-gradient(90deg, #{first-color} 0%, #{second-color} 89%, #{third-color} 100%)"
-module.exports = (store)->
+module.exports = (store, web3t)->
+    return null if not store? or not web3t?
     { current } = store
     lock = ->
-        navigate store, \locked
+        navigate store, web3t, \locked
     refresh = ->
-        <- web3(store).refresh
+        <- web3t.refresh
     #active-page = (page)->
     #    if current.page is page then \active
     #choose-account = (selected, event)-->
@@ -80,7 +80,7 @@ module.exports = (store)->
         network = 
             | store.current.network is \mainnet => \testnet
             | _ => \mainnet
-        <- use-network web3(store), store, network
+        <- use-network web3t, store, network
     activate-s = (name, event)-->
         store.menu.active = name
     activate-s1 = activate-s \s1
@@ -113,7 +113,6 @@ module.exports = (store)->
         change-account-index.timer = set-timeout refresh, 2000
     export-private-key = ->
         pin <- prompt store, "Please enter your PIN code"
-        console.log { pin }
         return if not check pin
         index = store.current.account-index
         token-input <- prompt store, "Enter the coin. Example: BTC, ETH, GBX"

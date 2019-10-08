@@ -129,8 +129,8 @@ require! {
             width: 80px
             padding: 1px
             text-align: center
-switch-account = (store)->
-    {  account-left, account-right, change-account-index } = menu-funcs store
+switch-account = (store, web3t)->
+    {  account-left, account-right, change-account-index } = menu-funcs store, web3t
     style = get-primary-info store
     input-style =
         background: style.app.input
@@ -142,8 +142,8 @@ switch-account = (store)->
         span.pug.bold
             input.pug.change-index(value="#{store.current.account-index}" style=input-style on-change=change-account-index)
         span.pug.button(on-click=account-right) >
-manage-account = (store)->
-    { current, generate, enter-pin, cancel-try, edit-seed, save-seed, change-seed, export-private-key } = menu-funcs store
+manage-account = (store, web3t)->
+    { current, generate, enter-pin, cancel-try, edit-seed, save-seed, change-seed, export-private-key } = menu-funcs store, web3t
     style = get-primary-info store
     lang = get-lang store
     input-style =
@@ -176,14 +176,14 @@ manage-account = (store)->
             .pug.title #{lang.your-nickname ? 'Your Nickname'}
             .pug.description #{lang.your-nickname-info ? 'You are able to attach nickname, email or phone number to your account and share it with friends. They will use your nick to resolve your crypto-address'}
             .pug.content
-                naming { store }
+                naming { store, web3t }
         .pug.section
             .pug.title #{lang.switch-account-index ? 'Switch Account Index'}
             .pug.description 
                 span.pug.bold #{lang.for-advanced-users ? 'For advanced users only'}.
                 span.pug #{lang.switch-account-info ? 'You could have a lot of unique addresses by switching account index. By default, you are given an index of 1, but you can change it in range 0 - 2,147,483,647'}
             .pug.content
-                switch-account store
+                switch-account store, web3t
         .pug.section.last
             .pug.title #{lang.export-private-key ? 'Export PRIVATE KEY'}
             .pug.description
@@ -191,9 +191,9 @@ manage-account = (store)->
                 span.pug #{lang.export-private-key-warning ? 'Please never do it in case when you do not understand exact reason of this action and do not accept risks'}.
             .pug.content
                 button.pug(on-click=export-private-key) #{lang.show-secret ? 'Show Secret'}
-module.exports = ({ store } )->
+module.exports = ({ store, web3t } )->
     return null if store.current.manage-account isnt yes
-    { close-account } = menu-funcs store
+    { close-account } = menu-funcs store, web3t
     style = get-primary-info store
     account-body-style = 
         background: style.app.background
@@ -205,4 +205,4 @@ module.exports = ({ store } )->
                 .pug Manage Account
                 .pug.close(on-click=close-account) ×
             .pug.settings
-                manage-account store
+                manage-account store, web3t

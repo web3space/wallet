@@ -108,8 +108,8 @@ require! {
         padding: 10px
     img
         height: 15px
-module.exports = ({ store })->
-    { go-back, switch-type-in, switch-type-out, coins, is-active, switch-filter, applied-transactions, cut-tx, arrow, delete-pending-tx, amount-beautify, ago } = history-funcs store
+module.exports = ({ store, web3t })->
+    { go-back, switch-type-in, switch-type-out, coins, is-active, switch-filter, applied-transactions, cut-tx, arrow, delete-pending-tx, amount-beautify, ago } = history-funcs store, web3t
     style = get-primary-info store
     header-style =
         border-bottom: "1px solid #{style.app.border}"

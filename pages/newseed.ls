@@ -49,9 +49,9 @@ require! {
     .hint
         color: #f2eeee
         padding: 20px 38px
-newseed = ({ store })->
+newseed = ({ store, web3t })->
     lang = get-lang store
-    { generate-seed, change-seed, save, fix-issue, has-issue } = newseed-funcs store
+    { generate-seed, change-seed, save, fix-issue, has-issue } = newseed-funcs store, web3t
     style = get-primary-info store
     text-style =
         color: style.app.text
@@ -66,7 +66,7 @@ newseed = ({ store })->
                 .pug #{lang.seed-warning}
                 button.pug.center(on-click=fix-issue) #{lang.fix-issue}
         .pug.hint(style=text-style) #{lang.new-seed-warning ? 'The phrase is stored securely on your computer. Do not transfer it to a third party and keep the duplicate in a safe place.'}
-focus = (store, cb)->
+focus = ({ store }, cb)->
     <- set-timeout _, 1000
     textarea = store.root.query-selector '.newseed textarea'
     textarea.focus!

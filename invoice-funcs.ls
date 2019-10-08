@@ -11,8 +11,8 @@ require! {
     \./address-link.ls : { get-address-link, get-address-title }
     \../web3t/providers/superagent.ls : { put }
 }
-module.exports = (store)->
-    return null if not store?
+module.exports = (store, web3t)->
+    return null if not store? or not web3t?
     { invoice } = store.current
     { wallet } = invoice
     return null if not wallet?
@@ -28,7 +28,7 @@ module.exports = (store)->
         alert "Your invoice has been sent"
         cancel!
     cancel = (event)->
-        navigate store, \send
+        navigate store, web3t, \wallets
     recipient-change = (event)->
         invoice.to = event.target.value ? ""
     get-value = (event)->

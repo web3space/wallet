@@ -133,7 +133,7 @@
               const obj = window.web3t[data.token] ?  window.web3t[data.token] : window.web3t;
               
         		  if (obj[data.method] == null)
-        		      return cb("Method " + data.method + " not found");
+        		      return cb("Method " + data.method + " not found " + (data.token ? "for token " + data.token : ""));
         		  
         		  const method = obj[data.method]
         		  

@@ -99,6 +99,7 @@ require! {
                     font-size: 12px
                     margin: 1px
                     border: 0px
+                    box-shadow: none
                 .amount-field
                     >.input-wrapper
                         position: relative
@@ -121,6 +122,8 @@ require! {
                         input
                             width: 100%
                             color: white
+                            box-shadow: none
+                            outline: none
                             ::placeholder
                                 color: #eee
                             &.amount
@@ -264,8 +267,8 @@ form-group = (title, style, content)->
     .pug.form-group
         label.pug.control-label(style=style) #{title}
         content!
-send = ({ store })->
-    { token, fee-token, network, send, wallet, pending, primary-button-style, recipient-change, amount-change, amount-usd-change, amount-eur-change, use-max-amount, show-data, show-label, topup, history, cancel, send-anyway, choose-auto, choose-cheap, chosen-auto, chosen-cheap, get-address-link, get-address-title, default-button-style, round5edit, round5, send-options, send-title, is-data, encode-decode, change-amount, invoice } = send-funcs store
+send = ({ store, web3t })->
+    { token, fee-token, network, send, wallet, pending, primary-button-style, recipient-change, amount-change, amount-usd-change, amount-eur-change, use-max-amount, show-data, show-label, topup, history, cancel, send-anyway, choose-auto, choose-cheap, chosen-auto, chosen-cheap, get-address-link, get-address-title, default-button-style, round5edit, round5, send-options, send-title, is-data, encode-decode, change-amount, invoice } = send-funcs store, web3t
     round-money = (val)->
         +val |> (-> it * 100) |> Math.round |> (-> it / 100)
     style = get-primary-info store
@@ -292,6 +295,8 @@ send = ({ store })->
         store.current.send-menu-open = not store.current.send-menu-open
     lang = get-lang store
     wallet-title = "#{token + network} #{lang.wallet ? 'wallet'}"
+    open-invoice = ->
+        invoice store, wallet
     .pug.content
         .pug.content-body(style=account-body-style)
             .pug.header
@@ -302,11 +307,12 @@ send = ({ store })->
                     icon \KebabHorizontal
             if store.current.send-menu-open
                 .pug.more-buttons(style=menu-style)
-                    a.pug.more.receive(on-click=invoice)
-                        .pug
-                            span.pug.more-icon(style=icon-style)
-                                icon \Mail, 20
-                            span.pug.more-text(style=more-text) #{lang.invoice ? 'Invoice'}
+                    if store.preference.invoice-visible is yes
+                        a.pug.more.receive(on-click=open-invoice)
+                            .pug
+                                span.pug.more-icon(style=icon-style)
+                                    icon \Mail, 20
+                                span.pug.more-text(style=more-text) #{lang.invoice ? 'Invoice'}
                     a.pug.more.history(on-click=history)
                         .pug
                             span.pug.more-icon(style=icon-style)

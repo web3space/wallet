@@ -8,7 +8,3 @@ export string-to-hex = (str)->
     toHexString bytes
 export hex-to-string = (hex)->
     utils.toUtf8String(hex)
-    
-hex = string-to-hex "Hello world"
-console.log hex
-console.log hex-to-string "0x#{hex}"

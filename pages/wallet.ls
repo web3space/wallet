@@ -7,7 +7,6 @@ require! {
     \../copy.ls
     \../address-link.ls : { get-address-link, get-address-title }
     \../wallet-funcs.ls
-    \../send-funcs.ls
     \../get-lang.ls
     \./icon.ls
     \../get-primary-info.ls
@@ -108,10 +107,11 @@ require! {
                 cursor: pointer
                 border: 1px solid
                 $round: 36px
+                padding: 0
+                box-sizing: border-box
                 border-radius: $round
                 width: $round
                 height: $round
-                line-height: $round
                 color: #6CA7ED
                 text-transform: uppercase
                 font-weight: bold
@@ -155,8 +155,8 @@ require! {
             display: inline-block
             text-overflow: ellipsis
             overflow: hidden
-module.exports = (store, wallets, wallet)-->
-    { button-style, uninstall, wallet, active, big, balance, pending, send, receive, expand, usd-rate, last } = wallet-funcs store, wallets, wallet
+module.exports = (store, web3t, wallets, wallet)-->
+    { button-style, uninstall, wallet, active, big, balance, pending, send, receive, expand, usd-rate, last } = wallet-funcs store, web3t, wallets, wallet
     lang = get-lang store
     style = get-primary-info store
     label-uninstall =
@@ -164,6 +164,7 @@ module.exports = (store, wallets, wallet)-->
         | _ => \HIDE
     border-style =
         border-bottom: "1px solid #{style.app.border}"
+        background: style.app.input
     .wallet.pug(on-click=expand class="#{last + ' ' + active + ' ' + big}" key="#{wallet.coin.token}" style=border-style)
         .wallet-top.pug
             .top-left.pug

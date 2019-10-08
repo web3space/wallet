@@ -1,7 +1,6 @@
 require! {
     \react
     \qrcode.react : QRCode
-    \../navigate.ls
     \../get-primary-info.ls
     \../get-lang.ls
 }
@@ -12,13 +11,14 @@ require! {
         canvas
             width: 60%
             height: auto
-qrcode = (store)->
-    { send } = store.current
-    { wallet } = send.coin
+qrcode = (store, wallet)->
     info = get-primary-info store
     return null if not wallet?address?
-    QRCode.pug(value="#{wallet.address}" size="256" bgColor="#{info.color}" fgColor='#afc1fa')
-module.exports = ({ store })->
+    console.log \QRCode , { wallet?address }
+    bgColor = info.background
+    fgColor = info.color
+    QRCode.pug(value="#{wallet.address}" size="256" bgColor=bgColor fgColor=fgColor)
+module.exports = (store, wallet)->
     .pug.receive
         .receive-body.pug
-            qrcode store
+            qrcode store, wallet

@@ -22,7 +22,7 @@ require! {
     position: relative
     left: 0
     bottom: 5px
-    $cards-pad: 5px
+    $cards-pad: 15px
     right: 0
     margin: 0 $cards-pad
     z-index: 2
@@ -57,25 +57,31 @@ require! {
         border-top: 1px solid #213040
         display: inline-block
 arrow = \https://res.cloudinary.com/dfbhd7liw/image/upload/v1543595868/wallet/arrow.png
-wallets = ({ store })->
+wallets = ({ store, web3t })->
     return null if not store.current.account?
-    { wallets, go-up, can-up, go-down, can-down } = wallets-funcs store
+    { wallets, go-up, can-up, go-down, can-down } = wallets-funcs store, web3t
     style = get-primary-info store
     border-style =
         border: "1px solid #{style.app.border}"
+        background: "#{style.app.input}99"
     .pug(key="wallets")
-        menu { store }
-        manage-account { store }
-        add-coin-page { store }
+        menu { store, web3t }
+        manage-account { store, web3t }
+        add-coin-page { store, web3t }
         .wallets.pug(key="wallets-body")
             .wallet-container.pug(key="wallets-viewport" style=border-style)
-                wallets |> map wallet store, wallets
-wallets.init = (store, cb)->
+                wallets |> map wallet store, web3t, wallets
+wallets.init = ({ store, web3t }, cb)->
+    #console.log \wallets, { store, web3t }
     delete store.current.send?wallet
     store.current.send?tx-type = \regular
     return cb null if store.current.account?
     store.current.seed = get!
-    refresh-timer = 30 * 60 * 1000
-    err <- web3(store, { refresh-timer }).refresh
+    err <- web3t.init
+    #console.log err
+    cb null
+wallets.focus = ({ store, web3t }, cb)->
+    <- set-timeout _, 100
+    err <- web3t.refresh
     cb err
 module.exports = wallets

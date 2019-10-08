@@ -2,7 +2,6 @@ require! {
     \./api.ls : { get-balance }
     \./math.ls : { times, plus }
     \prelude-ls : { find, map, pairs-to-obj, foldl, filter }
-    \./plugin-loader.ls : { get-coins }
     \./workflow.ls : { run, task }
     \./round5.ls
     #\./pending-tx.ls : { get-pending-amount }
@@ -14,13 +13,17 @@ calc-wallet = (store, cb)->
     { rates } = store
     state =
         balance-usd: 0
-    coins = get-coins!
+    return cb err if err?
     build-loader = (wallet)-> task (cb)->
         { token } = wallet.coin
-        #wallet.balance = \...
+        #wallet.balance = \..
         #wallet.balance-usd = 0
         token = wallet.coin.token.to-lower-case!
         usd-rate = rates[token] ? \..
+        #coin =
+        #    coins |> find (.token is wallet.coin.token)
+        #return cb "Coin Not Found" if not coin?
+        #coin.wallet = wallet
         wallet.usd-rate =
             | usd-rate is \.. => \..
             | _ => round5 usd-rate
@@ -28,10 +31,6 @@ calc-wallet = (store, cb)->
         wallet.eur-rate =
             | usd-rate is \.. => \..
             | _ => round5 (usd-rate `times` eur-rate)
-        coin =
-            coins |> find (.token is wallet.coin.token)
-        return cb "Coin Not Found" if not coin?
-        coin.wallet = wallet
         err, balance <- get-balance { wallet.address, wallet.network, token, account: { wallet.address, wallet.private-key } }
         return cb err if err?
         pending-sent =

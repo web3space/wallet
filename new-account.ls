@@ -1,5 +1,4 @@
 require! {
-    \./plugin-loader.ls : { get-coins }
     \prelude-ls : { obj-to-pairs, pairs-to-obj, map }
     \mobx : { toJS }
     \./api.ls : { get-keys }
@@ -7,23 +6,6 @@ require! {
     #\./ethnamed.ls
 }
 module.exports = (store, mnemonic="", cb)->
-    #{ whois } = web3 store
-    #naming = ethnamed store
-    #master = import-master mnemonic 
-    #return null if not rates['USDT-ETH']?
-    #final-rates =
-    #    rates
-    #        |> toJS
-    #        |> obj-to-pairs 
-    #        |> map -> [it.0.replace(/-ETH/, '').to-lower-case!, it.1]
-    #        |> -> it ++ [[\eth, 1]]
-    #        |> pairs-to-obj
-    #round5 = (value)->
-    #   [head, dec] = value.split(\.)
-    #    "#{head}.#{dec.substr 0, 5}"
-    #in-usd = ({token})->
-    #    rate =  1 `div ` final-rates[token] `times` final-rates[\usdt]
-    #    round5 rate
     generate-coin-wallet = (coin, cb)->
         network = coin[store.current.network]
         return cb null if network.disabled is yes
@@ -39,6 +21,13 @@ module.exports = (store, mnemonic="", cb)->
         return cb null, [] if not coin?
         err, wallet-or-null <- generate-coin-wallet coin
         return cb err if err?
+        if wallet-or-null?
+            coin.wallet = wallet-or-null
+            wallet-or-null.usd-rate = \..
+            wallet-or-null.eur-rate = \..
+            wallet-or-null.balance-usd = \..
+            wallet-or-null.pending-sent = \..
+            wallet-or-null.balance = \..
         err, wallets <- generate-coin-wallets rest
         return cb err if err?
         current-wallets =
@@ -46,7 +35,6 @@ module.exports = (store, mnemonic="", cb)->
             | _ => []
         all = current-wallets ++ wallets
         cb null, all
-    coins = get-coins!
-    err, wallets <- generate-coin-wallets coins
+    err, wallets <- generate-coin-wallets store.coins
     return cb err if err?
     cb null, { mnemonic, wallets }

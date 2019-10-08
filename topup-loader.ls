@@ -16,13 +16,16 @@ verify-fields = (t)->
     return no if typeof! t.image isnt \String
     return no if typeof! t.address isnt \String
     return yes
-get-methods = ->
+get-methods = (cb)->
     base =
         common
             |> filter verify-fields
+    err, items <- get-install-list
+    return cb err if err?
     installed =
-        get-install-list! |> filter (.type is \topup)
-    installed ++ base
+        items |> filter (.type is \topup)
+    all = installed ++ base
+    cb null, all
 support = ({ token, network }, { topup-coins-by-mask, networks })-->
     return no  if networks.split(', ').index-of(network) is -1
     return yes if topup-coins-by-mask is '*'
@@ -46,9 +49,11 @@ filter-by-importance = (store)-> (arr, item)->
         all |> find (.token is coin?branding?topup)
     return [important] if important?
     return all
-export get-topup-address = (store, { token, network, address })->
+export get-topup-address = (store, { token, network, address }, cb)->
+    err, methods <-  get-methods
+    return cb err if err?
     method =
-        get-methods!
+        methods
             |> foldl filter-by-importance(store), []
             |> filter support { token, network } 
             |> reverse

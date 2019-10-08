@@ -7,7 +7,8 @@ module.exports = (store)-> (e)->
     { token } = send?coin ? {}
     { network } = store.current
     { address } = send?wallet ? {}
-    address = get-topup-address store, { token, network, address }
+    err, address <- get-topup-address store, { token, network, address }
+    return alert "#{err}" if err?
     if address?
         window.open address
     else if wallet.network.topup

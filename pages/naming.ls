@@ -55,8 +55,8 @@ install-record = (name, record)->
     "Please setup html element <meta property='web3space' value='#{record}' /> on #{name} to pass verification"
 state =
     timeout: null
-module.exports = ({ store })->
-    { setup-record, verify-record } = web3(store).naming
+module.exports = ({ store, web3t })->
+    { setup-record, verify-record } = web3t.naming
     price = 0.01ETH
     empty = ->
         ( store.current.nickname ? "" ).length is 0

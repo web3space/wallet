@@ -1,9 +1,9 @@
 require! {
-    \./plugin-loader.ls : { get-coins }
     \prelude-ls : { head, drop, take, find }
 }
 load-first = (store)->
-    get-coins! |> head
+    return null if store.coins.length is 0
+    store.coins |> head
 max = 4
 get-list = (store)->
     return [] if not store.current?account?
@@ -12,7 +12,8 @@ get-list = (store)->
         |> drop list
         |> take max
 get-important = (store)->
-    get-coins! |> find (.branding?important)
+    return null if store.coins.length is 0
+    store.coins |> find (.branding?important)
 get-wallet-by-index = (store)->
     { send, account, wallet-index } = store.current
     items = get-list store

@@ -23,12 +23,15 @@ common =
 #    * require \../web3t/plugins/ltc-coin.ls
 #    * require \../web3t/plugins/etc-coin.ls
 #    #* require \../web3t/plugins/eos-coin.ls
-export get-coins = ->
+export get-coins = (cb)->
     base =
         common
             |> filter (?)
             |> filter (.type is \coin)
             |> filter (.enabled)
+    err, items <- get-install-list
+    return cb err if err?
     installed =
-        get-install-list! |> filter (.type is \coin)
-    installed ++ base
+        items |> filter (.type is \coin)
+    all = installed ++ base
+    cb null, all

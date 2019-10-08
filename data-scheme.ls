@@ -1,5 +1,4 @@
 require! {
-    \./plugin-loader.ls : { get-coins }
     \prelude-ls : { map, pairs-to-obj }
     \./seed.ls : { saved }
     \./browser/location.ls
@@ -35,6 +34,14 @@ store =
     langs: { en, ru, ua }
     registry: []
     terms: "Loading..."
+    preference:
+        settings-visible: yes
+        invoice-visible: yes
+        username-visible: no
+        refresh-visible: yes
+        lock-visible: yes
+    receive: 
+        wallet: null
     menu:
         active: 's2'
     ask: 
@@ -79,8 +86,6 @@ store =
         loading: no
         send : create-send!
         invoice : create-send!
-    rates: 
-        get-coins! 
-            |> map -> [it.token.to-upper-case!, USD: 0] 
-            |> pairs-to-obj
+    rates: {}
+    coins: []
 module.exports = store

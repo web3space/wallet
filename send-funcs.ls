@@ -23,10 +23,10 @@ require! {
     \./pages/confirmation.ls : { confirm }
     \./get-lang.ls
 }
-module.exports = (store)->
-    return null if not store?
+module.exports = (store, web3t)->
+    return null if not store? or not web3t?
     lang = get-lang store
-    { send-to } = web3(store).naming
+    { send-to } = web3t.naming
     { send } = store.current
     { wallet } = send
     return null if not wallet?
@@ -57,7 +57,7 @@ module.exports = (store)->
         err <- create-pending-tx { store, token, network, tx, amount-send, amount-send-fee }
         cb err, tx
     perform-send-safe = (cb)->
-        err, to <- resolve-address send.to, send.coin, send.network
+        err, to <- resolve-address web3t, send.to, send.coin, send.network
         #send.propose-escrow = err is "Address not found" and send.coin.token is \eth
         #return cb err if err?
         resolved =
@@ -87,8 +87,8 @@ module.exports = (store)->
         return send.error = "#{err.message ? err}" if err?
         notify-form-result send.id, null, data
         store.current.last-tx-url = "#{send.network.api.url}/tx/#{data}"
-        navigate store, \sent
-        <- web3(store).refresh
+        navigate store, web3t, \sent
+        <- web3t.refresh
     send-escrow = ->
         name = send.to
         amount-ethers = send.amount-send
@@ -100,7 +100,7 @@ module.exports = (store)->
         | send.propose-escrow then 'SEND (Escrow)'
         | _ => lang.send
     cancel = (event)->
-        navigate store, \wallets
+        navigate store, web3t, \wallets
         notify-form-result send.id, "Cancelled by user"
     recipient-change = (event)->
         send.to = event.target.value ? ""
@@ -147,22 +147,21 @@ module.exports = (store)->
         amount-send = 1
         amount-send-fee = 0.01
         err <- create-pending-tx { store, token, send.network, tx, amount-send, amount-send-fee }
-        <- web3(store).refresh
-        console.log \fake, { network, err }
+        <- web3t.refresh
         cb null
     history = ->
         #<- debug
         store.current.send-menu-open = no
         store.current.filter = [\IN, \OUT, send.coin.token]
-        navigate store, \history
+        navigate store, web3t, \history
     network = 
         | store.current.network is \testnet => " (TESTNET) "
         | _ => ""
-    invoice = ->
+    invoice = (wallet)->
         store.current.send-menu-open = no
-        { coin, network, wallet } = store.current.send
+        { coin, network } = store.current.send
         store.current.invoice <<<< { coin, wallet, network }
-        navigate store, \invoice
+        navigate store, web3t, \invoice
     token = send.coin.token.to-upper-case!
     fee-token = (wallet.network.tx-fee-in ? send.coin.token).to-upper-case!
     is-data = (send.data ? "").length > 0

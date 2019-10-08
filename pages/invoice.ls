@@ -75,6 +75,7 @@ require! {
                     font-size: 12px
                     margin: 1px
                     border: 1px solid #5E72E4
+                    box-shadow: none
                 .amount-field
                     >.input-wrapper
                         position: relative
@@ -210,8 +211,16 @@ form-group = (title, icon-style, content)->
         label.pug.control-label(style=icon-style) #{title}
         content!
 recaptchaRef = react.createRef!
-send = ({ store })->
-    { invoice, token, wallet, primary-button-style, recipient-change, description-change, amount-change, amount-usd-change, cancel, send-anyway, get-address-link, get-address-title, default-button-style, round5edit } = invoice-funcs store
+cancel-button = (store, web3t)->
+    return null if store.preference.disableInvoice isnt yes
+    lang = get-lang store
+    { invoice, token, wallet, primary-button-style, recipient-change, description-change, amount-change, amount-usd-change, cancel, send-anyway, get-address-link, get-address-title, default-button-style, round5edit } = invoice-funcs store, web3t
+    .pug.button-container
+        .pug.buttons
+            a.pug.btn.btn-default(on-click=cancel style=default-button-style) #{lang.cancel}
+send-by-email = (store, web3t)->
+    return null if store.preference.disableInvoice is yes
+    { invoice, token, wallet, primary-button-style, recipient-change, description-change, amount-change, amount-usd-change, cancel, send-anyway, get-address-link, get-address-title, default-button-style, round5edit } = invoice-funcs store, web3t
     change = (response)->
         send-anyway response
     send = ->
@@ -227,42 +236,46 @@ send = ({ store })->
     href-style=
         border: "1px solid #{style.app.border}"
     lang = get-lang store
+    .pug.content-body
+        .pug.header
+            span.pug.head #{lang.invoice-header ? 'SEND INVOICE BY EMAIL'}
+            span.head.pug.right
+                img.pug(src="https://cdn3.iconfinder.com/data/icons/message-and-communication-sets/50/Icon_Email_Message-256.png")
+        form.pug
+            form-group lang.funding-address, icon-style, ->
+                .address.pug(style=href-style)
+                    a.pug(href="#{get-address-link wallet}") #{get-address-title wallet}
+            form-group lang.recipient-email, icon-style, ->
+                .pug
+                    .pug.amount-field
+                        .input-wrapper.pug
+                            .label.crypto.pug @
+                            input.pug.amount(type='text' style=input-style on-change=recipient-change value="#{invoice.to}" placeholder="email@address.com")
+                        .input-wrapper.pug
+                            .label.lusd.pug 
+                            input.pug.amount-usd(type='text' style=input-style on-change=description-change value="#{invoice.data}" placeholder="Description")
+                    ReCAPTCHA.pug(ref=recaptchaRef size="invisible" sitekey="6LeZ66AUAAAAAPqgD720Met5Prsq5B3AXl05G0vJ" on-change=change)
+            form-group lang.amount, icon-style, ->
+                .pug
+                    .pug.amount-field
+                        .input-wrapper.pug
+                            .label.crypto.pug #{token}
+                            input.pug.amount(type='text' style=input-style on-change=amount-change placeholder="0" title="#{invoice.amount-send}" value="#{round5edit invoice.amount-send}")
+                        .input-wrapper.pug
+                            .label.lusd.pug $
+                            input.pug.amount-usd(type='text' style=input-style on-change=amount-usd-change placeholder="0" title="#{invoice.amount-send-usd}" value="#{round5edit invoice.amount-send-usd}")
+        .pug.escrow
+        .pug.button-container
+            .pug.buttons
+                a.pug.btn.btn-primary(on-click=send style=primary-button-style)
+                    span.pug #{lang.send ? 'Send Email'}
+                    if send.sending
+                        span.pug ...
+                a.pug.btn.btn-default(on-click=cancel style=default-button-style) #{lang.cancel}
+send = ({ store, web3t })->
+    { wallet } = invoice-funcs store, web3t
     .pug.content
-        receive { store }
-        .pug.content-body
-            .pug.header
-                span.pug.head #{lang.invoice-header ? 'SEND INVOICE BY EMAIL'}
-                span.head.pug.right
-                    img.pug(src="https://cdn3.iconfinder.com/data/icons/message-and-communication-sets/50/Icon_Email_Message-256.png")
-            form.pug
-                form-group lang.funding-address, icon-style, ->
-                    .address.pug(style=href-style)
-                        a.pug(href="#{get-address-link wallet}") #{get-address-title wallet}
-                form-group lang.recipient-email, icon-style, ->
-                    .pug
-                        .pug.amount-field
-                            .input-wrapper.pug
-                                .label.crypto.pug @
-                                input.pug.amount(type='text' style=input-style on-change=recipient-change value="#{invoice.to}" placeholder="email@address.com")
-                            .input-wrapper.pug
-                                .label.lusd.pug 
-                                input.pug.amount-usd(type='text' style=input-style on-change=description-change value="#{invoice.data}" placeholder="Description")
-                        ReCAPTCHA.pug(ref=recaptchaRef size="invisible" sitekey="6LeZ66AUAAAAAPqgD720Met5Prsq5B3AXl05G0vJ" on-change=change)
-                form-group lang.amount, icon-style, ->
-                    .pug
-                        .pug.amount-field
-                            .input-wrapper.pug
-                                .label.crypto.pug #{token}
-                                input.pug.amount(type='text' style=input-style on-change=amount-change placeholder="0" title="#{invoice.amount-send}" value="#{round5edit invoice.amount-send}")
-                            .input-wrapper.pug
-                                .label.lusd.pug $
-                                input.pug.amount-usd(type='text' style=input-style on-change=amount-usd-change placeholder="0" title="#{invoice.amount-send-usd}" value="#{round5edit invoice.amount-send-usd}")
-            .pug.escrow
-            .pug.button-container
-                .pug.buttons
-                    a.pug.btn.btn-primary(on-click=send style=primary-button-style)
-                        span.pug #{lang.send ? 'Send Email'}
-                        if send.sending
-                            span.pug ...
-                    a.pug.btn.btn-default(on-click=cancel style=default-button-style) #{lang.cancel}
+        receive store, wallet
+        send-by-email store, web3t
+        cancel-button store, web3t
 module.exports = send

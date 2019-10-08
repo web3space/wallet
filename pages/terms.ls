@@ -13,7 +13,7 @@ require! {
             font-size: 19px
             padding: 10px
         display: inline-block
-        max-width: 250px
+        min-width: 250px
         >.buttons
             color: inherit
             text-align: center
@@ -31,19 +31,19 @@ require! {
             padding: 10px
             width: 100%
             box-sizing: border-bx
-            height: 300px
+            height: 150px
             resize: no
             border-radius: 5px
             outline: none
-terms = ({ store })->
+terms = ({ store, web3t })->
     lang = get-lang store
     info = get-primary-info store
     style=
         background: info.app.background
         color: info.app.text
     accept = ->
-        navigate store, \:init
-        <- web3(store).refresh
+        navigate store, web3t, \:init
+        <- web3t.refresh
     .pug.terms(style=style)
         .pug.terms-body
             .pug.header Terms of Use
@@ -51,7 +51,7 @@ terms = ({ store })->
             .pug.buttons
                 .pug #{lang.terms ? 'Please accept terms of use'}
                 button.pug(on-click=accept) #{lang.accept ? 'Accept'}
-terms.init = (store, cb)->
+terms.init = ({ store }, cb)->
     err, res <- get \https://raw.githubusercontent.com/web3space/wallet/master/TERMS.md .end
     return cb err if err?
     store.terms = res.text

@@ -9,7 +9,8 @@ clean = ->
     it.match(/[a-z]+/)?0
 fix =  
     words >> (map clean) >> (filter (?)) >> (join " ")
-module.exports = (store)->
+module.exports = (store, web3t)->
+    return null if not store? or not web3t?
     generate-seed = ->
         store.current.seed = generate-mnemonic!
         store.current.seed-temp = store.current.seed
@@ -26,7 +27,7 @@ module.exports = (store)->
         return if confirmed isnt yes
         store.current.saved-seed = yes
         set store.current.seed
-        navigate store, \:init
+        navigate store, web3t, \:init
     has-issue = ->
         return no if store.current.seed.length is 0
         not store.current.seed.match(/^([a-z]+[ ]){0,11}([a-z]+)$/)?

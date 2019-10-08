@@ -114,10 +114,10 @@ require! {
                                 color: white
                             >*
                                 vertical-align: middle
-create-item = (store, item)-->
+create-item = ({ store, web3t }, item)-->
     add = ->
         store.current.add-coin = no
-        <- web3(store).install item
+        <- web3t.install-quick item
     title = "#{item.token} #{item.type}"
     style = get-primary-info store
     button-style =
@@ -131,7 +131,7 @@ create-item = (store, item)-->
 filter-item = (store)-> (item)->
     return yes if (store.current.filter-plugins ? "").length is 0
     (item.token ? "").index-of(store.current.filter-plugins) > -1
-module.exports = ({ store } )->
+module.exports = ({ store, web3t } )->
     return null if store.current.add-coin isnt yes
     close = ->
         store.current.add-coin = no
@@ -158,7 +158,7 @@ module.exports = ({ store } )->
                         if store.registry.length > 0
                             store.registry 
                                 |> filter filter-item store
-                                |> map create-item store
+                                |> map create-item { store, web3t }
                         else
                             .loading.pug
                                 loading \black
