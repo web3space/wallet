@@ -31,7 +31,7 @@ build-get-balance = (store, coin)-> (cb)->
     network = coin[store.current.network]
     { wallet } = coin
     get-balance { coin.token, network, wallet.address }, cb
-build-send-transaction = (store, coin)-> (tx, cb)->
+build-send-transaction = (store, cweb3, coin)-> (tx, cb)->
     network = coin[store.current.network]
     return cb "Transaction is required" if typeof! tx isnt \Object
     { to, data, decoded-data, value, gas, amount } = tx
@@ -99,8 +99,8 @@ build-get-usd-amount = (store, coin)-> (amount, cb)->
     return cb "usd rate not found #{token}" if not wallet.usd-rate?
     usd = amount `times` wallet.usd-rate
     cb null, usd
-build-api = (store, coin)->
-    send-transaction = build-send-transaction store, coin
+build-api = (store, cweb3, coin)->
+    send-transaction = build-send-transaction store, cweb3, coin
     get-balance = build-get-balance store, coin
     get-address = build-get-address store, coin
     get-usd-amount = build-get-usd-amount store, coin
@@ -111,7 +111,7 @@ build-use = (web3, store)->  (network)->
 get-apis = (cweb3, store, cb)->
     res =
         store.coins
-            |> map -> [it.token, build-api(store, it)]
+            |> map -> [it.token, build-api(store, cweb3, it)]
             |> pairs-to-obj
     cb null, res
 refresh-apis = (cweb3, store, cb)->
