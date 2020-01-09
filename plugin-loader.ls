@@ -15,6 +15,7 @@ query-related = (token, coin)->
     if window.location.search.index-of("plugin=#{token}") > -1 then coin
 common =
     * require \../web3t/plugins/btc-coin.ls
+    * require \../web3t/plugins/vlx-coin.ls
     * query-related \gbx         , gobyte
 #    * require \../web3t/plugins/usdt-coin.ls
 #    

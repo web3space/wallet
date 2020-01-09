@@ -48,13 +48,15 @@ confirmation-modal = (store)->
     confirmation-style =
         background: style.app.background
         color: style.app.text
+    confirmation-style2 =
+        color: style.app.text
     button-style=
         color: style.app.text
     lang = get-lang store
     .pug.confirmation
         .pug.confirmation-body
             .pug.header(style=confirmation-style) #{lang.confirmation}
-            .pug.text(style=confirmation-style) #{store.current.confirmation}
+            .pug.text(style=confirmation-style2) #{store.current.confirmation}
             .pug.buttons
                 .pug.button(on-click=confirm style=button-style) Confirm
                 .pug.button(on-click=cancel style=button-style) Cancel

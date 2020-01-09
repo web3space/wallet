@@ -31,6 +31,11 @@ build-get-balance = (store, coin)-> (cb)->
     network = coin[store.current.network]
     { wallet } = coin
     get-balance { coin.token, network, wallet.address }, cb
+build-unlock = (store, cweb3)-> (cb)->
+    return cb null if store.page is \locked
+    err, data <- wait-form-result \unlock
+    return cb err if err?
+    cb null, data
 build-send-transaction = (store, cweb3, coin)-> (tx, cb)->
     network = coin[store.current.network]
     return cb "Transaction is required" if typeof! tx isnt \Object
@@ -183,9 +188,10 @@ module.exports = (store, config)->
             store.preference[key] = preference[key] ? store.preference[key]
         store.preference |> keys |> each set
     lock = ->
-        navigate store, cweb3, \locked
+        navigate store,  , \locked
+    unlock = build-unlock store, cweb3
     #set-preference config if typeof! config is \Object
     refresh-interface ->
     web3 = new Web3!
-    cweb3 <<<< { web3.utils, set-preference, get-supported-tokens, use, refresh, lock, init, install, uninstall, install-by-name, naming, get-account-name, set-theme, set-lang, install-quick }
+    cweb3 <<<< { web3.utils, unlock, set-preference, get-supported-tokens, use, refresh, lock, init, install, uninstall, install-by-name, naming, get-account-name, set-theme, set-lang, install-quick }
     cweb3

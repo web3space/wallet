@@ -5,6 +5,7 @@ require! {
     \../navigate.ls
     \../get-primary-info.ls
     \../get-lang.ls
+    \../send-form.ls : { notify-form-result }
 }
 .locked
     @import scheme
@@ -75,6 +76,7 @@ check-pin = (store, web3t)->
     #console.log \start
     #<- set-timeout _, 1
     navigate store, web3t, \:init
+    notify-form-result \unlock, null
 input = (store, web3t)->
     info = get-primary-info store
     locked-style=
@@ -124,7 +126,7 @@ locked = ({ store, web3t })->
         .pug.title(key="locked-title") #{title}
         .pug.inputs(key="locked-inputs")
             input store, web3t
-        footer store
+        footer store, web3t
 focus = ({ store }, cb)->
     cb null
 locked.focus = focus

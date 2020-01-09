@@ -50,6 +50,7 @@ store =
         callback: null
         image: ""
         type: ''
+    contract-address: ''
     current:
         list: 0
         prompt-answer: ""

@@ -18,11 +18,19 @@ module.exports = (store, web3t)->
         store.current.seed = store.current.seed-temp
     change-seed = (event)->
         store.current.seed-temp = event.target.value
-        change-seed.timeout = clear-timeout change-seed.timeout
-        change-seed.timeout = set-timeout perform-change-seed, 1000
+        #change-seed.timeout = clear-timeout change-seed.timeout
+        #change-seed.timeout = set-timeout perform-change-seed, 1000
+    week-seed = (cb)->
+        return cb null if store.current.seed-temp.length > 20
+        confirmed <- confirm store, "Please confirm to have week seed?"
+        return cb "not confirmed" if confirmed isnt yes
+        cb null
     save = ->
-        return alert "Secret key cannot be empty" if store.current.seed.length is 0
-        return alert "Secret key is so weak" if store.current.seed.length < 20
+        err <- week-seed
+        return if err?
+        perform-change-seed!
+        #return alert "Secret key cannot be empty" if store.current.seed.length is 0
+        #return alert "Secret key is so weak" if store.current.seed.length < 20
         confirmed <- confirm store, "Please confirm that you stored this phrase in safe place?"
         return if confirmed isnt yes
         store.current.saved-seed = yes
